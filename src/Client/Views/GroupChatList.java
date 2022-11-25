@@ -35,6 +35,8 @@ import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.border.TitledBorder;
+import javax.swing.AbstractListModel;
 
 public class GroupChatList extends JFrame {
 

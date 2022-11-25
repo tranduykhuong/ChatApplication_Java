@@ -17,6 +17,8 @@ import java.awt.Font;
 import java.awt.Color;
 
 import javax.swing.ImageIcon;
+import java.awt.Font;
+import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
@@ -75,7 +77,6 @@ public class EditUser extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
 		
 		JLabel lblCpNhtNgi = new JLabel("Cập nhật người dùng");
 		lblCpNhtNgi.setBounds(164, 10, 140, 16);

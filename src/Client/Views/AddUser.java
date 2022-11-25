@@ -110,10 +110,6 @@ public class AddUser extends JFrame {
 		lblNewLabel_1_1_3.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel_1_1_3.setBounds(30, 197, 106, 13);
 		panel.add(lblNewLabel_1_1_3);
-		JLabel lblNewLabel_1_1_4 = new JLabel("Email:");
-		lblNewLabel_1_1_4.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblNewLabel_1_1_4.setBounds(30, 239, 106, 13);
-		panel.add(lblNewLabel_1_1_4);
 
 		addrFd = new JTextField();
 		addrFd.setFont(new Font("Tahoma", Font.PLAIN, 13));
