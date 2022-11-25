@@ -25,6 +25,17 @@ import Client.Controller;
 import Entity.Packet;
 import Server.Controller.AccountController;
 
+import java.awt.event.ActionListener;
+import java.util.Date;
+import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+import java.awt.GridLayout;
+import javax.swing.JList;
+import javax.swing.AbstractListModel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 public class LoginList extends JFrame {
 
 	private JPanel contentPane;
@@ -58,7 +69,6 @@ public class LoginList extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(10, 73, 706, 427);
@@ -88,7 +98,6 @@ public class LoginList extends JFrame {
 		btnBack.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnBack.setBounds(10, 10, 89, 21);
 		contentPane.add(btnBack);
-
 		JLabel lbLoginList = new JLabel("Danh sách đăng nhập");
 		lbLoginList.setForeground(new Color(31, 128, 224));
 		lbLoginList.setFont(new Font("Tahoma", Font.BOLD, 14));

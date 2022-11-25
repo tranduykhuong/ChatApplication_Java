@@ -103,14 +103,12 @@ public class ManageUsersList extends JFrame {
 
 		setContentPane(cpContain);
 		cpContain.setLayout(null);
-
 		JPanel pnInforUsers = new JPanel();
 		pnInforUsers.setBackground(Color.WHITE);
 		pnInforUsers.setBorder(new CompoundBorder(new EmptyBorder(1, 1, 1, 1), null));
 		pnInforUsers.setBounds(10, 99, 968, 410);
 		cpContain.add(pnInforUsers);
 		pnInforUsers.setLayout(null);
-
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(10, 0, 948, 400);
@@ -194,7 +192,6 @@ public class ManageUsersList extends JFrame {
 		btnAddUser.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnAddUser.setBounds(589, 48, 150, 21);
 		pnControl.add(btnAddUser);
-
 		JLabel lbFilter = new JLabel("Lọc theo tên/tên đăng nhập:");
 		lbFilter.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lbFilter.setBounds(31, 20, 200, 13);
@@ -267,7 +264,6 @@ public class ManageUsersList extends JFrame {
 		btnXa.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnXa.setBounds(771, 48, 68, 21);
 		pnControl.add(btnXa);
-
 		JButton btnSa_1 = new JButton("Khóa");
 		btnSa_1.setForeground(new Color(1, 128, 254));
 		btnSa_1.setFont(new Font("Tahoma", Font.BOLD, 13));
