@@ -68,13 +68,11 @@ public class GroupChatList extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
 		JPanel pnControl = new JPanel();
 		pnControl.setBackground(Color.WHITE);
 		pnControl.setBounds(10, 10, 808, 92);
 		contentPane.add(pnControl);
 		pnControl.setLayout(null);
-
 		JLabel lbArrange = new JLabel("Sắp xếp theo:");
 		lbArrange.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lbArrange.setBounds(11, 55, 99, 13);
@@ -101,7 +99,6 @@ public class GroupChatList extends JFrame {
 		btnSortDate.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnSortDate.setBounds(230, 52, 99, 21);
 		pnControl.add(btnSortDate);
-
 		JLabel lblDanhSchNhm = new JLabel("Danh sách nhóm chat");
 		lblDanhSchNhm.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblDanhSchNhm.setBounds(336, 10, 150, 13);
@@ -118,7 +115,6 @@ public class GroupChatList extends JFrame {
 		btnBack.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnBack.setBounds(0, 0, 87, 21);
 		pnControl.add(btnBack);
-
 		JPanel panel = new JPanel();
 		panel.setBounds(10, 112, 808, 324);
 		contentPane.add(panel);

@@ -12,6 +12,7 @@ import java.awt.Font;
 import java.text.SimpleDateFormat;
 import java.awt.Font;
 import java.text.SimpleDateFormat;
+import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JTextField;
@@ -65,6 +66,7 @@ public class EditUser extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+		
 		JLabel lblCpNhtNgi = new JLabel("Cập nhật người dùng");
 		lblCpNhtNgi.setBounds(164, 10, 140, 16);
 		lblCpNhtNgi.setForeground(new Color(30, 113, 225));
@@ -81,13 +83,11 @@ public class EditUser extends JFrame {
 		btnBack.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnBack.setBounds(10, 5, 89, 21);
 		contentPane.add(btnBack);
-
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(10, 51, 437, 365);
 		contentPane.add(panel);
-
 		JLabel lblNewLabel_1 = new JLabel("Tên người dùng:");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel_1.setBounds(30, 29, 106, 13);
@@ -114,17 +114,14 @@ public class EditUser extends JFrame {
 		lblNewLabel_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel_1_1_1.setBounds(30, 113, 106, 13);
 		panel.add(lblNewLabel_1_1_1);
-
 		JLabel lblNewLabel_1_1_2 = new JLabel("Ngày sinh:");
 		lblNewLabel_1_1_2.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel_1_1_2.setBounds(30, 155, 106, 13);
 		panel.add(lblNewLabel_1_1_2);
-
 		JLabel lblNewLabel_1_1_3 = new JLabel("Giới tính:");
 		lblNewLabel_1_1_3.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel_1_1_3.setBounds(30, 197, 106, 13);
 		panel.add(lblNewLabel_1_1_3);
-
 		JLabel lblNewLabel_1_1_4 = new JLabel("Email:");
 		lblNewLabel_1_1_4.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel_1_1_4.setBounds(30, 239, 106, 13);

@@ -103,7 +103,6 @@ public class LoginList extends JFrame {
 		btnBack.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnBack.setBounds(10, 10, 89, 21);
 		contentPane.add(btnBack);
-
 		JLabel lbLoginList = new JLabel("Danh sách đăng nhập");
 		lbLoginList.setForeground(new Color(31, 128, 224));
 		lbLoginList.setFont(new Font("Tahoma", Font.BOLD, 14));
