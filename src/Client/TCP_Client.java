@@ -17,7 +17,7 @@ public class TCP_Client {
 		
 	}
 
-	public void disconnect() {
+	 void disconnect() {
 		// TODO Auto-generated method stub
 		
 	}
