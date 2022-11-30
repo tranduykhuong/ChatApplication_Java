@@ -10,12 +10,12 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 public class TCP_Client {
-	private Socket client;
-	private InputStream is;
+    private Socket client;
+    private InputStream is;
     private OutputStream os;
     private BufferedReader inData;
     private BufferedWriter outData;
-    public static final int BufferSize = 32*1024;
+    public static final int BufferSize = 32 * 1024;
 
     public boolean ConnectToServer(String ip, int port) {
         try {
@@ -43,7 +43,7 @@ public class TCP_Client {
         }
         return null;
     }
-    
+
     public byte[] readAllBytes() {
         try {
             return is.readAllBytes();
@@ -51,14 +51,14 @@ public class TCP_Client {
         }
         return null;
     }
-    
-    public void sendBytes(byte[] data){
+
+    public void sendBytes(byte[] data) {
         try {
             os.write(data);
         } catch (IOException e) {
         }
     }
-    
+
     public String readString() {
         try {
             return inData.readLine();
@@ -69,16 +69,16 @@ public class TCP_Client {
 
     public void sendString(String inp) {
         try {
-        	outData.write(inp + "\n");
-        	outData.flush();
+            outData.write(inp + "\n");
+            outData.flush();
         } catch (IOException e) {
         }
     }
 
     public void DisconnectToServer() {
         try {
-        	inData.close();
-        	outData.close();
+            inData.close();
+            outData.close();
             client.close();
         } catch (IOException e) {
         }
