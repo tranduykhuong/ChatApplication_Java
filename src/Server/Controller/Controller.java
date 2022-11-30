@@ -28,7 +28,8 @@ public class Controller extends Thread {
 	public void run() {
 		try {
 			while (true) {
-				String header = thisClient.receiver.readLine();
+				// String header = thisClient.receiver.readLine();
+				String header = "";
 				if (header == null)
 					throw new IOException();
 
@@ -134,7 +135,7 @@ public class Controller extends Thread {
 
 //					thisClient.socket.close();
 
-				} catch (IOException e1) {
+				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 				Main.socketController.connectedClient.remove(thisClient);
