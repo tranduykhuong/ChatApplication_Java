@@ -58,6 +58,10 @@ public class TCP_Client {
         } catch (IOException e) {
         }
     }
+	 void disconnect() {
+		// TODO Auto-generated method stub
+		
+	}
 
     public String readString() {
         try {
