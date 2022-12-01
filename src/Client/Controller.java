@@ -44,7 +44,7 @@ public class Controller {
                 var msg = client.readString(); //Create "readString" function in TCP_Client
                 if (msg == null)
                     break;
-                var message = new Message(msg); // Create "Message" class in Client package
+                // var message = new Message(msg); // Create "Message" class in Client package
 //                listener.process(message);
             }
         }).start();
