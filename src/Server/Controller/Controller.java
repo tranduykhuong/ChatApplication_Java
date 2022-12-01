@@ -14,16 +14,19 @@ public class Controller extends Thread {
 	public Controller(Socket clientSocket) {
 		try {
 			thisClient = new ClientApp();
-//			thisClient.socket = clientSocket;
+			// thisClient.socket = clientSocket;
 			OutputStream os = clientSocket.getOutputStream();
-//			thisClient.sender = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
+			// thisClient.sender = new BufferedWriter(new OutputStreamWriter(os,
+			// StandardCharsets.UTF_8));
 			InputStream is = clientSocket.getInputStream();
-//			thisClient.receiver = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-//			thisClient.port = clientSocket.getPort();
+			// thisClient.receiver = new BufferedReader(new InputStreamReader(is,
+			// StandardCharsets.UTF_8));
+			// thisClient.port = clientSocket.getPort();
 		} catch (IOException e) {
 
 		}
 	}
+
 	@Override
 	public void run() {
 		try {
@@ -117,29 +120,29 @@ public class Controller extends Thread {
 			}
 
 		} catch (IOException e) {
-			if (!Main.socketController.s.isClosed() /*&& thisClient.userName != null*/) {
+			if (!Main.socketController.s.isClosed() /* && thisClient.userName != null */) {
 
 				try {
-//					for (ClientApp client : Main.socketController.connectedClient) {
-//						if (!client.userName.equals(thisClient.userName)) {
-//							client.sender.write("user quit");
-//							client.sender.newLine();
-//							client.sender.write(thisClient.userName);
-//							client.sender.newLine();
-//							client.sender.flush();
-//						}
-//					}
+					// for (ClientApp client : Main.socketController.connectedClient) {
+					// if (!client.userName.equals(thisClient.userName)) {
+					// client.sender.write("user quit");
+					// client.sender.newLine();
+					// client.sender.write(thisClient.userName);
+					// client.sender.newLine();
+					// client.sender.flush();
+					// }
+					// }
 
-//					for (Room room : Main.socketController.allRooms)
-//						room.users.remove(thisClient.userName);
+					// for (Room room : Main.socketController.allRooms)
+					// room.users.remove(thisClient.userName);
 
-//					thisClient.socket.close();
+					// thisClient.socket.close();
 
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 				Main.socketController.connectedClient.remove(thisClient);
-//				Main.mainScreen.updateClientTable();
+				// Main.mainScreen.updateClientTable();
 			}
 		}
 	}
