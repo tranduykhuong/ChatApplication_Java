@@ -2,9 +2,12 @@ package Client;
 
 public class ClientApp {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	public ClientApp() {
 	}
 
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		new ClientApp();
+
+	}
 }
