@@ -33,7 +33,7 @@ public class Controller {
 	public boolean connect(String hostname, int port) {
         this.hostName = hostname;
         this.port = port;
-        return client.connect(hostname, port); //Create "connect" function in TCP_Client
+        return client.ConnectToServer(hostname, port); //Create "connect" function in TCP_Client
     }
 	
 	public void startListen() {
@@ -44,7 +44,7 @@ public class Controller {
                 var msg = client.readString(); //Create "readString" function in TCP_Client
                 if (msg == null)
                     break;
-                var message = new Message(msg); // Create "Message" class in Client package
+                // var message = new Message(msg); // Create "Message" class in Client package
 //                listener.process(message);
             }
         }).start();
@@ -58,7 +58,7 @@ public class Controller {
 	
 	public void reconnect() {
         client.disconnect(); //Create "disconnect" function in TCP_Client
-        client.connect(hostName, port);
+        client.ConnectToServer(hostName, port);
     }
 	
 	public boolean login(String username, String password) {
