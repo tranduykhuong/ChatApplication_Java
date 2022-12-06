@@ -1,7 +1,6 @@
 package Client.Views;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -27,25 +26,6 @@ public class ChatApplicationScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ChatApplicationScreen frame = new ChatApplicationScreen();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public ChatApplicationScreen() {
 		setTitle("Chat Application");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

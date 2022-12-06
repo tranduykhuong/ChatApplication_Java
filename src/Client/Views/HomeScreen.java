@@ -13,8 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import Client.Controller;
-import Entity.Packet;
+import Client.ClientApp;
 
 public class HomeScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -40,10 +39,7 @@ public class HomeScreen extends JFrame {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-//				ClientApp.connectionScreen.setVisible(true);
-
-//				NÀY ĐANG SỬ DỤNG ĐỂ CODE KHÔNG CẦN LOGIN
-				new ChatApplicationScreen().setVisible(true);
+				ClientApp.connectionScreen.setVisible(true);
 			}
 		});
 		btnNewButton_1.setFont(new Font("Times New Roman", Font.BOLD, 10));
@@ -67,13 +63,14 @@ public class HomeScreen extends JFrame {
 		lblNewLabel.setBounds(65, -33, 326, 252);
 		contentPane.add(lblNewLabel);
 
-		JButton btnNewButton_3 = new JButton("New button");
+		JButton btnNewButton_3 = new JButton("Dashboard");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Controller.getInstance().sendTextMessage(new Packet("logIn", "Test ne", "DK").toString());
+//				Controller.getInstance().sendTextMessage(new Packet("logIn", "Test ne", "DK").toString());
+				new ChatApplicationScreen().setVisible(true);
 			}
 		});
-		btnNewButton_3.setBounds(334, 192, 89, 23);
+		btnNewButton_3.setBounds(322, 192, 101, 23);
 		contentPane.add(btnNewButton_3);
 	}
 }

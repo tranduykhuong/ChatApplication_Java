@@ -60,8 +60,8 @@ public class ConnectionScreen extends JFrame {
 		JOptionPane.showMessageDialog(this, "Connect successfully!", "Connection", JOptionPane.INFORMATION_MESSAGE);
 
 		Controller.getInstance().startListen();
-//		new HomeScreen().setVisible(true);
-//		setVisible(false);
+		new HomeScreen().setVisible(true);
+		setVisible(false);
 	}
 
 	private void btnDisconnectActionPerformed(ActionEvent e) {
