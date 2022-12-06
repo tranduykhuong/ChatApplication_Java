@@ -1,40 +1,24 @@
 package Client.Views;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
-import java.awt.Font;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-import javax.swing.SwingConstants;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
+import Client.ClientApp;
 
 public class HomeScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					HomeScreen frame = new HomeScreen();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public HomeScreen() {
 		setTitle("Home");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,11 +36,23 @@ public class HomeScreen extends JFrame {
 		contentPane.add(btnNewButton);
 
 		JButton btnNewButton_1 = new JButton("QUIT");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				ClientApp.connectionScreen.setVisible(true);
+			}
+		});
 		btnNewButton_1.setFont(new Font("Times New Roman", Font.BOLD, 10));
 		btnNewButton_1.setBounds(153, 229, 149, 30);
 		contentPane.add(btnNewButton_1);
 
 		JButton btnNewButton_2 = new JButton("LOG IN");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new LoginScreen().setVisible(true);
+				setVisible(false);
+			}
+		});
 		btnNewButton_2.setFont(new Font("Times New Roman", Font.BOLD, 10));
 		btnNewButton_2.setBounds(153, 149, 149, 30);
 		contentPane.add(btnNewButton_2);
@@ -66,5 +62,15 @@ public class HomeScreen extends JFrame {
 		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\ACER\\Downloads\\AppChat.png"));
 		lblNewLabel.setBounds(65, -33, 326, 252);
 		contentPane.add(lblNewLabel);
+
+		JButton btnNewButton_3 = new JButton("Dashboard");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+//				Controller.getInstance().sendTextMessage(new Packet("logIn", "Test ne", "DK").toString());
+				new ChatApplicationScreen().setVisible(true);
+			}
+		});
+		btnNewButton_3.setBounds(322, 192, 101, 23);
+		contentPane.add(btnNewButton_3);
 	}
 }

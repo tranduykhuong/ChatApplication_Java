@@ -1,17 +1,18 @@
 package Client.Views;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import java.awt.Font;
-import javax.swing.JCheckBox;
-import javax.swing.JButton;
-import javax.swing.JPasswordField;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 public class LoginScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -23,25 +24,6 @@ public class LoginScreen extends JFrame {
 	private JPasswordField passwordField;
 	private JButton btnNewButton_1;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginScreen frame = new LoginScreen();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public LoginScreen() {
 		setTitle("Login");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,8 +35,9 @@ public class LoginScreen extends JFrame {
 		contentPane.setLayout(null);
 
 		JLabel lblNewLabel = new JLabel("LOG IN");
+		lblNewLabel.setForeground(new Color(0, 0, 160));
 		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 23));
-		lblNewLabel.setBounds(203, 23, 99, 40);
+		lblNewLabel.setBounds(178, 0, 99, 40);
 		contentPane.add(lblNewLabel);
 
 		JLabel lblNewLabel_1 = new JLabel("Username");
@@ -64,7 +47,7 @@ public class LoginScreen extends JFrame {
 
 		JLabel lblNewLabel_2 = new JLabel("Password");
 		lblNewLabel_2.setFont(new Font("Times New Roman", Font.BOLD, 18));
-		lblNewLabel_2.setBounds(36, 110, 78, 16);
+		lblNewLabel_2.setBounds(36, 112, 78, 16);
 		contentPane.add(lblNewLabel_2);
 
 		textField_1 = new JTextField();
@@ -75,7 +58,7 @@ public class LoginScreen extends JFrame {
 
 		chckbxNewCheckBox = new JCheckBox("Show Password");
 		chckbxNewCheckBox.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
-		chckbxNewCheckBox.setBounds(157, 139, 130, 21);
+		chckbxNewCheckBox.setBounds(157, 140, 130, 21);
 		contentPane.add(chckbxNewCheckBox);
 
 		btnNewButton = new JButton("LOG IN");
@@ -84,6 +67,12 @@ public class LoginScreen extends JFrame {
 		contentPane.add(btnNewButton);
 
 		btnCancel = new JButton("BACK");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new HomeScreen().setVisible(true);
+				setVisible(false);
+			}
+		});
 		btnCancel.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		btnCancel.setBounds(225, 220, 99, 34);
 		contentPane.add(btnCancel);
@@ -93,8 +82,8 @@ public class LoginScreen extends JFrame {
 		contentPane.add(passwordField);
 
 		btnNewButton_1 = new JButton("Forger Password");
-		btnNewButton_1.setForeground(Color.WHITE);
-		btnNewButton_1.setBackground(Color.RED);
+		btnNewButton_1.setForeground(new Color(0, 0, 160));
+		btnNewButton_1.setBackground(new Color(192, 192, 192));
 		btnNewButton_1.setFont(new Font("Times New Roman", Font.ITALIC, 14));
 		btnNewButton_1.setBounds(277, 174, 149, 21);
 		contentPane.add(btnNewButton_1);

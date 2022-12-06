@@ -1,43 +1,79 @@
 package Client.Views;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+import Client.Controller;
 
 public class ConnectionScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField ipField;
 	private JLabel lblPort;
-	private JTextField textField_1;
+	private JTextField portField;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ConnectionScreen frame = new ConnectionScreen();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+	private boolean checkValidation() {
+		if (portField.getText().length() == 0 || ipField.getText().length() == 0) {
+			JOptionPane.showMessageDialog(this, "Missing connection config", "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+
+		try {
+			String PATTERN = "^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$";
+			if (!ipField.getText().matches(PATTERN)) {
+				JOptionPane.showMessageDialog(this, "IP address is not valid", "Error", JOptionPane.ERROR_MESSAGE);
+				return false;
 			}
-		});
+
+			var port = Integer.valueOf(portField.getText());
+			if (port < 0 || port > 65536) {
+				JOptionPane.showMessageDialog(this, "Port is not valid", "Error", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(this, "Port is not valid", "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+
+		return true;
+	}
+
+	private void btnConnectActionPerformed(ActionEvent e) {
+		if (!checkValidation()) {
+			return;
+		}
+
+		var port = Integer.valueOf(portField.getText());
+
+		if (!Controller.getInstance().connect(ipField.getText(), port)) {
+			JOptionPane.showMessageDialog(this, "Can not connect to Server", "Warning", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		JOptionPane.showMessageDialog(this, "Connect successfully!", "Connection", JOptionPane.INFORMATION_MESSAGE);
+
+		Controller.getInstance().startListen();
+		new HomeScreen().setVisible(true);
+		setVisible(false);
+	}
+
+	private void btnDisconnectActionPerformed(ActionEvent e) {
+		Controller.getInstance().sendTextMessage("Disconnect");
+		Controller.getInstance().disconnect();
 	}
 
 	/**
 	 * Create the frame.
 	 */
 	public ConnectionScreen() {
-		setTitle("Server Connect");
+		setTitle("Connection");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 356, 172);
 		contentPane = new JPanel();
@@ -51,33 +87,37 @@ public class ConnectionScreen extends JFrame {
 		lblNewLabel.setBounds(10, 26, 45, 13);
 		contentPane.add(lblNewLabel);
 
-		textField = new JTextField();
-		textField.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		lblNewLabel.setLabelFor(textField);
-		textField.setBounds(76, 21, 214, 26);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		ipField = new JTextField();
+		ipField.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		lblNewLabel.setLabelFor(ipField);
+		ipField.setBounds(76, 21, 214, 26);
+		contentPane.add(ipField);
+		ipField.setColumns(10);
 
 		lblPort = new JLabel("Port");
 		lblPort.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		lblPort.setBounds(10, 62, 45, 13);
 		contentPane.add(lblPort);
 
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		lblPort.setLabelFor(textField_1);
-		textField_1.setColumns(10);
-		textField_1.setBounds(76, 57, 214, 26);
-		contentPane.add(textField_1);
+		portField = new JTextField();
+		portField.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		lblPort.setLabelFor(portField);
+		portField.setColumns(10);
+		portField.setBounds(76, 57, 214, 26);
+		contentPane.add(portField);
 
-		JButton btnNewButton = new JButton("Connect");
-		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		btnNewButton.setBounds(197, 93, 93, 30);
-		contentPane.add(btnNewButton);
+		JButton btnConnect = new JButton("Connect");
+		btnConnect.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		btnConnect.setBounds(197, 93, 93, 30);
+		contentPane.add(btnConnect);
 
 		JButton btnDisconnect = new JButton("Disconnect");
 		btnDisconnect.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		btnDisconnect.setBounds(76, 93, 111, 30);
 		contentPane.add(btnDisconnect);
+
+		// LOGISTIC
+		btnConnect.addActionListener(e -> btnConnectActionPerformed(e));
+		btnDisconnect.addActionListener(e -> btnDisconnectActionPerformed(e));
 	}
 }

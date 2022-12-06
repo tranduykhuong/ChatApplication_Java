@@ -1,13 +1,12 @@
 package Client;
 
-public class ClientApp {
+import Client.Views.ConnectionScreen;
 
-	public ClientApp() {
-	}
+public class ClientApp {
+	public static ConnectionScreen connectionScreen;
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		new ClientApp();
-
+		connectionScreen = new ConnectionScreen();
+		connectionScreen.setVisible(true);
 	}
 }
