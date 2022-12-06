@@ -159,11 +159,6 @@ public class ChatApplicationScreen extends JFrame {
 		panel_4.add(panel_9);
 		panel_9.setLayout(null);
 
-		JButton btnNewButton_6 = new JButton("Chat History");
-		btnNewButton_6.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		btnNewButton_6.setBounds(10, 40, 139, 27);
-		panel_9.add(btnNewButton_6);
-
 		JButton btnNewButton_6_1 = new JButton("Delete CH");
 		btnNewButton_6_1.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		btnNewButton_6_1.setBounds(10, 79, 139, 27);
