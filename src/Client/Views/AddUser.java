@@ -1,29 +1,28 @@
 package Client.Views;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
+import java.util.UUID;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import javax.swing.JButton;
-import javax.swing.JTextField;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
 import com.toedter.calendar.JDateChooser;
 
 import Client.Controller;
 import Entity.Packet;
-
-import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.UUID;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class AddUser extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -199,9 +198,11 @@ public class AddUser extends JFrame {
 		String id = UUID.randomUUID().toString();
 		String password = UUID.randomUUID().toString();
 
-		Controller.getInstance().sendTextMessage(
-				new Packet("addAccount", id + ", " + userFd.getText() + ", " + fullnameFd.getText() + ", " + password + ", "
-						+ addrFd.getText() + ", " + strDate + ", " + gender + ", " + emailFd.getText(), "").toString());
+		Controller.getInstance()
+				.sendTextMessage(new Packet("addAccount",
+						id + ", " + userFd.getText() + ", " + fullnameFd.getText() + ", " + password + ", "
+								+ addrFd.getText() + ", " + strDate + ", " + gender + ", " + emailFd.getText(),
+						"").toString());
 		JOptionPane.showMessageDialog(this, "Thêm thành công");
 		Controller.getInstance().sendTextMessage(new Packet("showAll", "", "").toString());
 		setVisible(false);
