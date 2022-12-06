@@ -1,86 +1,167 @@
 package Client;
 
-import javax.naming.ldap.ManageReferralControl;
+import Entity.Packet;
 
 public class Controller {
-	private static Controller ctl;
-    private  TCP_Client client;
-    private String hostName;
-    private int port;
-    private int downloadPort;
-//    private IMessageReceiverListener listener;
+	private static Controller sgt;
+	private TCP_Client client;
+	private String hostName;
+	private int port;
+	private Boolean running;
 
-    
-	private  Controller() {
-        client = new TCP_Client();
-    }
-	
-//	public static Controller getTis() {
-//		return ctl;
-//	}
-	
-	public static void setTis(Controller ctl) {
-		Controller.ctl = ctl;
+	private Controller() {
+		client = new TCP_Client();
+		running = false;
 	}
-	
+
+	public static void setTis(Controller sgt) {
+		Controller.sgt = sgt;
+	}
+
 	public static Controller getInstance() {
-        if (ctl == null) {
-        	ctl = new Controller();
-        }
-        return ctl;
-    }
-	
+		if (sgt == null) {
+			sgt = new Controller();
+		}
+		return sgt;
+	}
+
 	public boolean connect(String hostname, int port) {
-        this.hostName = hostname;
-        this.port = port;
-        return client.connect(hostname, port); //Create "connect" function in TCP_Client
-    }
-	
+		this.hostName = hostname;
+		this.port = port;
+		if (client.ConnectToServer(hostname, port)) {
+			running = true;
+			return running;
+		}
+		return false;
+	}
+
 	public void startListen() {
-        new Thread(() -> {
-            while (true) {
-//                if (listener == null)
-//                    break;
-                var msg = client.readString(); //Create "readString" function in TCP_Client
-                if (msg == null)
-                    break;
-                var message = new Message(msg); // Create "Message" class in Client package
-//                listener.process(message);
-            }
-        }).start();
-    }
-	
+		new Thread(() -> {
+			while (true) {
+				if (running == false)
+					break;
+				var msg = client.readString();
+				System.out.println("Client receive: " + msg);
+
+				if (msg == null || msg.equals("Server closed!")) {
+					disconnect();
+					break;
+				}
+
+				Packet pk = new Packet(msg);
+				String header = pk.getHeader();
+
+				System.out.println("Header client recive: " + header);
+				switch (header) {
+				case "filterList": {
+					break;
+				}
+				case "addAccount": {
+					break;
+				}
+				case "updateAccount": {
+					break;
+				}
+				case "removeAccount": {
+					break;
+				}
+				case "lockAccount": {
+					break;
+				}
+				case "historyLogin": {
+					break;
+				}
+				case "listFriend": {
+					break;
+				}
+				case "listLoginTime": {
+					break;
+				}
+				case "listGroupChat": {
+					break;
+				}
+				case "signUp": {
+					break;
+				}
+				case "logIn": {
+					break;
+				}
+				case "forgotPassword": {
+					break;
+				}
+				case "addFriend": {
+					break;
+				}
+				case "unFriend": {
+					break;
+				}
+				case "listFriendOnline": {
+					break;
+				}
+				case "chatWithFriendOnline": {
+					break;
+				}
+				case "chatWithFriendOffline": {
+					break;
+				}
+				case "viewChatHistory": {
+					break;
+				}
+				case "romoveChatHistory": {
+					break;
+				}
+				case "searchStringChatSingle": {
+					break;
+				}
+				case "searchStringChatMultiple": {
+					break;
+				}
+				case "createGroup": {
+					break;
+				}
+				case "changeNameGroup": {
+					break;
+				}
+				case "administator": {
+					break;
+				}
+				case "removeMember": {
+					break;
+				}
+				case "chatGroup": {
+					break;
+				}
+				default: {
+					break;
+				}
+				}
+			}
+		}).start();
+	}
+
 	public void sendTextMessage(String content) {
-        var textmessage = new TextMessage(content);  //entity.message.TextMessage;
-        var message = new Message(MessageType.TEXT, textmessage, ""); //entity.MessageType
-        client.sendString(message.toString()); 
-    }
-	
+		client.sendString(content);
+	}
+
 	public void reconnect() {
-        client.disconnect(); //Create "disconnect" function in TCP_Client
-        client.connect(hostName, port);
-    }
-	
+		client.DisconnectToServer();
+		client.ConnectToServer(hostName, port);
+	}
+
+	public void disconnect() {
+		running = false;
+		client.DisconnectToServer();
+	}
+
 	public boolean login(String username, String password) {
-        client.sendString("1\t" + username + "\t" + password);
-        if (client.readString().equals("1")) {
-            downloadPort = Integer.valueOf((String) client.readString());
-            return true;
-        }
-        return false;
-    }
-	
+		client.sendString("1\t" + username + "\t" + password);
+		return false;
+	}
+
 	public boolean register(String username, String password) {
-        client.sendString("0\t" + username + "\t" + password);
-        return client.readString().equals("1");
-    }
-//	public IMessageReceiverListener getListener() {
-//        return listener;
-//    }
-//	public void setListener(IMessageReceiverListener listener) {
-//        this.listener = listener;
-//    }
-	
-	
+		client.sendString("0\t" + username + "\t" + password);
+		System.out.println("send");
+		return client.readString().equals("1");
+	}
 
 }

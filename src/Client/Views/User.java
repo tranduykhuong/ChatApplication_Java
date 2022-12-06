@@ -183,7 +183,7 @@ public class User extends JFrame {
 		panel_1.setLayout(null);
 		
 		JButton btnBack = new JButton("Trở về");
-		btnBack.setBounds(0, 0, 81, 25);
+		btnBack.setBounds(0, 0, 75, 25);
 		btnBack.setHorizontalAlignment(SwingConstants.LEFT);
 		btnBack.setForeground(new Color(1, 128, 254));
 		btnBack.setFont(new Font("Tahoma", Font.BOLD, 13));

@@ -171,6 +171,19 @@ public class ManageUsersList extends JFrame {
 		btnSortDate.setBounds(266, 48, 99, 21);
 		pnControl.add(btnSortDate);
 		
+		JButton btnBack = new JButton("Trở về");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+			}
+		});
+		btnBack.setHorizontalAlignment(SwingConstants.LEFT);
+		btnBack.setForeground(new Color(1, 128, 254));
+		btnBack.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnBack.setBounds(0, 0, 78, 19);
+		pnControl.add(btnBack);
+		
 		JButton btnXa = new JButton("Xóa");
 		btnXa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

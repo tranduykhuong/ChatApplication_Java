@@ -93,7 +93,7 @@ public class GroupChatList extends JFrame {
 		JList listGroupChat = new JList();
 		listGroupChat.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		listGroupChat.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Nhóm 1", "Nhóm 2", "Nhóm 3", "Nhóm 4"};
+			String[] values = new String[] {"sêfdsfsf", "dfsfs", "sdfsdf", "sdfsdf", "sdf"};
 			public int getSize() {
 				return values.length;
 			}
@@ -110,15 +110,6 @@ public class GroupChatList extends JFrame {
 		pnMemberList.setLayout(null);
 		
 		JList listMember = new JList();
-		listMember.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Chính ", "Khôi", "Khương", "Tấn", "Vinh"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
 		listMember.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		listMember.setBounds(10, 21, 249, 293);
 		pnMemberList.add(listMember);
@@ -129,15 +120,6 @@ public class GroupChatList extends JFrame {
 		pnAdminList.setLayout(null);
 		
 		JList listAdmin = new JList();
-		listAdmin.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Khôi", "Vinh"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
 		listAdmin.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		listAdmin.setBounds(10, 21, 249, 293);
 		pnAdminList.add(listAdmin);

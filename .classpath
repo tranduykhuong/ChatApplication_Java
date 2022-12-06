@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="jcalendar-1.4.jar"/>
 	<classpathentry kind="lib" path="jgoodies-looks-2.4.1.jar"/>
 	<classpathentry kind="lib" path="jgoodies-common-1.2.0.jar"/>
+	<classpathentry kind="lib" path="mongo-java-driver-3.12.11.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
