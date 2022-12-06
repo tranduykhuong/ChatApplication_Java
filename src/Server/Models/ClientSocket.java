@@ -10,7 +10,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 public class ClientSocket {
-	private final Socket client;
+	private Socket client;
 	private BufferedReader in;
 	private BufferedWriter out;
 	private InputStream is;
@@ -81,9 +81,19 @@ public class ClientSocket {
 
 	public void disconnect() {
 		try {
-			client.close();
+			if (client.isConnected()) {
+				client.close();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Boolean isConnected() {
+		return client.isConnected();
+	}
+
+	public int getPort() {
+		return client.getPort();
 	}
 }
