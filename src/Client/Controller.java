@@ -3,7 +3,7 @@ package Client;
 import javax.naming.ldap.ManageReferralControl;
 
 public class Controller {
-	private static Controller tis;
+	private static Controller ctl;
     private  TCP_Client client;
     private String hostName;
     private int port;
@@ -16,18 +16,18 @@ public class Controller {
     }
 	
 //	public static Controller getTis() {
-//		return tis;
+//		return ctl;
 //	}
 	
-	public static void setTis(Controller tis) {
-		Controller.tis = tis;
+	public static void setTis(Controller ctl) {
+		Controller.ctl = ctl;
 	}
 	
 	public static Controller getInstance() {
-        if (tis == null) {
-            tis = new Controller();
+        if (ctl == null) {
+        	ctl = new Controller();
         }
-        return tis;
+        return ctl;
     }
 	
 	public boolean connect(String hostname, int port) {
