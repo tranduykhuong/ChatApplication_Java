@@ -1,41 +1,52 @@
 package Server.Controller;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-import Client.ClientApp;
+import Entity.Packet;
+import Server.ServerApp;
+import Server.Models.ClientSocket;
 
 public class Controller extends Thread {
-	ClientApp thisClient;
+	ClientSocket thisClient;
 
 	public Controller(Socket clientSocket) {
 		try {
-			thisClient = new ClientApp();
-			// thisClient.socket = clientSocket;
-			OutputStream os = clientSocket.getOutputStream();
-			// thisClient.sender = new BufferedWriter(new OutputStreamWriter(os,
-			// StandardCharsets.UTF_8));
-			InputStream is = clientSocket.getInputStream();
-			// thisClient.receiver = new BufferedReader(new InputStreamReader(is,
-			// StandardCharsets.UTF_8));
-			// thisClient.port = clientSocket.getPort();
-		} catch (IOException e) {
-
+			thisClient = new ClientSocket(clientSocket);
+			ClientConnected.getInstance().addClientConnect(thisClient);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void run() {
+		System.out.println("Server connect client");
 		try {
 			while (true) {
-				// String header = thisClient.receiver.readLine();
-				String header = "";
+				String mess = thisClient.readString();
+				System.out.println("Server receive: " + mess);
+
+				if (mess == null)
+					break;
+
+				if (mess.equals("Disconnect")) {
+					ServerApp.mainScreen
+							.addClientStatus(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy"))
+									+ " : Client with port " + thisClient.getPort() + " disconnected");
+					ClientConnected.getInstance().removeClientConnect(thisClient);
+					thisClient.disconnect();
+					break;
+				}
+				Packet pk = new Packet(mess);
+				String header = pk.getHeader();
+
 				if (header == null)
 					throw new IOException();
 
-				System.out.println("Header: " + header);
+				System.out.println("Header server receive: " + header);
 				switch (header) {
 				case "filterList": {
 					break;
@@ -68,6 +79,7 @@ public class Controller extends Thread {
 					break;
 				}
 				case "logIn": {
+					thisClient.sendString(new Packet("logIn", "Phan hoi ne", "DK").toString());
 					break;
 				}
 				case "forgotPassword": {
@@ -113,6 +125,10 @@ public class Controller extends Thread {
 					break;
 				}
 				case "chatGroup": {
+					break;
+				}
+				default: {
+					thisClient.sendString("Not found");
 					break;
 				}
 				}
