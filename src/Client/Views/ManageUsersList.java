@@ -210,6 +210,7 @@ public class ManageUsersList extends JFrame {
 		btnBack.setBounds(0, 0, 78, 19);
 		pnControl.add(btnBack);
 
+		
 		JButton btnXa = new JButton("Xóa");
 		btnXa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
