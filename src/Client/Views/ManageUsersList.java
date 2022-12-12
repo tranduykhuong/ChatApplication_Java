@@ -1,9 +1,23 @@
 package Client.Views;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.Color;
@@ -34,6 +48,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import com.mongodb.internal.connection.tlschannel.NeedsWriteException;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 import Client.Controller;
 import Entity.Packet;
@@ -212,6 +229,7 @@ public class ManageUsersList extends JFrame {
 		JButton btnBack = new JButton("Trở về");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
 				setVisible(false);
 			}
 		});
@@ -225,6 +243,7 @@ public class ManageUsersList extends JFrame {
 		btnXa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			
+
 			}
 		});
 		btnXa.setForeground(new Color(1, 128, 254));
@@ -272,7 +291,7 @@ public class ManageUsersList extends JFrame {
 		btnDanhSchNhm.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnDanhSchNhm.setBounds(771, 17, 171, 21);
 		pnControl.add(btnDanhSchNhm);
-		
+
 //		String str = "hello, 13/12/2022 01:54:32, alo, 13/12/2022 01:54:49, � nhon, 13/12/2022 01:55:07, 9h, 13/12/2022 10:34:13]";
 //		ArrayList<String> infoCreatedGroupSorted = new ArrayList<>();
 //		String[] infoGroupDate = str.split(", ");

@@ -16,6 +16,7 @@ public class InterfaceAPI {
 		String id = UUID.randomUUID().toString();
 		accountApi.createAccount(id, userName, password, name, dob, gender, address, email);
 		accountApi.create(id, fullName,userName, password, dob, gender, address, email);
+		accountApi.createAccount(id, userName, password, name, dob, gender, address, email);
 
 		return id;
 	}
@@ -238,4 +239,5 @@ public class InterfaceAPI {
 		}
 		return listAdminInGroup;
 	}
+	
 }

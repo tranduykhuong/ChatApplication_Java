@@ -381,7 +381,4 @@ public class AccountController extends AccountModel {
 		CollectionAccount().updateOne(eq("id", idUser), combine(set("historyLogin", document)));
 	
 	}
-
-	
-
 }

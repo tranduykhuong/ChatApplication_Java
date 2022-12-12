@@ -17,6 +17,8 @@ import javax.xml.crypto.Data;
 
 import Client.Views.GroupChatList;
 import Client.Views.LoginList;
+
+import Client.Views.User;
 import Entity.Packet;
 
 public class Controller {
