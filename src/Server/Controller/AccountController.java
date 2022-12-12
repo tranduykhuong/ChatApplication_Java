@@ -73,6 +73,7 @@ public class AccountController extends AccountModel {
 		CollectionAccount().insertOne(document);
 		System.out.println("successful");
 	}
+
 	
 	public ArrayList<String> read() {
 		MongoCursor<Document> document = CollectionAccount().find().iterator();
