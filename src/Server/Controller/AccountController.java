@@ -12,7 +12,9 @@ import java.util.List;
 
 import org.bson.Document;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.Filters;
 
 import Server.Models.AccountModel;
 
@@ -37,18 +39,138 @@ public class AccountController extends AccountModel {
 		System.out.println("successful");
 	}
 
-	public void read() {
+	public void createAccount(String id, String userName, String fullName, String password, String dob, boolean gender,
+			String address, String email) {
 
+		ArrayList<String> listFriend = new ArrayList<String>();
+		ArrayList<String> listRoom = new ArrayList<String>();
+		ArrayList<String> listMessage = new ArrayList<String>();
+		ArrayList<String> historyLogin = new ArrayList<String>();
+		// boy -> gender :0
+		// girl -> gender : 1
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Date date = new Date();
+
+		Document document = new Document("id", id).append("userName", userName).append("fullName", fullName).append("password", password)
+				.append("dob", dob).append("gender", gender).append("address", address).append("email", email)
+				.append("listFriend", listFriend).append("listRoom", listRoom).append("listMessage", listMessage)
+				.append("createTime", formatter.format(date)).append("active", 1).append("historyLogin", historyLogin);
+		CollectionAccount().insertOne(document);
+		System.out.println("successful");
+	}
+	
+	public ArrayList<String> read() {
 		MongoCursor<Document> document = CollectionAccount().find().iterator();
-
-		try {
-			while (document.hasNext()) {
-				System.out.println(document.next().toJson());
-			}
-		} finally {
-			document.close();
-		}
-//		System.out.print("Successfull");
+		ArrayList<String> listData = new ArrayList<String>();
+        try {
+         while (document.hasNext()) {
+        	 Document doc= document.next();
+        	 listData.add((String) doc.get("userName"));
+        	 listData.add((String) doc.get("fullName"));
+        	 listData.add((String) doc.get("address"));
+        	 listData.add((String) doc.get("dob"));
+        	 listData.add((String) doc.get("gender").toString());
+        	 listData.add((String) doc.get("email"));
+         }
+     } finally {
+     	document.close();
+     }
+        
+      return listData;
+	}
+	
+	public ArrayList<String> FilterByName(int status) {
+		List<Document> document = CollectionAccount().find().sort(new BasicDBObject("userName".substring("userName".lastIndexOf("|") + 1), status)).into(new ArrayList<>());
+		ArrayList<String> listData = new ArrayList<String>();
+        try {
+        	for (Document e : document) {
+        	 listData.add((String) e.get("userName"));
+           	 listData.add((String) e.get("fullName"));
+           	 listData.add((String) e.get("address"));
+           	 listData.add((String) e.get("dob"));
+           	 listData.add((String) e.get("gender").toString());
+           	 listData.add((String) e.get("email"));
+        	}
+     } finally {}
+      return listData;
+	}
+	
+	public ArrayList<String> FilterByDate(int status) {
+		List<Document> document = CollectionAccount().find().sort(new BasicDBObject("createTime", status)).into(new ArrayList<>());
+		ArrayList<String> listData = new ArrayList<String>();
+        try {
+        	for (Document e : document) {
+        	 listData.add((String) e.get("userName"));
+           	 listData.add((String) e.get("fullName"));
+           	 listData.add((String) e.get("address"));
+           	 listData.add((String) e.get("dob"));
+           	 listData.add((String) e.get("gender").toString());
+           	 listData.add((String) e.get("email"));
+        	}
+     } finally {}
+      return listData;
+	}
+	
+	public ArrayList<String> SearchByName(String userName) {
+   	 	MongoCursor<Document> document = CollectionAccount().find(Filters.or(Filters.regex("fullName", userName),Filters.regex("userName", userName))).iterator();
+   	 	ArrayList<String> listData = new ArrayList<String>();
+	        try {
+            while (document.hasNext()) {
+           	 Document doc= document.next();
+           	listData.add((String) doc.get("userName"));
+       	    listData.add((String) doc.get("fullName"));
+       	    listData.add((String) doc.get("address"));
+       	    listData.add((String) doc.get("dob"));
+       	    listData.add((String) doc.get("gender").toString());
+       	    listData.add((String) doc.get("email"));
+            }
+        } finally {
+        	document.close();
+        }
+	        System.out.print(listData);
+	      return listData;
+	}
+	
+	public ArrayList<String> SearchByID(String id) {
+		Document filterDoc = new Document();
+    	filterDoc.append("id", id);
+   	 	MongoCursor<Document> document = CollectionAccount().find(filterDoc).iterator();
+   	 	ArrayList<String> listData = new ArrayList<String>();
+	        try {
+            while (document.hasNext()) {
+           	 Document doc= document.next();
+       	    listData.add((String) doc.get("fullName"));
+            }
+        } finally {
+        	document.close();
+        }
+	      return listData;
+	}
+	
+	public ArrayList<String> FindID(String userName, String fullName, String address, String email) {
+		Document filterDoc = new Document();
+    	filterDoc.append("userName", userName).append("fullName", fullName).append("address", address).append("email", email);
+   	 	MongoCursor<Document> document = CollectionAccount().find(filterDoc).iterator();
+   	 	ArrayList<String> listData = new ArrayList<String>();
+	        try {
+            while (document.hasNext()) 
+            {
+           	 Document doc= document.next();
+           	 listData.add((String) doc.get("id"));
+           	 listData.add((String) doc.get("active").toString());
+           	 listData.add((String) doc.get("userName"));
+       	     listData.add((String) doc.get("fullName"));
+       	     listData.add((String) doc.get("address"));
+       	     listData.add((String) doc.get("dob"));
+       	     listData.add((String) doc.get("gender").toString());
+       	     listData.add((String) doc.get("email"));
+       	     listData.add((String) doc.get("listFriend").toString());
+        	 listData.add((String) doc.get("historyLogin").toString());
+            }
+        } finally {
+        	document.close();
+        }
+	      return listData;
 	}
 	
 	public ArrayList<String> listHistoryLogin() {
@@ -113,9 +235,27 @@ public class AccountController extends AccountModel {
 		CollectionAccount().updateOne(eq("_id", "23"), combine(set("name", "23")));
 		System.out.println("successful");
 	}
+	
+	public void blockAccount(String id, int active) {
+		CollectionAccount().updateOne(
+                eq("id", id),
+                combine(set("active", active))
+                );
+    }
+	
+	public void updateAccount(String id, String userName, String fullName, String dob, boolean gender, String address, String email) {
+		CollectionAccount().updateOne(
+                eq("id", id),
+                combine(set("userName", userName), set("fullName", fullName), set("dob", dob), set("address", address), set("gender", gender), set("email", email))
+                );
+    }
 
 	public void delete(String id) {
 		CollectionAccount().deleteMany(eq("_id", id));
 	}
 
+	
+	public void removeAccount(String id) {
+		CollectionAccount().deleteMany(eq("id", id));
+	}
 }

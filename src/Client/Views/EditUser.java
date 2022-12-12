@@ -6,20 +6,35 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
+import java.text.SimpleDateFormat;
 import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 import com.toedter.calendar.JDateChooser;
 
-public class EditUser extends JFrame {
+import Client.Controller;
+import Entity.Packet;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class EditUser extends JFrame {
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
+	private JTextField nameFd;
+	private JTextField fnameFd;
+	private JTextField addFd;
+	private JTextField emailFd;
+	private JRadioButton namFd;
+	private JRadioButton nuFd;
+	private JDateChooser dateFd;
+	private boolean flagGender;
 
 	/**
 	 * Launch the application.
@@ -28,7 +43,7 @@ public class EditUser extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					EditUser frame = new EditUser();
+					EditUser frame = new EditUser("", "", "", true, null, "", "");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,108 +52,170 @@ public class EditUser extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	public EditUser() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public EditUser(String id, String userName, String fullName, boolean gender, java.util.Date date, String address,
+			String email) {
+		setTitle("Update Account");
+		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 471, 463);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JLabel lblCpNhtNgi = new JLabel("Cập nhật người dùng");
 		lblCpNhtNgi.setBounds(164, 10, 140, 16);
 		lblCpNhtNgi.setForeground(new Color(30, 113, 225));
 		lblCpNhtNgi.setFont(new Font("Tahoma", Font.BOLD, 13));
 		contentPane.add(lblCpNhtNgi);
-		
+
 		JButton btnBack = new JButton("Trở về");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+			}
+		});
 		btnBack.setForeground(new Color(1, 128, 254));
 		btnBack.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnBack.setBounds(10, 5, 89, 21);
 		contentPane.add(btnBack);
-		
+
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(10, 51, 437, 365);
 		contentPane.add(panel);
-		
+
 		JLabel lblNewLabel_1 = new JLabel("Tên người dùng:");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel_1.setBounds(30, 29, 106, 13);
 		panel.add(lblNewLabel_1);
-		
-		textField = new JTextField();
-		textField.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		textField.setColumns(10);
-		textField.setBounds(147, 24, 253, 22);
-		panel.add(textField);
-		
+
+		nameFd = new JTextField();
+		nameFd.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		nameFd.setColumns(10);
+		nameFd.setBounds(147, 24, 253, 22);
+		panel.add(nameFd);
+
 		JLabel lblNewLabel_1_1 = new JLabel("Họ tên:");
 		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel_1_1.setBounds(30, 71, 106, 13);
 		panel.add(lblNewLabel_1_1);
-		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		textField_1.setColumns(10);
-		textField_1.setBounds(147, 66, 253, 22);
-		panel.add(textField_1);
-		
+
+		fnameFd = new JTextField();
+		fnameFd.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		fnameFd.setColumns(10);
+		fnameFd.setBounds(147, 66, 253, 22);
+		panel.add(fnameFd);
+
 		JLabel lblNewLabel_1_1_1 = new JLabel("Địa chỉ:");
 		lblNewLabel_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel_1_1_1.setBounds(30, 113, 106, 13);
 		panel.add(lblNewLabel_1_1_1);
-		
+
 		JLabel lblNewLabel_1_1_2 = new JLabel("Ngày sinh:");
 		lblNewLabel_1_1_2.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel_1_1_2.setBounds(30, 155, 106, 13);
 		panel.add(lblNewLabel_1_1_2);
-		
+
 		JLabel lblNewLabel_1_1_3 = new JLabel("Giới tính:");
 		lblNewLabel_1_1_3.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel_1_1_3.setBounds(30, 197, 106, 13);
 		panel.add(lblNewLabel_1_1_3);
-		
+
 		JLabel lblNewLabel_1_1_4 = new JLabel("Email:");
 		lblNewLabel_1_1_4.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel_1_1_4.setBounds(30, 239, 106, 13);
 		panel.add(lblNewLabel_1_1_4);
-		
-		textField_2 = new JTextField();
-		textField_2.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		textField_2.setColumns(10);
-		textField_2.setBounds(147, 108, 253, 22);
-		panel.add(textField_2);
-		
-		textField_3 = new JTextField();
-		textField_3.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		textField_3.setColumns(10);
-		textField_3.setBounds(147, 234, 253, 22);
-		panel.add(textField_3);
-		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("Nam");
-		rdbtnNewRadioButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		rdbtnNewRadioButton.setBounds(148, 194, 103, 21);
-		panel.add(rdbtnNewRadioButton);
-		
-		JRadioButton rdbtnN = new JRadioButton("Nữ");
-		rdbtnN.setFont(new Font("Tahoma", Font.BOLD, 13));
-		rdbtnN.setBounds(297, 194, 103, 21);
-		panel.add(rdbtnN);
-		
-		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(147, 155, 253, 19);
-		panel.add(dateChooser);
-		
+
+		addFd = new JTextField();
+		addFd.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		addFd.setColumns(10);
+		addFd.setBounds(147, 108, 253, 22);
+		panel.add(addFd);
+
+		emailFd = new JTextField();
+		emailFd.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		emailFd.setColumns(10);
+		emailFd.setBounds(147, 234, 253, 22);
+		panel.add(emailFd);
+
+		namFd = new JRadioButton("Nam");
+		namFd.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				namFd.setSelected(true);
+				nuFd.setSelected(false);
+			}
+		});
+		namFd.setFont(new Font("Tahoma", Font.BOLD, 13));
+		namFd.setBounds(148, 194, 103, 21);
+		panel.add(namFd);
+
+		nuFd = new JRadioButton("Nữ");
+		nuFd.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				nuFd.setSelected(true);
+				namFd.setSelected(false);
+			}
+		});
+		nuFd.setFont(new Font("Tahoma", Font.BOLD, 13));
+		nuFd.setBounds(297, 194, 103, 21);
+		panel.add(nuFd);
+
+		dateFd = new JDateChooser();
+		dateFd.setBounds(147, 155, 253, 19);
+		panel.add(dateFd);
+
 		JButton btnLuThayi = new JButton("Lưu thay đổi");
+		btnLuThayi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				UpdateInfor(id);
+			}
+		});
 		btnLuThayi.setForeground(new Color(1, 128, 254));
 		btnLuThayi.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnLuThayi.setBounds(147, 320, 155, 21);
 		panel.add(btnLuThayi);
+
+		showCurrentInfor(userName, fullName, gender, date, address, email);
+	}
+
+	public void showCurrentInfor(String userName, String fullName, boolean gender, java.util.Date date, String address,
+			String email) {
+
+		nameFd.setText(userName);
+		fnameFd.setText(fullName);
+		addFd.setText(address);
+		dateFd.setDate(date);
+		emailFd.setText(email);
+
+		if (gender == false) {
+			namFd.setSelected(true);
+			nuFd.setSelected(false);
+			flagGender = false;
+		} else {
+			namFd.setSelected(false);
+			nuFd.setSelected(true);
+			flagGender = true;
+		}
+	}
+
+	public void UpdateInfor(String id) {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		String strDate = formatter.format(dateFd.getDate());
+
+		int response = JOptionPane.showConfirmDialog(this, "Are you sure to update this account?", "Update Account",
+				JOptionPane.YES_NO_OPTION);
+		if (response == JOptionPane.YES_OPTION) {
+
+		System.out.print(nameFd.getText() + " " + fnameFd.getText() + " " + flagGender + " " + addFd.getText() + " "
+					+ emailFd.getText());
+
+		Controller.getInstance().sendTextMessage(new Packet("updateAccount",id + ", " + nameFd.getText() + ", " + fnameFd.getText() + ", " + strDate + ", " + flagGender + ", " + addFd.getText() + ", " + emailFd.getText(), "").toString());
+		Controller.getInstance().sendTextMessage(new Packet("showAll", "", "").toString());
+		setVisible(false);
+		} 
 	}
 }
