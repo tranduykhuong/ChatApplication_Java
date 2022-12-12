@@ -2,6 +2,9 @@ package Client.Views;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +26,13 @@ import com.toedter.calendar.JDateChooser;
 
 import Client.Controller;
 import Entity.Packet;
+
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.UUID;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class AddUser extends JFrame {
 	private static final long serialVersionUID = 1L;

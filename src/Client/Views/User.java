@@ -80,6 +80,7 @@ public class User extends JFrame {
 		panel_2.setBackground(Color.WHITE);
 		panel_2.setBounds(28, 10, 455, 271);
 		panel.add(panel_2);
+
 		JLabel lblNewLabel_1 = new JLabel("Tên người dùng:");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel_1.setBounds(30, 29, 106, 13);
@@ -112,6 +113,7 @@ public class User extends JFrame {
 		lblNewLabel_1_1_2.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel_1_1_2.setBounds(30, 155, 106, 13);
 		panel_2.add(lblNewLabel_1_1_2);
+
 		JLabel lblNewLabel_1_1_3 = new JLabel("Giới tính:");
 		lblNewLabel_1_1_3.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel_1_1_3.setBounds(30, 197, 106, 13);
