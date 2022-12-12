@@ -72,5 +72,15 @@ public class HomeScreen extends JFrame {
 		});
 		btnNewButton_3.setBounds(322, 192, 101, 23);
 		contentPane.add(btnNewButton_3);
+
+		JButton btnNewButton_4 = new JButton("New button");
+		btnNewButton_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ClientApp.MNUserList.run();
+				ClientApp.MNUserList.setVisible(true);
+			}
+		});
+		btnNewButton_4.setBounds(10, 193, 85, 21);
+		contentPane.add(btnNewButton_4);
 	}
 }
