@@ -12,6 +12,8 @@ import javax.xml.crypto.Data;
 
 import Client.Views.GroupChatList;
 import Client.Views.LoginList;
+
+import Client.Views.User;
 import Entity.Packet;
 
 public class Controller {
@@ -21,6 +23,9 @@ public class Controller {
 	private int port;
 	private Boolean running;
 	private GroupChatList groupChatLists = new GroupChatList();
+	private User userframe;
+	
+	private String data;
 
 	private Controller() {
 		client = new TCP_Client();
@@ -64,18 +69,72 @@ public class Controller {
 				Packet pk = new Packet(msg);
 				String header = pk.getHeader();
 
-				System.out.println("Header client recive: " + header);
+				System.out.println("Header client receive: " + header);
 				switch (header) {
 				case "filterList": {
+					data = pk.getData();
+					String replace1 = data.substring(1, data.lastIndexOf("]"));
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					ClientApp.MNUserList.showInfor(myList);
 					break;
 				}
+				case "showAll": {
+					data = pk.getData();
+					String replace1 = data.substring(1, data.lastIndexOf("]"));
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					System.out.println("List packet display:" + myList);
+					ClientApp.MNUserList.showInfor(myList);
+					break;
+				}
+				case "orderName":{
+					data = pk.getData();
+					String replace1 = data.substring(1, data.lastIndexOf("]"));
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					ClientApp.MNUserList.showInfor(myList);
+					break;
+				}
+				case "orderCreateDate":{
+					data = pk.getData();
+					String replace1 = data.substring(1, data.lastIndexOf("]"));
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					ClientApp.MNUserList.showInfor(myList);
+					break;
+				}
+				case "showDetail": {
+					data = pk.getData();
+					String replace1 = data.substring(1, data.lastIndexOf("]"));
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+
+					String id = myList.get(0);
+					String active = myList.get(1);
+					String usname = myList.get(2);
+					String fname = myList.get(3);
+					String addr = myList.get(4);
+					String dob = myList.get(5);
+					String gender = myList.get(6);
+					String email = myList.get(7);
+					
+					String tmpKo = data.substring(1, data.lastIndexOf("]"));
+					String tmp = tmpKo.substring(tmpKo.indexOf("[", tmpKo.indexOf("[")) + 1, tmpKo.lastIndexOf("]"));
+					String tmp1 = tmp.substring(tmp.indexOf("[") + 1, tmp.length());
+					String listFriend = tmp1.substring(tmp1.indexOf("[") + 1, tmp1.length());
+					
+					String historyLg = tmp1.substring(0, tmp1.indexOf("]"));
+					
+					userframe = new User(id, usname, fname, addr, dob, gender, email);
+					userframe.setVisible(true);
+					userframe.showInformation(active, usname, fname, addr, dob, gender, email, listFriend, historyLg);
+				}
 				case "addAccount": {
+					data = pk.getData();
 					break;
 				}
 				case "updateAccount": {
+					data = pk.getData();
 					break;
 				}
 				case "removeAccount": {
+					data = pk.getData();
 					break;
 				}
 				case "lockAccount": {

@@ -2,6 +2,8 @@ package Server.Controller;
 
 import java.awt.image.RescaleOp;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class InterfaceAPI {
@@ -13,6 +15,7 @@ public class InterfaceAPI {
 			String name, String dob, boolean gender, String address, String email) {
 		String id = UUID.randomUUID().toString();
 		accountApi.create(id, fullName,userName, password, dob, gender, address, email);
+		accountApi.createAccount(id, userName, password, name, dob, gender, address, email);
 
 		return id;
 	}
@@ -24,6 +27,21 @@ public class InterfaceAPI {
 				  dob, gender, address, email ) ;
 	}
 
+	public ArrayList<String> updateUser(String id, String userName, String fullName, String dob, String gender, String address, String email) {
+		boolean mainGD;
+		ArrayList<String> res = new ArrayList<String>();
+		if (gender.equals("false"))
+		{
+			mainGD = false;
+		}
+		else
+		{
+			mainGD = true;
+		}
+		accountApi.updateAccount(id, userName, fullName, dob, mainGD, address, email);
+		res.add(id); res.add(userName); res.add(fullName); res.add(dob); res.add(gender); res.add(address); res.add(email);
+		return res;
+	}
 	//
 	public void createRoom(String name, String idUser) {
 		String idRoom = UUID.randomUUID().toString();
@@ -145,4 +163,79 @@ public class InterfaceAPI {
 		}
 		return listAdminInGroup;
 	}
+	public void addAccountSc(String id, String userName, String fullName, String password, String address, String dob, String gd, String email) {
+		boolean mainGD;
+		if (gd.equals("false"))
+		{
+			mainGD = false;
+		}
+		else
+		{
+			mainGD = true;
+		}
+		accountApi.createAccount(id, userName, fullName, password, dob, mainGD, address, email);
+	}
+	
+	public void blockAccount(String userName, String fullName, String address, String email, String active) {
+		int status;
+		if(active.equals("0")) {
+			status = 0;
+		}
+		else {
+			status = 1;
+		}
+		ArrayList<String> res = new ArrayList<String>();
+		res = accountApi.FindID(userName, fullName, address, email);
+		String id = res.get(0);
+		accountApi.blockAccount(id, status);
+	}
+	
+	public void deleteAccount(String userName, String fullName, String address, String email) {
+		ArrayList<String> res = new ArrayList<String>();
+		res = accountApi.FindID(userName, fullName, address, email);
+		String id = res.get(0);
+		accountApi.removeAccount(id);
+	}
+	
+	public ArrayList<String> Filter(String key, String data, int status) {
+		ArrayList<String> res = new ArrayList<String>();
+		switch (key) {
+		case "searchByName":
+			res = accountApi.SearchByName(data);
+			break;
+			
+		case "orderbyName":
+			res = accountApi.FilterByName(status);
+			break;
+			
+		case "orderbyCreateDay":
+			res = accountApi.FilterByDate(status);
+			break;
+			
+		case "showAllInf":
+			res = accountApi.read();
+			break;
+
+		default:
+			break;
+		}
+		return res;
+	}
+	
+	public ArrayList<String> showDetailAccount(String us, String fn, String addr, String em) {
+		ArrayList<String> res = new ArrayList<String>();
+		ArrayList<String> finalRes = new ArrayList<String>();
+		res = accountApi.FindID(us, fn, addr, em);
+		String listid = res.get(8);
+		String listfriend = listid.substring(1, listid.length() - 1);
+		List<String> ListFriend = new ArrayList<String>(Arrays.asList(listfriend.split(", ")));
+		for(int i = 0; i <ListFriend.size();i++) {
+			finalRes.add(accountApi.SearchByID(ListFriend.get(i)).toString().substring(1, accountApi.SearchByID(ListFriend.get(i)).toString().length()-1 ));
+		}
+		
+		res.add(finalRes.toString());
+		
+		return res;
+	}
+	
 }
