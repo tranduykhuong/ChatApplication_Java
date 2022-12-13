@@ -21,6 +21,10 @@ import Client.Views.LoginScreen;
 import Client.Views.ManageUsersList;
 import Client.Views.RegisterScreen;
 import Client.Views.User;
+import javax.xml.crypto.Data;
+
+import Client.Views.GroupChatList;
+import Client.Views.LoginList;
 import Entity.Packet;
 
 public class Controller {
@@ -288,7 +292,6 @@ public class Controller {
 					for (int i = 0; i < infoGroup.length; i++) {
 						nameGroupSorted.add(infoGroup[i]);
 					}
-
 					System.out.println("Before sorted: " + nameGroupSorted);
 //					Collections.sort(nameGroupSorted);
 					Collections.sort(nameGroupSorted, Collator.getInstance());

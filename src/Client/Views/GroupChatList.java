@@ -125,6 +125,7 @@ public class GroupChatList extends JFrame {
 				new TitledBorder(null, "T\u00EAn nh\u00F3m chat", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.add(pnGroupName);
 		pnGroupName.setLayout(null);
+		
 		listGroupChat = new JList<String>();
 		listGroupChat.addMouseListener(new MouseAdapter() {
 			@Override

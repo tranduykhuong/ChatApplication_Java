@@ -97,7 +97,6 @@ public class LoginList extends JFrame {
 				setVisible(false);
 			}
 		});
-
 		
 		btnBack.setForeground(new Color(1, 128, 254));
 		btnBack.setFont(new Font("Tahoma", Font.BOLD, 13));

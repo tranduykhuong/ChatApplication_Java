@@ -1,8 +1,13 @@
 package Server.Controller;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+=======
+import java.awt.image.RescaleOp;
+import java.util.ArrayList;
+>>>>>>> 85ff174 (Done task part 23)
 import java.util.UUID;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -17,8 +22,12 @@ public class InterfaceAPI {
 	public String createAccount(String fullName, String userName, String password, String name, String dob,
 			boolean gender, String address, String email) {
 		String id = UUID.randomUUID().toString();
+<<<<<<< HEAD
 		accountApi.createAccount(id, userName, password, name, dob, gender, address, email);
 
+=======
+		accountApi.create(id, userName, password, name, dob, gender, address, email);
+>>>>>>> 85ff174 (Done task part 23)
 		return id;
 	}
 
@@ -654,5 +663,61 @@ public class InterfaceAPI {
 		}
 
 		return dataMessage;
+	}
+	
+	public ArrayList<String> showHistoryLogin() {
+		ArrayList<String> res = new ArrayList<String>();
+		res = accountApi.listHistoryLogin();
+		return res;
+	}
+	
+	public ArrayList<String> showGroupChatList() {
+		ArrayList<String> res = new ArrayList<>();
+		res = roomApi.listGroupChat();
+		return res;
+	}
+	
+	public ArrayList<String> showGroupChatListToSort() {
+		ArrayList<String> res = new ArrayList<>();
+		res = roomApi.sortByGroupName();
+		return res;
+	} 
+	
+	public ArrayList<String> showGroupChatListByCreateDate() {
+		ArrayList<String> res = new ArrayList<>();
+		res = roomApi.sortByCreateDateGroup();
+		return res;
+	} 
+	public ArrayList<String> showMemberGroup(String groupName) {
+		ArrayList<String> res = new ArrayList<>();
+		ArrayList<String> listMemberInGroup = new ArrayList<>();
+		res = roomApi.listMember(groupName);
+		String idMemberString = res.toString();
+
+		String str = idMemberString.substring(2, idMemberString.length() - 2);
+
+		String[] idMember = str.split(", ");
+		for(int i = 0; i < idMember.length; i++) {
+			ArrayList<String> findName = new ArrayList<>();
+//			System.out.println("Member " + idMember[i]);
+			findName = accountApi.listAdminGroupChat(idMember[i]);
+			listMemberInGroup.add(findName.get(0));
+		}
+		return listMemberInGroup;
+	}
+	
+	public ArrayList<String> showAdminGroup(String groupName) {
+		ArrayList<String> res = new ArrayList<>();
+		ArrayList<String> listAdminInGroup = new ArrayList<>();
+		res = roomApi.listAdmin(groupName);
+		String idAdminString = res.toString();
+		String str = idAdminString.substring(2, idAdminString.length() - 2);
+		String[] idAdmin = str.split(", ");
+		for(int i = 0; i < idAdmin.length; i++) {
+			ArrayList<String> findName = new ArrayList<>();
+			findName = accountApi.listAdminGroupChat(idAdmin[i]);
+			listAdminInGroup.add(findName.get(0));
+		}
+		return listAdminInGroup;
 	}
 }
