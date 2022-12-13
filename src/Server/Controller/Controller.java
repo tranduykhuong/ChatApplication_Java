@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 import Entity.Packet;
 import Server.ServerApp;
@@ -11,6 +12,7 @@ import Server.Models.ClientSocket;
 
 public class Controller extends Thread {
 	ClientSocket thisClient;
+	InterfaceAPI api = new InterfaceAPI();
 
 	public Controller(Socket clientSocket) {
 		try {
@@ -70,9 +72,35 @@ public class Controller extends Thread {
 					break;
 				}
 				case "listLoginTime": {
+					String dataString = api.showHistoryLogin().toString();
+					thisClient.sendString(new Packet("listLoginTime", dataString, "").toString());
 					break;
 				}
 				case "listGroupChat": {
+					String dataString = api.showGroupChatList().toString();
+					thisClient.sendString(new Packet("listGroupChat", dataString, "").toString());
+					break;
+				}
+				case "showMemberList": {
+					String data = pk.getData();
+					String dataString = api.showMemberGroup(data).toString();
+					thisClient.sendString(new Packet("showMemberList", dataString, "").toString());
+					break;
+				}
+				case "showAdminList": {
+					String data = pk.getData();
+					String dataString = api.showAdminGroup(data).toString();
+					thisClient.sendString(new Packet("showAdminList", dataString, "").toString());
+					break;
+				}
+				case "sortByGroupName": {
+					String dataString = api.showGroupChatListToSort().toString();
+					thisClient.sendString(new Packet("sortByGroupName", dataString, "").toString());
+					break;
+				}
+				case "sortByCreateDate": {
+					String dataString = api.showGroupChatListByCreateDate().toString();
+					thisClient.sendString(new Packet("sortByCreateDate", dataString, "").toString());
 					break;
 				}
 				case "signUp": {

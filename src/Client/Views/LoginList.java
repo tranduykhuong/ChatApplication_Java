@@ -9,29 +9,34 @@ import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.event.ActionListener;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import java.awt.GridLayout;
-import javax.swing.JList;
-import javax.swing.AbstractListModel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import org.bson.Document;
+
+import Client.Controller;
+import Entity.Packet;
+import Server.Controller.AccountController;
 
 public class LoginList extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
+	private AccountController account = new AccountController();
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					AccountController b = new AccountController();
+					b.listHistoryLogin();
 					LoginList frame = new LoginList();
 					frame.setVisible(true);
 					frame.setTitle("Login List");
@@ -53,44 +58,58 @@ public class LoginList extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(10, 73, 706, 427);
 		contentPane.add(panel);
 		panel.setLayout(null);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 10, 686, 407);
 		panel.add(scrollPane);
-		
+
 		table = new JTable();
 		table.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		scrollPane.setViewportView(table);
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"02/03/2222", "TDK", "Trần Duy Khương"},
-				{"02/03/2222", "TDK", "Trần Duy Khương"},
-			},
-			new String[] {
-				"Thời gian", "Tên Đăng Nhập", "Họ Tên"
-			}
-		));
-		
+		table.setModel(new DefaultTableModel(new Object[][] { { null, null, null },
+
+		}, new String[] { "Thời Gian", "Tên Đăng Nhập", "Họ Tên", }));
+
 		JButton btnBack = new JButton("Trở về");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				new ManageUsersList().setVisible(true);
+				setVisible(false);
 			}
 		});
+		
 		btnBack.setForeground(new Color(1, 128, 254));
 		btnBack.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnBack.setBounds(10, 10, 89, 21);
 		contentPane.add(btnBack);
-		
+
 		JLabel lbLoginList = new JLabel("Danh sách đăng nhập");
 		lbLoginList.setForeground(new Color(31, 128, 224));
 		lbLoginList.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lbLoginList.setBounds(296, 9, 158, 20);
 		contentPane.add(lbLoginList);
+	}
+
+	public static String removeFirstandLast(String str) {
+		str = str.substring(1, str.length() - 1);
+		return str;
+	}
+
+	public void showHistoryLoginList(List<String> listUserLogin) {
+		List<String> sortedList = new ArrayList<>();
+		DefaultTableModel tableModel;
+		table.getModel();
+		tableModel = (DefaultTableModel) table.getModel();
+		tableModel.setRowCount(0);
+		for (int i = 0; i < listUserLogin.size(); i = i + 3) {
+			tableModel
+					.addRow(new Object[] { listUserLogin.get(i + 2), listUserLogin.get(i), listUserLogin.get(i + 1) });
+		}
 	}
 }
