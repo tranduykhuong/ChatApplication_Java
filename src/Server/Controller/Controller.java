@@ -143,9 +143,35 @@ public class Controller extends Thread {
 					break;
 				}
 				case "listLoginTime": {
+					String dataString = api.showHistoryLogin().toString();
+					thisClient.sendString(new Packet("listLoginTime", dataString, "").toString());
 					break;
 				}
 				case "listGroupChat": {
+					String dataString = api.showGroupChatList().toString();
+					thisClient.sendString(new Packet("listGroupChat", dataString, "").toString());
+					break;
+				}
+				case "showMemberList": {
+					String data = pk.getData();
+					String dataString = api.showMemberGroup(data).toString();
+					thisClient.sendString(new Packet("showMemberList", dataString, "").toString());
+					break;
+				}
+				case "showAdminList": {
+					String data = pk.getData();
+					String dataString = api.showAdminGroup(data).toString();
+					thisClient.sendString(new Packet("showAdminList", dataString, "").toString());
+					break;
+				}
+				case "sortByGroupName": {
+					String dataString = api.showGroupChatListToSort().toString();
+					thisClient.sendString(new Packet("sortByGroupName", dataString, "").toString());
+					break;
+				}
+				case "sortByCreateDate": {
+					String dataString = api.showGroupChatListByCreateDate().toString();
+					thisClient.sendString(new Packet("sortByCreateDate", dataString, "").toString());
 					break;
 				}
 				case "signUp": {

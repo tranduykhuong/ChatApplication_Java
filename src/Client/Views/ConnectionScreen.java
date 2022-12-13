@@ -50,7 +50,6 @@ public class ConnectionScreen extends JFrame {
 		if (!checkValidation()) {
 			return;
 		}
-
 		var port = Integer.valueOf(portField.getText());
 
 		if (!Controller.getInstance().connect(ipField.getText(), port)) {

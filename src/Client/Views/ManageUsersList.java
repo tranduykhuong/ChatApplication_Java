@@ -17,6 +17,12 @@ import java.awt.SystemColor;
 import javax.swing.SwingConstants;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
@@ -26,6 +32,11 @@ import Client.Controller;
 import Entity.Packet;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import com.mongodb.internal.connection.tlschannel.NeedsWriteException;
+
+import Client.Controller;
+import Entity.Packet;
 
 public class ManageUsersList extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -210,7 +221,6 @@ public class ManageUsersList extends JFrame {
 		btnBack.setBounds(0, 0, 78, 19);
 		pnControl.add(btnBack);
 
-		
 		JButton btnXa = new JButton("Xóa");
 		btnXa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -229,6 +239,12 @@ public class ManageUsersList extends JFrame {
 		pnControl.add(btnSa_1);
 
 		JButton btnXemChiTit = new JButton("Quản lí đăng nhập");
+		btnXemChiTit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Controller.getInstance().sendTextMessage(new Packet("listLoginTime", "", "").toString());
+				setVisible(false);
+			}
+		});
 		btnXemChiTit.setForeground(new Color(1, 128, 254));
 		btnXemChiTit.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnXemChiTit.setBounds(589, 17, 171, 21);
@@ -246,10 +262,52 @@ public class ManageUsersList extends JFrame {
 		pnControl.add(btnLc);
 
 		JButton btnDanhSchNhm = new JButton("Quản lí nhóm chat");
+		btnDanhSchNhm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Controller.getInstance().sendTextMessage(new Packet("listGroupChat", "", "").toString());
+				setVisible(false);
+			}
+		});
 		btnDanhSchNhm.setForeground(new Color(1, 128, 254));
 		btnDanhSchNhm.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnDanhSchNhm.setBounds(771, 17, 171, 21);
 		pnControl.add(btnDanhSchNhm);
+		
+//		String str = "hello, 13/12/2022 01:54:32, alo, 13/12/2022 01:54:49, � nhon, 13/12/2022 01:55:07, 9h, 13/12/2022 10:34:13]";
+//		ArrayList<String> infoCreatedGroupSorted = new ArrayList<>();
+//		String[] infoGroupDate = str.split(", ");
+//		ArrayList<List<String>> listCreateDateGroup = new ArrayList<>();
+//		for(int i = 0; i < infoGroupDate.length; i++) {
+//			infoCreatedGroupSorted.add(infoGroupDate[i] + ", " + infoGroupDate[++i]);
+//		}
+//		
+//		for(int i = 0; i < infoCreatedGroupSorted.size();i++) {
+//			List<String> myList = new ArrayList<String>(Arrays.asList(infoCreatedGroupSorted.get(i).split(", ")));
+//			listCreateDateGroup.add(myList);
+//		}
+//		
+//		for (int i1 = 0; i1 < listCreateDateGroup.size() - 1; i1++) {
+//			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+//			String startDate = listCreateDateGroup.get(i1).get(1);
+//			String endDate = listCreateDateGroup.get(i1 + 1).get(1);
+////			System.out.println(listCreateDateGroup.get(i1));
+//			try {
+//				if (sdf.parse(startDate).after(sdf.parse(endDate))) {
+//					Collections.swap(listCreateDateGroup, i1, i1 + 1);
+//				}
+//			} catch (ParseException e1) {
+//				e1.printStackTrace();
+//			}
+//		}
+//		
+//		ArrayList<String> finalSortGroupList = new ArrayList<>();
+//		for(int i = 0; i < listCreateDateGroup.size(); i++) {
+//			finalSortGroupList.add(listCreateDateGroup.get(i).get(0));
+//			System.out.println(listCreateDateGroup.get(i));
+//		}
+//		for (int i = 0; i < finalSortGroupList.size(); i++) {
+//			System.out.println(finalSortGroupList.get(i));
+//		}
 	}
 
 	public void run() {

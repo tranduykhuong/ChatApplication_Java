@@ -12,12 +12,27 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import java.awt.GridLayout;
 import javax.swing.border.TitledBorder;
+
+import Client.Controller;
+import Entity.Packet;
+
 import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
+
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class GroupChatList extends JFrame {
 
 	private JPanel contentPane;
-
+	private JList<String> listGroupChat;
+	private JList<String> listMember;
+	private JList<String> listAdmin;
+	private String selectedString;
+	private int firstSelIx;
 	/**
 	 * Launch the application.
 	 */
@@ -58,12 +73,22 @@ public class GroupChatList extends JFrame {
 		pnControl.add(lbArrange);
 		
 		JButton btnSortName = new JButton("Tên");
+		btnSortName.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Controller.getInstance().sendTextMessage(new Packet("sortByGroupName", "", "").toString());
+			}
+		});
 		btnSortName.setForeground(new Color(1, 128, 254));
 		btnSortName.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnSortName.setBounds(120, 52, 75, 21);
 		pnControl.add(btnSortName);
 		
 		JButton btnSortDate = new JButton("Ngày tạo");
+		btnSortDate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Controller.getInstance().sendTextMessage(new Packet("sortByCreateDate", "", "").toString());
+			}
+		});
 		btnSortDate.setForeground(new Color(1, 128, 254));
 		btnSortDate.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnSortDate.setBounds(230, 52, 99, 21);
@@ -75,6 +100,12 @@ public class GroupChatList extends JFrame {
 		pnControl.add(lblDanhSchNhm);
 		
 		JButton btnBack = new JButton("Trở về");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ManageUsersList().setVisible(true);
+				setVisible(false);
+			}
+		});
 		btnBack.setForeground(new Color(1, 128, 254));
 		btnBack.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnBack.setBounds(0, 0, 87, 21);
@@ -90,17 +121,18 @@ public class GroupChatList extends JFrame {
 		panel.add(pnGroupName);
 		pnGroupName.setLayout(null);
 		
-		JList listGroupChat = new JList();
-		listGroupChat.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		listGroupChat.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Nhóm 1", "Nhóm 2", "Nhóm 3", "Nhóm 4"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
+		listGroupChat = new JList<String>();
+		listGroupChat.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				selectedString = listGroupChat.getSelectedValue().toString();
+//				firstSelIx = listGroupChat.getSelectedIndex();
+				Controller.getInstance().sendTextMessage(new Packet("showMemberList", selectedString, "").toString());
+				Controller.getInstance().sendTextMessage(new Packet("showAdminList", selectedString, "").toString());
+//				System.out.println(firstSelIx);
 			}
 		});
+		listGroupChat.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		listGroupChat.setBounds(10, 21, 249, 293);
 		pnGroupName.add(listGroupChat);
 		
@@ -109,16 +141,7 @@ public class GroupChatList extends JFrame {
 		panel.add(pnMemberList);
 		pnMemberList.setLayout(null);
 		
-		JList listMember = new JList();
-		listMember.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Chính ", "Khôi", "Khương", "Tấn", "Vinh"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
+		listMember = new JList<String>();
 		listMember.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		listMember.setBounds(10, 21, 249, 293);
 		pnMemberList.add(listMember);
@@ -128,18 +151,54 @@ public class GroupChatList extends JFrame {
 		panel.add(pnAdminList);
 		pnAdminList.setLayout(null);
 		
-		JList listAdmin = new JList();
-		listAdmin.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Khôi", "Vinh"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
+		listAdmin = new JList<String>();
 		listAdmin.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		listAdmin.setBounds(10, 21, 249, 293);
 		pnAdminList.add(listAdmin);
+	}
+	
+	public void showGroupChatList(List<String> groupChatList) {
+		DefaultListModel<String> listModel = new DefaultListModel<String>();
+		listGroupChat.setModel(listModel);
+		for (int i = 0; i < groupChatList.size(); i= i+2) {
+			listModel.addElement(groupChatList.get(i)); // + " " + groupChatList.get(i + 1)
+		}
+		System.out.println(groupChatList);
+	}
+	
+	public void showGroupChatListSortedByName(List<String> groupChatList) {
+		DefaultListModel<String> listModel = new DefaultListModel<String>();
+		listGroupChat.setModel(listModel);
+		for (int i = 0; i < groupChatList.size(); i++) {
+			listModel.addElement(groupChatList.get(i)); 
+		}
+		System.out.println(groupChatList);
+	}
+	
+	public void showGroupChatListSortedByCreateDate(List<String> groupChatList) {
+		DefaultListModel<String> listModel = new DefaultListModel<String>();
+		listGroupChat.setModel(listModel);
+		for (int i = 0; i < groupChatList.size(); i++) {
+			listModel.addElement(groupChatList.get(i)); 
+		}
+		System.out.println(groupChatList);
+	}
+	
+	public void showMemberList(List<String> userList) {
+		DefaultListModel<String> listModel = new DefaultListModel<String>();
+		listMember.setModel(listModel);
+		for (int i = 0; i < userList.size(); i++) {
+			listModel.addElement(userList.get(i)); 
+		}
+		System.out.println(userList);
+	}
+	
+	public void showAdminList(List<String> adminList) {
+		DefaultListModel<String> listModel = new DefaultListModel<String>();
+		listAdmin.setModel(listModel);
+		for (int i = 0; i < adminList.size(); i++) {
+			listModel.addElement(adminList.get(i)); // + " " + groupChatList.get(i + 1)
+		}
+		System.out.println(adminList);
 	}
 }
