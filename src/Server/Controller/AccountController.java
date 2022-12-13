@@ -94,6 +94,57 @@ public class AccountController extends AccountModel {
 
 		return listData;
 	}
+	
+	public ArrayList<String> listHistoryLogin() {
+		MongoCursor<Document> documentCursor = CollectionAccount().find().iterator();
+		ArrayList<String> dataArrayList = new ArrayList<>();
+		try {
+			while (documentCursor.hasNext()) {
+				Document nextDocument = documentCursor.next();
+				if (!"[]".equals(nextDocument.get("historyLogin").toString())) {
+					dataArrayList.add((String) nextDocument.get("userName"));
+					dataArrayList.add((String) nextDocument.get("fullName"));
+					dataArrayList.add((String) nextDocument.get("historyLogin").toString());
+				}
+			}
+		} finally {
+			documentCursor.close();
+		}
+		return dataArrayList;
+	}
+	
+	public ArrayList<String> listMemberGroupChat(String id) {
+		Document idMember = new Document();
+		idMember.append("id", id);
+		MongoCursor<Document> documentCursor = CollectionAccount().find(idMember).iterator();
+		ArrayList<String> dataMemberArrayList = new ArrayList<>();
+		try {
+			while (documentCursor.hasNext()) {
+				Document document = documentCursor.next();
+				dataMemberArrayList.add((String) document.get("userName"));
+			}
+		} finally {
+			documentCursor.close();
+		}
+		return dataMemberArrayList;
+	}
+	
+	public ArrayList<String> listAdminGroupChat(String id) {
+		Document idMember = new Document();
+		idMember.append("id", id);
+		MongoCursor<Document> documentCursor = CollectionAccount().find(idMember).iterator();
+		ArrayList<String> dataAdminArrayList = new ArrayList<>();
+		try {
+			while (documentCursor.hasNext()) {
+				Document document = (Document) documentCursor.next();
+				dataAdminArrayList.add((String) document.get("userName"));
+			}
+		} finally {
+			documentCursor.close();
+		}
+		return dataAdminArrayList;
+	}
+	
 
 	public String checkAccountExist(String userName) {
 		MongoCursor<Document> document = CollectionAccount().find(eq("userName", userName)).iterator();
@@ -237,57 +288,6 @@ public class AccountController extends AccountModel {
 			document.close();
 		}
 		return listData;
-	}
-
-	public ArrayList<String> listHistoryLogin() {
-		logger1.atLevel(org.slf4j.event.Level.ERROR);
-		MongoCursor<Document> documentCursor = CollectionAccount().find().iterator();
-		ArrayList<String> dataArrayList = new ArrayList<>();
-		try {
-			while (documentCursor.hasNext()) {
-				Document nextDocument = documentCursor.next();
-				if (!"[]".equals(nextDocument.get("historyLogin").toString())) {
-					dataArrayList.add((String) nextDocument.get("userName"));
-					dataArrayList.add((String) nextDocument.get("fullName"));
-					dataArrayList.add((String) nextDocument.get("historyLogin").toString());
-				}
-			}
-		} finally {
-			documentCursor.close();
-		}
-		return dataArrayList;
-	}
-
-	public ArrayList<String> listMemberGroupChat(String id) {
-		Document idMember = new Document();
-		idMember.append("id", id);
-		MongoCursor<Document> documentCursor = CollectionAccount().find(idMember).iterator();
-		ArrayList<String> dataMemberArrayList = new ArrayList<>();
-		try {
-			while (documentCursor.hasNext()) {
-				Document document = documentCursor.next();
-				dataMemberArrayList.add((String) document.get("userName"));
-			}
-		} finally {
-			documentCursor.close();
-		}
-		return dataMemberArrayList;
-	}
-
-	public ArrayList<String> listAdminGroupChat(String id) {
-		Document idMember = new Document();
-		idMember.append("id", id);
-		MongoCursor<Document> documentCursor = CollectionAccount().find(idMember).iterator();
-		ArrayList<String> dataAdminArrayList = new ArrayList<>();
-		try {
-			while (documentCursor.hasNext()) {
-				Document document = (Document) documentCursor.next();
-				dataAdminArrayList.add((String) document.get("userName"));
-			}
-		} finally {
-			documentCursor.close();
-		}
-		return dataAdminArrayList;
 	}
 	
 

@@ -45,16 +45,21 @@ import Server.Controller.AccountController;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.event.ActionListener;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import java.awt.GridLayout;
-import javax.swing.JList;
-import javax.swing.AbstractListModel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import org.bson.Document;
+
+import Client.Controller;
+import Entity.Packet;
+import Server.Controller.AccountController;
 
 public class LoginList extends JFrame {
 
@@ -100,7 +105,6 @@ public class LoginList extends JFrame {
 				setVisible(false);
 			}
 		});
-
 		btnBack.setForeground(new Color(1, 128, 254));
 		btnBack.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnBack.setBounds(10, 10, 89, 21);
@@ -119,20 +123,14 @@ public class LoginList extends JFrame {
 
 	public void showHistoryLoginList(List<String> listUserLogin) {
 		// List<String> sortedList = new ArrayList<>();
+		List<String> sortedList = new ArrayList<>();
 		DefaultTableModel tableModel;
 		table.getModel();
 		tableModel = (DefaultTableModel) table.getModel();
 		tableModel.setRowCount(0);
-
-		// for (int i = 0; i < listUserLogin.size(); i = i + 3) {
-		// tableModel
-		// .addRow(new Object[] { listUserLogin.get(i + 2), listUserLogin.get(i),
-		// listUserLogin.get(i + 1) });
-		// }
-
-		for (int i = listUserLogin.size() - 1; i >= 2; i = i - 3) {
+		for (int i = 0; i < listUserLogin.size(); i = i + 3) {
 			tableModel
-					.addRow(new Object[] { listUserLogin.get(i), listUserLogin.get(i - 2), listUserLogin.get(i - 1) });
+					.addRow(new Object[] { listUserLogin.get(i + 2), listUserLogin.get(i), listUserLogin.get(i + 1) });
 		}
 	}
 }
