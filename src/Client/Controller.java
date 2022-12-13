@@ -1,5 +1,17 @@
 package Client;
 
+import java.text.Collator;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import javax.xml.crypto.Data;
+
+import Client.Views.GroupChatList;
+import Client.Views.LoginList;
 import Entity.Packet;
 
 public class Controller {
@@ -8,6 +20,7 @@ public class Controller {
 	private String hostName;
 	private int port;
 	private Boolean running;
+	private GroupChatList groupChatLists = new GroupChatList();
 
 	private Controller() {
 		client = new TCP_Client();
@@ -75,9 +88,172 @@ public class Controller {
 					break;
 				}
 				case "listLoginTime": {
+					String dataString = pk.getData();
+					ArrayList<ArrayList<String>> historyLogin = new ArrayList<>();
+					ArrayList<List<String>> tmpHistoryLogin = new ArrayList<List<String>>();
+					ArrayList<String> historyLoginArrayList = new ArrayList<String>();
+					String str = dataString.substring(1, dataString.length() - 1);
+//					System.out.println(str);
+
+					String[] userList = str.split("\\], ");
+					userList[userList.length - 1] = userList[userList.length - 1].substring(0,
+							userList[userList.length - 1].length() - 1);
+					for (String user : userList) {
+						ArrayList<String> userInfo = new ArrayList<String>();
+						String[] temp = user.split(", \\[");
+						userInfo.add(temp[0].split(", ")[0]);
+						userInfo.add(temp[0].split(", ")[1]);
+						userInfo.add(temp[1]);
+						historyLogin.add(userInfo);
+					}
+					for (int i = 0; i < historyLogin.size(); i++) {
+						String usname = historyLogin.get(i).get(0);
+						String fname = historyLogin.get(i).get(1);
+
+						ArrayList<String> listLogin = new ArrayList<>();
+						ArrayList<String> finals = new ArrayList<>();
+
+						for (int j = 2; j < historyLogin.get(i).size(); j++) {
+
+							listLogin.add(historyLogin.get(i).get(j));
+							String history = historyLogin.get(i).get(j);
+							List<String> tmpLogin = new ArrayList<>(Arrays.asList(history.split(", ")));
+
+							for (int l = 0; l < tmpLogin.size(); l++) {
+								ArrayList<String> Detail = new ArrayList<>();
+								Detail.add(usname);
+								Detail.add(fname);
+								Detail.add(tmpLogin.get(l));
+								finals.add(Detail.toString().substring(1, (Detail.toString().length() - 1)));
+
+								List<String> tmpKo = new ArrayList<>(Arrays.asList(finals.get(l).split(", ")));
+								tmpHistoryLogin.add(tmpKo);
+							}
+						}
+					}
+					for (int i1 = 0; i1 < tmpHistoryLogin.size() - 1; i1++) {
+						SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+						String startDate = tmpHistoryLogin.get(i1).get(2);
+						String endDate = tmpHistoryLogin.get(i1 + 1).get(2);
+						System.out.println(tmpHistoryLogin.get(i1));
+						try {
+							if (sdf.parse(startDate).before(sdf.parse(endDate))) {
+								Collections.swap(tmpHistoryLogin, i1, i1 + 1);
+							}
+						} catch (ParseException e1) {
+							e1.printStackTrace();
+						}
+					}
+
+					for (int i = 0; i < tmpHistoryLogin.size(); i++) {
+						for (int j = 0; j < 3; j++) {
+							historyLoginArrayList.add(tmpHistoryLogin.get(i).get(j));
+						}
+					}
+//					System.out.println(historyLoginArrayList);
+					LoginList historyLoginList = new LoginList();
+					historyLoginList.showHistoryLoginList(historyLoginArrayList);
+					historyLoginList.setVisible(true);
 					break;
 				}
 				case "listGroupChat": {
+					String dataString = pk.getData();
+					String str = dataString.substring(1, dataString.length() - 1);
+					ArrayList<String> nameGroup = new ArrayList<>();
+					String[] infoGroup = str.split(", ");
+
+					for (int i = 0; i < infoGroup.length; i++) {
+//						System.out.println(infoGroup[i]);
+						nameGroup.add(infoGroup[i]);
+					}
+
+					groupChatLists.showGroupChatList(nameGroup);
+					groupChatLists.setVisible(true);
+					break;
+				}
+				case "showMemberList": {
+					String data = pk.getData();
+					String str = data.substring(1, data.length() - 1);
+					ArrayList<String> nameMemberList = new ArrayList<>();
+					String[] infoMember = str.split(", ");
+
+					for (int i = 0; i < infoMember.length; i++) {
+						nameMemberList.add(infoMember[i]);
+					}
+					groupChatLists.showMemberList(nameMemberList);
+					groupChatLists.setVisible(true);
+					break;
+				}
+				case "showAdminList": {
+					String data = pk.getData();
+					String str = data.substring(1, data.length() - 1);
+					ArrayList<String> nameAdminList = new ArrayList<>();
+					String[] infoAdmin = str.split(", ");
+
+					for (int i = 0; i < infoAdmin.length; i++) {
+						nameAdminList.add(infoAdmin[i]);
+					}
+					groupChatLists.showAdminList(nameAdminList);
+					groupChatLists.setVisible(true);
+					break;
+				}
+				case "sortByGroupName": {
+					String dataString = pk.getData();
+					String str = dataString.substring(1, dataString.length() - 1);
+					System.out.println("Vinh: " + str);
+					ArrayList<String> nameGroupSorted = new ArrayList<>();
+					String[] infoGroup = str.split(", ");
+
+					for (int i = 0; i < infoGroup.length; i++) {
+						nameGroupSorted.add(infoGroup[i]);
+					}
+					
+					System.out.println("Before sorted: " + nameGroupSorted);
+//					Collections.sort(nameGroupSorted);
+					Collections.sort(nameGroupSorted, Collator.getInstance());
+					System.out.println("After sorted: " + nameGroupSorted);
+					
+					for(int i = 0; i < nameGroupSorted.size(); i++) {
+						System.out.println(nameGroupSorted.get(i));
+					}
+					groupChatLists.showGroupChatListSortedByName(nameGroupSorted);
+					groupChatLists.setVisible(true);
+					break;
+				}
+				case "sortByCreateDate": {
+					String dataString = pk.getData();
+					String str = dataString.substring(1, dataString.length() - 1);
+					ArrayList<String> infoCreatedGroupSorted = new ArrayList<>();
+					ArrayList<String> finalSortGroupList = new ArrayList<>();
+					String[] infoGroupDate = str.split(", ");
+					ArrayList<List<String>> listCreateDateGroup = new ArrayList<>();
+					for(int i = 0; i < infoGroupDate.length; i++) {
+						infoCreatedGroupSorted.add(infoGroupDate[i] + ", " + infoGroupDate[++i]);
+					}
+					
+					for(int i = 0; i < infoCreatedGroupSorted.size();i++) {
+						List<String> myList = new ArrayList<String>(Arrays.asList(infoCreatedGroupSorted.get(i).split(", ")));
+						listCreateDateGroup.add(myList);
+					}
+					
+					for (int i1 = 0; i1 < listCreateDateGroup.size() - 1; i1++) {
+						SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+						String startDate = listCreateDateGroup.get(i1).get(1);
+						String endDate = listCreateDateGroup.get(i1 + 1).get(1);
+						try {
+							if (!sdf.parse(startDate).before(sdf.parse(endDate))) {
+								Collections.swap(listCreateDateGroup, i1, i1 + 1);
+							}
+						} catch (ParseException e1) {
+							e1.printStackTrace();
+						}
+					}
+					
+					for(int i = 0; i < listCreateDateGroup.size(); i++) {
+						finalSortGroupList.add(listCreateDateGroup.get(i).get(0));
+					}
+					groupChatLists.showGroupChatListSortedByName(finalSortGroupList);
+					groupChatLists.setVisible(true);
 					break;
 				}
 				case "signUp": {
