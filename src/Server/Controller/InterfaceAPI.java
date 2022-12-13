@@ -14,10 +14,7 @@ public class InterfaceAPI {
 	public String createAccount(String fullName, String userName, String password, 
 			String name, String dob, boolean gender, String address, String email) {
 		String id = UUID.randomUUID().toString();
-		accountApi.createAccount(id, userName, password, name, dob, gender, address, email);
-		accountApi.create(id, fullName,userName, password, dob, gender, address, email);
-		accountApi.createAccount(id, userName, password, name, dob, gender, address, email);
-
+		accountApi.create(id, userName, password, name, dob, gender, address, email);
 		return id;
 	}
 

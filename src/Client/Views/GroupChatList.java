@@ -25,6 +25,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
+
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class GroupChatList extends JFrame {
 
@@ -34,7 +41,6 @@ public class GroupChatList extends JFrame {
 	private JList<String> listAdmin;
 	private String selectedString;
 	private int firstSelIx;
-
 	/**
 	 * Launch the application.
 	 */
@@ -123,7 +129,6 @@ public class GroupChatList extends JFrame {
 				new TitledBorder(null, "T\u00EAn nh\u00F3m chat", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.add(pnGroupName);
 		pnGroupName.setLayout(null);
-
 		listGroupChat = new JList<String>();
 		listGroupChat.addMouseListener(new MouseAdapter() {
 			@Override
@@ -144,7 +149,6 @@ public class GroupChatList extends JFrame {
 				TitledBorder.TOP, null, null));
 		panel.add(pnMemberList);
 		pnMemberList.setLayout(null);
-
 		listMember = new JList<String>();
 		listMember.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		listMember.setBounds(10, 21, 249, 293);
@@ -155,7 +159,6 @@ public class GroupChatList extends JFrame {
 				.setBorder(new TitledBorder(null, "Danh s\u00E1ch admin", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.add(pnAdminList);
 		pnAdminList.setLayout(null);
-
 		listAdmin = new JList<String>();
 		listAdmin.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		listAdmin.setBounds(10, 21, 249, 293);
@@ -170,7 +173,6 @@ public class GroupChatList extends JFrame {
 		}
 		System.out.println(groupChatList);
 	}
-
 	public void showGroupChatListSortedByName(List<String> groupChatList) {
 		DefaultListModel<String> listModel = new DefaultListModel<String>();
 		listGroupChat.setModel(listModel);
