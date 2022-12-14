@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Iterator;
 
 import org.bson.Document;
 
@@ -18,22 +19,39 @@ import com.mongodb.client.model.Filters;
 import Server.Models.AccountModel;
 
 public class AccountController extends AccountModel {
-	public void create(String id, String userName, String password, String name, String dob, boolean gender,
+	public String formatDate() {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Date date = new Date();
+		
+		return   formatter.format(date);
+	}
+	
+	public void create(String id, String fullName, String userName, String password, String dob, boolean gender,
 			String address, String email) {
 
 		ArrayList<String> listFriend = new ArrayList<String>();
+		ArrayList<String> listRequestAddFriend = new ArrayList<String>();
 		ArrayList<String> listRoom = new ArrayList<String>();
 		ArrayList<String> listMessage = new ArrayList<String>();
 		ArrayList<String> historyLogin = new ArrayList<String>();
 		// boy -> gender :0
 		// girl -> gender : 1
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		Date date = new Date();
 
-		Document document = new Document("id", id).append("userName", userName).append("password", password)
-				.append("dob", dob).append("gender", gender).append("address", address).append("email", email)
-				.append("listFriend", listFriend).append("listRoom", listRoom).append("listMessage", listMessage)
-				.append("createTime", formatter.format(date)).append("active", 1).append("historyLogin", historyLogin);
+		Document document = new Document("id", id)
+				.append("fullName", fullName)
+				.append("userName", userName)
+				.append("password", password)
+				.append("dob", dob)
+				.append("gender", gender)
+				.append("address", address)
+				.append("email", email)
+				.append("listFriend", listFriend)
+				.append("listRequestAddFriend", listRequestAddFriend)
+				.append("listRoom", listRoom)
+				.append("listMessage", listMessage)
+				.append("createTime", formatDate())
+				.append("active", 1)
+				.append("historyLogin", historyLogin);
 		CollectionAccount().insertOne(document);
 		System.out.println("successful");
 	}
@@ -174,13 +192,98 @@ public class AccountController extends AccountModel {
 
 	public void addPeopleRoom(String idRoom, String idUser) {
 		ArrayList<String> document = new ArrayList<String>();
-		document = (ArrayList<String>) CollectionAccount().find().iterator().next().get("listRoom");
+		document = (ArrayList<String>) CollectionAccount().find(eq("id", idUser)).iterator().next().get("listRoom");
 		document.add(idRoom);
+		
 		CollectionAccount().updateOne(eq("id", idUser), combine(set("listRoom", document)));
 	}
-
-	public void update() {
-		CollectionAccount().updateOne(eq("_id", "23"), combine(set("name", "23")));
+	
+	public void deletePeopleRoom( String idRoom, String idDelMember) {
+		ArrayList<String> document = new ArrayList<String>();
+		document = (ArrayList<String>) CollectionAccount().find(eq("id", idDelMember)).iterator().next().get("listRoom");
+		
+		for(int i=0;i<document.size();i++)
+		{
+			if(document.get(i).equals(idRoom))
+			{
+				document.remove(i);
+				break;
+			}
+		}
+		
+		CollectionAccount().updateOne(eq("id", idDelMember), combine(set("listRoom", document)));
+	}
+	public void updateListRequestAddFriend(String idUserSentRequest, String idUserRequest) {
+		ArrayList<String> document = new ArrayList<String>();
+		document = (ArrayList<String>) CollectionAccount()
+				.find(eq("id", idUserSentRequest))
+				.iterator().next().get("listRequestAddFriend");
+		document.add(idUserRequest);
+		
+		CollectionAccount().updateOne(eq("id", idUserSentRequest), combine(set("listRequestAddFriend", document)));
+	}
+	
+	public void deleteFriendListRequest( String idUser, String idRejectUser) {
+		ArrayList<String> document = new ArrayList<String>();
+		document = (ArrayList<String>) CollectionAccount()
+				.find(eq("id", idUser))
+				.iterator().next().get("listRequestAddFriend");
+		for(int i=0;i<document.size();i++)
+		{
+			if(document.get(i).equals(idRejectUser))
+			{
+				document.remove(i);
+				break;
+			}
+		}
+		
+		CollectionAccount().updateOne(eq("id", idUser), combine(set("listRequestAddFriend", document)));
+		System.out.println("Success");
+	}
+	
+	public void addListFriend( String idUser, String idNewFriend) {
+		ArrayList<String> document = new ArrayList<String>();
+		document = (ArrayList<String>) CollectionAccount()
+				.find(eq("id", idUser))
+				.iterator().next().get("listFriend");
+		document.add(idNewFriend);
+		
+		CollectionAccount().updateOne(eq("id", idUser), combine(set("listFriend", document)));
+		System.out.println("Success");
+	}
+	
+	public void deleteFriendListFriend( String idUser, String idFriendDelete ) {
+		ArrayList<String> document = new ArrayList<String>();
+		document = (ArrayList<String>) CollectionAccount()
+				.find(eq("id", idUser))
+				.iterator().next().get("listFriend");
+		
+		for(int i=0;i<document.size();i++)
+		{
+			if(document.get(i).equals(idFriendDelete))
+			{
+				document.remove(i);
+				break;
+			}
+		}
+		CollectionAccount().updateOne(eq("id", idUser), combine(set("listFriend", document)));
+		System.out.println("Success");
+	}
+	
+	public void update(String idUser, String fullName, String userName, String password, 
+			 String dob, boolean gender, String address, String email ) 
+	{
+		
+		CollectionAccount()
+		.updateOne(eq("id", idUser), 
+				combine(
+						set("fullName", fullName),
+						set("password", password),
+						set("dob", dob),
+						set("gender", gender),
+						set("address", address),
+						set("email", email)
+						));
 		System.out.println("successful");
 	}
 	
@@ -205,4 +308,29 @@ public class AccountController extends AccountModel {
 	public void removeAccount(String id) {
 		CollectionAccount().deleteMany(eq("id", id));
 	}
+	public void updateStatusUser( String idUser ) {
+		Object document = new ArrayList<String>();
+		document = CollectionAccount()
+				.find(eq("id", idUser))
+				.iterator().next().get("active");
+		
+		document = 1 - (int)document;
+		
+		CollectionAccount().updateOne(eq("id", idUser), combine(set("active", document )));
+	
+	}
+	
+	public void updateHistoryLogin( String idUser) {
+		ArrayList<String> document = new ArrayList<String>();
+		document = (ArrayList<String>) CollectionAccount()
+				.find(eq("id", idUser))
+				.iterator().next().get("historyLogin");
+		
+		document.add(formatDate());
+		
+		CollectionAccount().updateOne(eq("id", idUser), combine(set("historyLogin", document)));
+	
+	}
+
+	
 }

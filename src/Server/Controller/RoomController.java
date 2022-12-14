@@ -25,8 +25,12 @@ public class RoomController extends RoomModel {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
 
-		Document document = new Document("id", idRoom).append("listMember", listMember).append("listAdmins", listAdmins)
-				.append("listMessage", listMessage).append("createTime", formatter.format(date))
+		Document document = new Document("id", idRoom)
+				.append("name", name)
+				.append("listMember", listMember)
+				.append("listAdmins", listAdmins)
+				.append("listMessage", listMessage)
+				.append("createTime", formatter.format(date))
 				.append("listMessage", listMessage);
 		CollectionRoom().insertOne(document);
 		System.out.println("successful");
@@ -56,7 +60,21 @@ public class RoomController extends RoomModel {
 		System.out.println("successful");
 	}
 
-	public void delete(String id) {
-		CollectionRoom().deleteMany(eq("_id", id));
+	public void deletePeopleRoom(String idRoom, String idDelMember) {
+		ArrayList<String> document = new ArrayList<String>();
+		document = (ArrayList<String>) CollectionRoom()
+				.find(eq("id", idRoom))
+				.iterator().next().get("listMember");
+		for(int i=0;i<document.size();i++)
+		{
+			if(document.get(i).equals(idDelMember))
+			{
+				document.remove(i);
+				break;
+			}
+		}
+		
+		CollectionRoom().updateOne(eq("id", idRoom), combine(set("listMember", document)));
+		System.out.println("Success");
 	}
 }
