@@ -29,7 +29,6 @@ public class AccountController extends AccountModel {
 		ArrayList<String> listFriend = new ArrayList<String>();
 		ArrayList<String> listRequestAddFriend = new ArrayList<String>();
 		ArrayList<String> listRoom = new ArrayList<String>();
-		ArrayList<String> listMessage = new ArrayList<String>();
 		ArrayList<String> historyLogin = new ArrayList<String>();
 		// boy -> gender :0
 		// girl -> gender : 1
@@ -45,7 +44,6 @@ public class AccountController extends AccountModel {
 				.append("listFriend", listFriend)
 				.append("listRequestAddFriend", listRequestAddFriend)
 				.append("listRoom", listRoom)
-				.append("listMessage", listMessage)
 				.append("createTime", formatDate())
 				.append("active", 1)
 				.append("historyLogin", historyLogin);
