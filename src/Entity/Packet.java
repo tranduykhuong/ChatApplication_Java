@@ -14,7 +14,7 @@ public class Packet {
 		this.header = header;
 	}
 
-	public Object getData() {
+	public String getData() {
 		return data;
 	}
 

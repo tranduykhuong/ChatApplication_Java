@@ -11,6 +11,7 @@ import Server.Models.ClientSocket;
 
 public class Controller extends Thread {
 	ClientSocket thisClient;
+	InterfaceAPI api = new InterfaceAPI();
 
 	public Controller(Socket clientSocket) {
 		try {
@@ -112,16 +113,57 @@ public class Controller extends Thread {
 				case "searchStringChatMultiple": {
 					break;
 				}
+				case "showListGr": {
+					String data = pk.getData();
+					String res = api.returnListNameGr(data).toString();
+					thisClient.sendString(new Packet("showListGr", res, "").toString());
+					break;
+				}
+				case "showListFriend": {
+					String data = pk.getData();
+					String res = api.searchListFriend(data).toString();
+					thisClient.sendString(new Packet("showListFriend", res, "").toString());
+					break;
+				}
 				case "createGroup": {
+					String data = pk.getData();
+					String idSender = pk.getAuthor();
+					String res = api.createGroup(data, idSender).toString();
+					thisClient.sendString(new Packet("createGroup", res, "").toString());
+					break;
+				}
+				case "showListMemberRoom": {
+					String data = pk.getData();
+					String idSender = pk.getAuthor();
+					String res = api.listIdMemGr(data, idSender).toString();
+					thisClient.sendString(new Packet("showListMemberRoom", res.toString(), "").toString());
 					break;
 				}
 				case "changeNameGroup": {
+					String data = pk.getData();
+
+					String res = api.changeNameGr(data).toString();
+					thisClient.sendString(new Packet("changeNameGroup", res.toString(), "").toString());
 					break;
 				}
 				case "administator": {
+					String data = pk.getData();
+
+					String res = api.updateAdmin(data).toString();
+					thisClient.sendString(new Packet("administator", res.toString(), "").toString());
 					break;
 				}
 				case "removeMember": {
+					String data = pk.getData();
+
+					String res = api.removeMember(data).toString();
+					thisClient.sendString(new Packet("removeMember", res.toString(), "").toString());
+					break;
+				}
+				case "addMemberGroup": {
+					String data = pk.getData();
+					String res = api.addMemberGroup(data).toString();
+					thisClient.sendString(new Packet("addMemberGroup", res.toString(), "").toString());
 					break;
 				}
 				case "chatGroup": {

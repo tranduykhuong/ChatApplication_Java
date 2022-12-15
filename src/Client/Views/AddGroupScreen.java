@@ -1,24 +1,45 @@
 package Client.Views;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JList;
-import javax.swing.AbstractListModel;
-import java.awt.GridLayout;
-import javax.swing.border.TitledBorder;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+
+import Client.Controller;
+import Entity.Packet;
 
 public class AddGroupScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textField;
+	JPanel panel;
+	private JList<String> list;
+	private JList<String> list_1;
+
+	private String listID = "";
+	private String listName = "";
+	private String selectedAdd = "";
+	private String selectedRemove = "";
+	private String nameGroup = "";
+	private String notifyCreateGroup = "";
+	private DefaultListModel dmodel = new DefaultListModel();
+	private DefaultListModel dmodelSelected = new DefaultListModel();
+	private ArrayList<String> createRoomForID = new ArrayList<String>();
 
 	/**
 	 * Launch the application.
@@ -49,24 +70,38 @@ public class AddGroupScreen extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Ch\u1ECDn User \u0111\u1EC3 th\u00EAm v\u00E0o nh\u00F3m",
 				TitledBorder.LEADING, TitledBorder.TOP, null, Color.BLACK));
 		panel.setBounds(10, 62, 416, 209);
 		contentPane.add(panel);
 		panel.setLayout(new GridLayout(1, 0, 0, 0));
 
-		JList<String> list = new JList<String>();
-		list.setModel(new AbstractListModel<String>() {
-			private static final long serialVersionUID = 1L;
-			String[] values = new String[] { "Mạnh Khương", "Lãng tử Mưa", "Khôi đẹp trai" };
+		list = new JList<String>();
+		list.setModel(dmodel);
+		list.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				selectedAdd = list.getSelectedValue().toString();
+				int index = list.getSelectedIndex();
 
-			public int getSize() {
-				return values.length;
-			}
+				dmodelSelected.addElement(selectedAdd);
+				dmodel.removeElementAt(index);
 
-			public String getElementAt(int index) {
-				return values[index];
+				for (int i = 0; i < listName.split(", ").length; i++) {
+					if (selectedAdd.equals(listName.split(", ")[i])) {
+						createRoomForID.add(listID.split(", ")[i]);
+						selectedAdd = "";
+					}
+					if (selectedRemove.equals(listName.split(", ")[i])) {
+						for (int j = 0; j < createRoomForID.size(); j++) {
+							if (listID.split(", ")[i].equals(createRoomForID.get(j))) {
+								createRoomForID.remove(j);
+								selectedRemove = "";
+							}
+						}
+					}
+				}
 			}
 		});
 		list.setFont(new Font("Times New Roman", Font.BOLD, 13));
@@ -74,12 +109,40 @@ public class AddGroupScreen extends JFrame {
 
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.WHITE);
-		panel_1.setBorder(
-				new TitledBorder(null, "Danh s\u00E1ch Nh\u00F3m", TitledBorder.CENTER, TitledBorder.TOP, null, null));
+		panel_1.setBorder(new TitledBorder(
+				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
+				"Danh s\u00E1ch th\u00E0nh vi\u00EAn", TitledBorder.CENTER, TitledBorder.TOP, null,
+				new Color(0, 0, 0)));
 		panel.add(panel_1);
 		panel_1.setLayout(new GridLayout(1, 0, 0, 0));
 
-		JList<String> list_1 = new JList<String>();
+		list_1 = new JList<String>();
+		list_1.setModel(dmodelSelected);
+		list_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				selectedRemove = list_1.getSelectedValue().toString();
+				int index = list_1.getSelectedIndex();
+
+				dmodel.addElement(selectedRemove);
+				dmodelSelected.removeElementAt(index);
+
+				for (int i = 0; i < listName.split(", ").length; i++) {
+					if (selectedAdd.equals(listName.split(", ")[i])) {
+						createRoomForID.add(listID.split(", ")[i]);
+						selectedAdd = "";
+					}
+					if (selectedRemove.equals(listName.split(", ")[i])) {
+						for (int j = 0; j < createRoomForID.size(); j++) {
+							if (listID.split(", ")[i].equals(createRoomForID.get(j))) {
+								createRoomForID.remove(j);
+								selectedRemove = "";
+							}
+						}
+					}
+				}
+			}
+		});
 		list_1.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		panel_1.add(list_1);
 
@@ -96,8 +159,72 @@ public class AddGroupScreen extends JFrame {
 		textField.setColumns(10);
 
 		JButton btnNewButton = new JButton("Tạo");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				nameGroup = textField.getText();
+				if (nameGroup.length() == 0 || createRoomForID.size() < 2) {
+					JOptionPane.showMessageDialog(panel, "Vui lòng nhập tên nhóm or chọn từ hai người bạn của bạn",
+							"Error", JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					ArrayList<String> concatGrNameListId = new ArrayList<String>();
+					concatGrNameListId.add("[" + nameGroup + "]");
+					concatGrNameListId.add(createRoomForID.toString());
+
+					String id = "63b533f8-1e88-4a22-9069-51d9507f94ed";
+					Controller.getInstance()
+							.sendTextMessage(new Packet("createGroup", concatGrNameListId.toString(), id).toString());
+				}
+			}
+		});
 		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		btnNewButton.setBounds(335, 281, 91, 30);
 		contentPane.add(btnNewButton);
+	}
+
+	public void destroyAddGroupScreen() {
+		listID = "";
+		listName = "";
+		selectedAdd = "";
+		selectedRemove = "";
+		nameGroup = "";
+		notifyCreateGroup = "";
+
+		int sizeDmodelSelected = dmodelSelected.size();
+		while (sizeDmodelSelected != 0) {
+			dmodelSelected.removeElementAt(sizeDmodelSelected - 1);
+			sizeDmodelSelected -= 1;
+		}
+		int sizeDmodel = dmodel.size();
+		if (sizeDmodel != 0) {
+			while (sizeDmodel != 0) {
+				dmodel.removeElementAt(sizeDmodel - 1);
+				sizeDmodel -= 1;
+			}
+		}
+
+		createRoomForID.clear();
+		textField.setText("");
+	}
+
+	public void showlistFriend(String data) {
+		String listIdAndName = data.substring(1, data.length() - 1);
+		listName = listIdAndName.split("], ")[0].replace("[", "");
+		listID = listIdAndName.split("], ")[1].replace("]", "").replace("[", "");
+
+		for (int i = 0; i < listName.split(", ").length; i++) {
+			dmodel.addElement(listName.split(", ")[i]);
+		}
+	}
+
+	public void notifyCreateGroup(String data) {
+		notifyCreateGroup = data.replace("[", "").replace("]", "");
+		if (notifyCreateGroup.equals("Tạo thành công")) {
+			JOptionPane.showMessageDialog(panel, notifyCreateGroup, "Notify", JOptionPane.INFORMATION_MESSAGE);
+			this.setVisible(false);
+			destroyAddGroupScreen();
+		} else {
+			JOptionPane.showMessageDialog(panel, notifyCreateGroup, "Notify", JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 }

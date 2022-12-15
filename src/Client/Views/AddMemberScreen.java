@@ -1,20 +1,30 @@
 package Client.Views;
 
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.JTextField;
-import javax.swing.JButton;
+
+import Client.Controller;
+import Entity.Packet;
 
 public class AddMemberScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textField;
+
+	private String userName = "";
+	private String idRoom = "";
 
 	/**
 	 * Launch the application.
@@ -65,9 +75,32 @@ public class AddMemberScreen extends JFrame {
 		textField.setColumns(10);
 
 		JButton btnNewButton = new JButton("Add");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				userName = textField.getText();
+				if (userName.length() == 0) {
+					JOptionPane.showMessageDialog(panel, "Vui lòng nhập username bạn bè muốn thêm vào nhóm", "Error",
+							JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					ArrayList<String> dataUsername = new ArrayList<String>();
+					dataUsername.add(idRoom);
+					dataUsername.add(userName);
+					controllerAddMember(dataUsername);
+					setVisible(false);
+				}
+			}
+		});
 		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
 		btnNewButton.setBounds(283, 72, 85, 21);
 		contentPane.add(btnNewButton);
 	}
 
+	public void setIdRoom(String _idRoom) {
+		idRoom = _idRoom;
+	}
+
+	public void controllerAddMember(ArrayList<String> data) {
+		Controller.getInstance().sendTextMessage(new Packet("addMemberGroup", data.toString(), "").toString());
+	}
 }

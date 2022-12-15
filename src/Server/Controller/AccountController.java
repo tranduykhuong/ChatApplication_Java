@@ -11,6 +11,7 @@ import java.util.Date;
 import org.bson.Document;
 
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.Updates;
 
 import Server.Models.AccountModel;
 
@@ -63,5 +64,101 @@ public class AccountController extends AccountModel {
 
 	public void delete(String id) {
 		CollectionAccount().deleteMany(eq("_id", id));
+	}
+
+	public void addMemberRoom(String idRoom, String idUser) {
+		ArrayList<String> document = new ArrayList<String>();
+//		document = (ArrayList<String>) CollectionAccount().find().iterator().next().get("listRoom");
+		CollectionAccount().updateOne(eq("id", idUser), combine(Updates.addToSet("listRoom", idRoom)));
+	}
+
+	public ArrayList<String> searchListFriend(String id) {
+		Document filterDoc = new Document();
+		filterDoc.append("id", id);
+		MongoCursor<Document> document = CollectionAccount().find(filterDoc).iterator();
+		ArrayList<String> listData = new ArrayList<String>();
+		try {
+			while (document.hasNext()) {
+				Document doc = document.next();
+				listData.add((String) doc.get("listFriend").toString());
+			}
+		} finally {
+			document.close();
+		}
+		return listData;
+	}
+
+	public ArrayList<String> getFullnameToById(String id) {
+		Document filterDoc = new Document();
+		filterDoc.append("id", id);
+		MongoCursor<Document> document = CollectionAccount().find(filterDoc).iterator();
+		ArrayList<String> listData = new ArrayList<String>();
+		try {
+			while (document.hasNext()) {
+				Document doc = document.next();
+				listData.add((String) doc.get("fullName").toString());
+			}
+		} finally {
+			document.close();
+		}
+		return listData;
+	}
+
+	public ArrayList<String> getListIdGrToId(String id) {
+		Document filterDoc = new Document();
+		filterDoc.append("id", id);
+		MongoCursor<Document> document = CollectionAccount().find(filterDoc).iterator();
+		ArrayList<String> listData = new ArrayList<String>();
+		try {
+			while (document.hasNext()) {
+				Document doc = document.next();
+				listData.add((String) doc.get("listRoom").toString());
+			}
+		} finally {
+			document.close();
+		}
+		return listData;
+	}
+
+	public void updateListRoom(String idUser, ArrayList<String> listRoom) {
+		CollectionAccount().updateOne(eq("id", idUser), combine(set("listRoom", listRoom)));
+		System.out.println("successful");
+	}
+
+	public void updateMemberIdInListRoom(String idUser, String idMember) {
+		CollectionAccount().updateOne(eq("id", idUser), combine(Updates.addToSet("listRoom", idMember)));
+		System.out.println("successful");
+	}
+
+	public ArrayList<String> getFullnameIdToByUsername(String username) {
+		Document filterDoc = new Document();
+		filterDoc.append("userName", username);
+		MongoCursor<Document> document = CollectionAccount().find(filterDoc).iterator();
+		ArrayList<String> listData = new ArrayList<String>();
+		try {
+			while (document.hasNext()) {
+				Document doc = document.next();
+				listData.add((String) doc.get("fullName").toString());
+				listData.add((String) doc.get("id").toString());
+			}
+		} finally {
+			document.close();
+		}
+		return listData;
+	}
+
+	public ArrayList<String> getGetListUsername() {
+		Document filterDoc = new Document();
+		MongoCursor<Document> document = CollectionAccount().find(filterDoc).iterator();
+		ArrayList<String> listData = new ArrayList<String>();
+		try {
+			while (document.hasNext()) {
+				Document doc = document.next();
+				listData.add((String) doc.get("userName").toString());
+			}
+		} finally {
+			document.close();
+		}
+		return listData;
 	}
 }
