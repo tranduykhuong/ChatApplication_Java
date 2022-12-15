@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -19,37 +21,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-
-import java.awt.Color;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.JButton;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.border.CompoundBorder;
-import java.awt.SystemColor;
-import javax.swing.SwingConstants;
-import javax.swing.JScrollPane;
-import java.awt.event.ActionListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.awt.event.ActionEvent;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import Client.Controller;
 import Entity.Packet;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import com.mongodb.internal.connection.tlschannel.NeedsWriteException;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 public class ManageUsersList extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -110,7 +85,9 @@ public class ManageUsersList extends JFrame {
 				String gender = (String) tableUsersList.getValueAt(row, 4);
 				String email = (String) tableUsersList.getValueAt(row, 5);
 
-			    Controller.getInstance().sendTextMessage(new Packet("showDetail",username + ", " + fullname+ ", " + address+ ", " + email, "").toString());
+				Controller.getInstance().sendTextMessage(
+						new Packet("showDetail", username + ", " + fullname + ", " + address + ", " + email, "")
+								.toString());
 			}
 		});
 		scrollPane.setViewportView(tableUsersList);
@@ -235,7 +212,6 @@ public class ManageUsersList extends JFrame {
 		JButton btnXa = new JButton("Xóa");
 		btnXa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
 
 			}
 		});
@@ -264,7 +240,8 @@ public class ManageUsersList extends JFrame {
 		JButton btnLc = new JButton("Lọc");
 		btnLc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Controller.getInstance().sendTextMessage(new Packet("filterList", usernameField.getText(), "").toString());
+				Controller.getInstance()
+						.sendTextMessage(new Packet("filterList", usernameField.getText(), "").toString());
 			}
 		});
 		btnLc.setForeground(new Color(1, 128, 254));
@@ -334,8 +311,9 @@ public class ManageUsersList extends JFrame {
 		tableModel.setRowCount(0);
 		for (int i = 0; i < listUser.size(); i = i + 6) {
 			String genderTmp = (listUser.get(i + 4).equals("true")) ? "Nữ" : "Nam";
-			tableModel.addRow(new Object[] {listUser.get(i), listUser.get(i + 1), listUser.get(i + 2),
+			tableModel.addRow(new Object[] { listUser.get(i), listUser.get(i + 1), listUser.get(i + 2),
 					listUser.get(i + 3), genderTmp, listUser.get(i + 5) });
 		}
+		System.out.println(listUser);
 	}
 }
