@@ -66,15 +66,13 @@ public class RoomController extends RoomModel {
 		document = (ArrayList<String>) CollectionRoom()
 				.find(eq("id", idRoom))
 				.iterator().next().get("listMember");
-		for(int i=0;i<document.size();i++)
-		{
-			if(document.get(i).equals(idDelMember))
-			{
+		for (int i = 0; i < document.size(); i++) {
+			if (document.get(i).equals(idDelMember)) {
 				document.remove(i);
 				break;
 			}
 		}
-		
+
 		CollectionRoom().updateOne(eq("id", idRoom), combine(set("listMember", document)));
 		System.out.println("Success");
 	}
@@ -93,7 +91,7 @@ public class RoomController extends RoomModel {
 		}
 		return dataGroupArrayList;
 	}
-	
+
 	public ArrayList<String> sortByGroupName() {
 		MongoCursor<Document> documentCursor = CollectionRoom().find().iterator();
 		ArrayList<String> dataGroupArrayList = new ArrayList<>();
@@ -107,7 +105,7 @@ public class RoomController extends RoomModel {
 		}
 		return dataGroupArrayList;
 	}
-	
+
 	public ArrayList<String> sortByCreateDateGroup() {
 		MongoCursor<Document> documentCursor = CollectionRoom().find().iterator();
 		ArrayList<String> dataGroupArrayList = new ArrayList<>();
