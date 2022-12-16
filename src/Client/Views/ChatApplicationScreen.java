@@ -6,8 +6,14 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,9 +28,19 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 
+import Client.Controller;
+import Entity.Packet;
+
 public class ChatApplicationScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	JList<String> list_2;
+
+	private String listNameGr = "";
+	private String listIdGr = "";
+	private DefaultListModel dmodel = new DefaultListModel();
+	private ArrayList<String> showListNameRoom = new ArrayList<String>();
+	private ArrayList<String> getshowListNameRoom = new ArrayList<String>();
 
 	public ChatApplicationScreen() {
 		setTitle("Chat Application");
@@ -209,20 +225,29 @@ public class ChatApplicationScreen extends JFrame {
 		gbc_list_1.gridy = 1;
 		contentPane.add(list_1, gbc_list_1);
 
-		JList<String> list_2 = new JList<String>();
-		list_2.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		list_2.setModel(new AbstractListModel<String>() {
-			private static final long serialVersionUID = 1L;
-			String[] values = new String[] { "Nhóm anh em", "Nhóm chó", "Chạy deadline", "NMCNPM " };
+		list_2 = new JList<String>();
+		list_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String selected = list_2.getSelectedValue().toString();
 
-			public int getSize() {
-				return values.length;
-			}
+				for (int i = 0; i < listNameGr.split(", ").length; i++) {
+					if (selected.equals(listNameGr.split(", ")[i])) {
+						showListNameRoom.add(selected);
+						showListNameRoom.add(listIdGr.split(", ")[i]);
+					}
+				}
+				getshowListNameRoom.add(showListNameRoom.toString());
 
-			public String getElementAt(int index) {
-				return values[index];
+				String id = "63b533f8-1e88-4a22-9069-51d9507f94ed";
+				Controller.getInstance()
+						.sendTextMessage(new Packet("showListMemberRoom", showListNameRoom.toString(), id).toString());
+
+				showListNameRoom.clear();
 			}
 		});
+		list_2.setModel(dmodel);
+		list_2.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		list_2.setBorder(
 				new TitledBorder(null, "Nh\u00F3m", TitledBorder.LEADING, TitledBorder.TOP, null, Color.BLACK));
 		GridBagConstraints gbc_list_2 = new GridBagConstraints();
@@ -245,6 +270,13 @@ public class ChatApplicationScreen extends JFrame {
 		panel_2.setLayout(new GridLayout(1, 0, 0, 0));
 
 		JButton btnNewButton = new JButton("Tạo Nhóm");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String id = "63b533f8-1e88-4a22-9069-51d9507f94ed";
+
+				Controller.getInstance().sendTextMessage(new Packet("showListFriend", id, "").toString());
+			}
+		});
 		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		panel_2.add(btnNewButton);
 
@@ -296,5 +328,40 @@ public class ChatApplicationScreen extends JFrame {
 		JButton btnNewButton_2 = new JButton("Add Friend");
 		btnNewButton_2.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		panel_1.add(btnNewButton_2);
+	}
+
+	public ArrayList<String> getDataControlListMemberRoom() {
+		return getshowListNameRoom;
+	}
+
+	public void refeshDataForm() {
+		String id = "63b533f8-1e88-4a22-9069-51d9507f94ed";
+		Controller.getInstance().sendTextMessage(new Packet("showListGr", id, "").toString());
+	}
+
+	public void showListNameGr(String _data) {
+		String listIdAndName = _data.substring(1, _data.length() - 1);
+		listIdGr = listIdAndName.split("], ")[0].replace("[", "");
+		listNameGr = listIdAndName.split("], ")[1].replace("]", "").replace("[", "");
+
+		for (int i = 0; i < listNameGr.split(", ").length; i++) {
+			dmodel.addElement(listNameGr.split(", ")[i]);
+		}
+	}
+
+	public void destroyChatAppForm() {
+		listNameGr = "";
+		listIdGr = "";
+
+		int sizeDmodel = dmodel.size();
+		if (sizeDmodel != 0) {
+			while (sizeDmodel != 0) {
+				dmodel.removeElementAt(sizeDmodel - 1);
+				sizeDmodel -= 1;
+			}
+		}
+
+		showListNameRoom.clear();
+		getshowListNameRoom.clear();
 	}
 }

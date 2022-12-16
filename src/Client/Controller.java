@@ -23,6 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import Client.Views.User;
+import Client.Views.AddGroupScreen;
+import Client.Views.ChatApplicationScreen;
+import Client.Views.GroupChatScreen;
 import Entity.Packet;
 
 public class Controller {
@@ -35,6 +38,10 @@ public class Controller {
 	
 	private String data;
 	private GroupChatList groupChatLists = new GroupChatList();
+
+	private AddGroupScreen addGrScreen = new AddGroupScreen();
+	private ChatApplicationScreen chatAppScreen = new ChatApplicationScreen();
+	private GroupChatScreen grChat = new GroupChatScreen();
 
 	private Controller() {
 		client = new TCP_Client();
@@ -360,16 +367,77 @@ public class Controller {
 				case "searchStringChatMultiple": {
 					break;
 				}
+				case "showListGr": {
+					data = pk.getData();
+
+					chatAppScreen.destroyChatAppForm();
+					chatAppScreen.setVisible(true);
+					chatAppScreen.showListNameGr(data);
+					break;
+				}
+				case "showListFriend": {
+					data = pk.getData();
+
+					addGrScreen.destroyAddGroupScreen();
+					addGrScreen.setVisible(true);
+					addGrScreen.showlistFriend(data);
+					break;
+				}
 				case "createGroup": {
+					data = pk.getData();
+
+					addGrScreen.notifyCreateGroup(data);
+					chatAppScreen.destroyChatAppForm();
+					chatAppScreen.refeshDataForm();
+					break;
+				}
+				case "showListMemberRoom": {
+					data = pk.getData();
+
+					String res = data.substring(data.indexOf("[") + 1, data.length() - 1);
+					String listNameMember = res.split("]], ")[0].replace("[", "").replace("]", "");
+					String listIDMemberAdmin = res.split("]], ")[1];
+					String idGrSelected = res.split("]], ")[2].replace("[", "").replace("]", "");
+					String isAdmin = res.split("]], ")[3].replace("[", "").replace("]", "");
+					String idUser = res.split("]], ")[4].replace("[", "").replace("]", "");
+					String nameGr = res.split("]], ")[5];
+
+					String listIdAdmin = listIDMemberAdmin.split("], ")[0].replace("[", "").replace("]", "");
+					String listIdMember = listIDMemberAdmin.split("], ")[1].replace("[", "").replace("]", "");
+
+					grChat.destroyGroupChatScreen();
+					grChat.setVisible(true);
+					grChat.setTitle(nameGr);
+					grChat.showInfoGroupChat(listNameMember, idGrSelected, isAdmin, listIdMember, nameGr, listIdAdmin,
+							idUser);
 					break;
 				}
 				case "changeNameGroup": {
+					data = pk.getData();
+
+					grChat.checkChangeNameGr(data, chatAppScreen.getDataControlListMemberRoom());
+					chatAppScreen.destroyChatAppForm();
+//					Bug trùng tên
+					chatAppScreen.refeshDataForm();
 					break;
 				}
 				case "administator": {
+					data = pk.getData();
+
+					grChat.checkUpdateAdmin(data);
 					break;
 				}
 				case "removeMember": {
+					data = pk.getData();
+
+//					còn 1 bug ở chỗ xóa này nếu nó bấm sang một gr khác (merge xong fix tiếp)
+					grChat.checkDeleteMember(data, chatAppScreen.getDataControlListMemberRoom());
+					break;
+				}
+				case "addMemberGroup": {
+					data = pk.getData();
+
+					grChat.checkAddMember(data, chatAppScreen.getDataControlListMemberRoom());
 					break;
 				}
 				case "chatGroup": {
