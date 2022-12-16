@@ -310,10 +310,10 @@ public class ManageUsersList extends JFrame {
 		tableModel = (DefaultTableModel) tableUsersList.getModel();
 		tableModel.setRowCount(0);
 		for (int i = 0; i < listUser.size(); i = i + 6) {
+			System.out.println(listUser.get(i));
 			String genderTmp = (listUser.get(i + 4).equals("true")) ? "Nữ" : "Nam";
 			tableModel.addRow(new Object[] { listUser.get(i), listUser.get(i + 1), listUser.get(i + 2),
 					listUser.get(i + 3), genderTmp, listUser.get(i + 5) });
 		}
-		System.out.println(listUser);
 	}
 }
