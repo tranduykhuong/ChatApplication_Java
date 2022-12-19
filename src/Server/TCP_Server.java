@@ -8,6 +8,19 @@ import java.net.Socket;
 
 import Server.Controller.ClientConnected;
 import Server.Controller.Controller;
+import java.util.ArrayList;
+import java.util.List;
+
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+
 import Server.Models.ClientSocket;
 
 public class TCP_Server {
@@ -45,6 +58,7 @@ public class TCP_Server {
 		} catch (IOException e) {
 			return false;
 		}
+		serverPort = port;
 		return true;
 	}
 

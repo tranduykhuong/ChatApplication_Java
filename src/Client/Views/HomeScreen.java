@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -14,6 +15,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import Client.ClientApp;
+import Client.Controller;
+import Entity.Packet;
 
 public class HomeScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -67,10 +70,24 @@ public class HomeScreen extends JFrame {
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 //				Controller.getInstance().sendTextMessage(new Packet("logIn", "Test ne", "DK").toString());
-				new ChatApplicationScreen().setVisible(true);
+//				new ChatApplicationScreen().setVisible(true);
+
+				String id = "63b533f8-1e88-4a22-9069-51d9507f94ed";
+				Controller.getInstance().sendTextMessage(new Packet("showListGr", id, "").toString());
 			}
 		});
 		btnNewButton_3.setBounds(322, 192, 101, 23);
 		contentPane.add(btnNewButton_3);
+		
+		JButton btnNewButton_4 = new JButton("Admin");
+		btnNewButton_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+//				Controller.getInstance().sendTextMessage(new Packet("logIn", "Test ne", "DK").toString());
+				new ManageUsersList().setVisible(true);
+				setVisible(false);
+			}
+		});
+		btnNewButton_4.setBounds(322, 230, 101, 23);
+		contentPane.add(btnNewButton_4);
 	}
 }
