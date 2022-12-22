@@ -2,8 +2,12 @@ package Client.Views;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -19,6 +23,9 @@ public class ConnectionScreen extends JFrame {
 	private JTextField ipField;
 	private JLabel lblPort;
 	private JTextField portField;
+	JCheckBox autoCheckBox;
+	JButton btnConnect;
+	JButton btnDisconnect;
 
 	private boolean checkValidation() {
 		if (portField.getText().length() == 0 || ipField.getText().length() == 0) {
@@ -58,12 +65,33 @@ public class ConnectionScreen extends JFrame {
 		}
 		JOptionPane.showMessageDialog(this, "Connect successfully!", "Connection", JOptionPane.INFORMATION_MESSAGE);
 
+		btnDisconnect.setEnabled(true);
+		btnConnect.setEnabled(false);
+		ipField.setEditable(false);
+		portField.setEditable(false);
+		autoCheckBox.setEnabled(false);
+
 		Controller.getInstance().startListen();
-		new HomeScreen().setVisible(true);
+		Controller.getInstance().handleScreen("homeScreen", true);
 		setVisible(false);
 	}
 
 	private void btnDisconnectActionPerformed(ActionEvent e) {
+		btnDisconnect.setEnabled(false);
+		btnConnect.setEnabled(true);
+		ipField.setEditable(true);
+		portField.setEditable(true);
+		autoCheckBox.setEnabled(true);
+		Controller.getInstance().sendTextMessage("Disconnect");
+		Controller.getInstance().disconnect();
+	}
+
+	public void handleDisconnect() {
+		btnDisconnect.setEnabled(false);
+		btnConnect.setEnabled(true);
+		ipField.setEditable(true);
+		portField.setEditable(true);
+		autoCheckBox.setEnabled(true);
 		Controller.getInstance().sendTextMessage("Disconnect");
 		Controller.getInstance().disconnect();
 	}
@@ -73,8 +101,18 @@ public class ConnectionScreen extends JFrame {
 	 */
 	public ConnectionScreen() {
 		setTitle("Connection");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 356, 172);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				String[] options = { "Yes", "No" };
+				int result = JOptionPane.showOptionDialog(null, "Are you sure you want to exit?", "Confirmation",
+						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+				if (result == 0) {
+					setVisible(false);
+				}
+			}
+		});
+		setBounds(100, 100, 324, 204);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -95,7 +133,7 @@ public class ConnectionScreen extends JFrame {
 
 		lblPort = new JLabel("Port");
 		lblPort.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		lblPort.setBounds(10, 62, 45, 13);
+		lblPort.setBounds(10, 64, 45, 13);
 		contentPane.add(lblPort);
 
 		portField = new JTextField();
@@ -105,15 +143,35 @@ public class ConnectionScreen extends JFrame {
 		portField.setBounds(76, 57, 214, 26);
 		contentPane.add(portField);
 
-		JButton btnConnect = new JButton("Connect");
+		btnConnect = new JButton("Connect");
 		btnConnect.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		btnConnect.setBounds(197, 93, 93, 30);
+		btnConnect.setBounds(197, 124, 93, 30);
 		contentPane.add(btnConnect);
 
-		JButton btnDisconnect = new JButton("Disconnect");
+		btnDisconnect = new JButton("Disconnect");
 		btnDisconnect.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		btnDisconnect.setBounds(76, 93, 111, 30);
+		btnDisconnect.setBounds(76, 124, 111, 30);
 		contentPane.add(btnDisconnect);
+		btnDisconnect.setEnabled(false);
+
+		autoCheckBox = new JCheckBox("Auto");
+		autoCheckBox.setBounds(76, 90, 97, 23);
+		contentPane.add(autoCheckBox);
+		autoCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (autoCheckBox.isSelected()) {
+					ipField.setText("127.0.0.1");
+					portField.setText("8888");
+					ipField.setEditable(false);
+					portField.setEditable(false);
+				} else {
+					ipField.setText("");
+					portField.setText("");
+					ipField.setEditable(true);
+					portField.setEditable(true);
+				}
+			}
+		});
 
 		// LOGISTIC
 		btnConnect.addActionListener(e -> btnConnectActionPerformed(e));
