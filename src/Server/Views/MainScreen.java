@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -85,10 +87,23 @@ public class MainScreen extends JFrame {
 		autoCheckbox.setEnabled(false);
 	}
 
+	public void reConnect() {
+		server.closeSocket();
+		var port = Integer.valueOf(portField.getText());
+		if (!server.openSocket(ipField.getText(), port)) {
+			JOptionPane.showMessageDialog(this, "Can not open Server", "Warning", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		JOptionPane.showMessageDialog(this, "Reconnect Server!", "Warning", JOptionPane.WARNING_MESSAGE);
+		DefaultListModel<String> model = new DefaultListModel<String>();
+		model.addElement("Server is running...");
+		serverStatusPane.setModel(model);
+	}
+
 	private void btnStopActionPerformed(ActionEvent e) {
 		DefaultListModel<String> modelServer = new DefaultListModel<String>();
 		try {
-			Thread.sleep(1500);
+			Thread.sleep(500);
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
@@ -118,6 +133,16 @@ public class MainScreen extends JFrame {
 		setResizable(false);
 		setTitle("SERVER");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				String[] options = { "Yes", "No" };
+				int result = JOptionPane.showOptionDialog(null, "Are you sure you want to exit?", "Confirmation",
+						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+				if (result == 0) {
+					server.closeSocket();
+				}
+			}
+		});
 		setBounds(100, 100, 711, 600);
 		ipAddress = new JPanel();
 		ipAddress.setBackground(Color.WHITE);

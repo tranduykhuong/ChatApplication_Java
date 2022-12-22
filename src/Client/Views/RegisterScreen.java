@@ -1,48 +1,58 @@
 package Client.Views;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JTextField;
-import javax.swing.JCheckBox;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+
+import Client.Controller;
 
 public class RegisterScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField userNameField;
 	private JLabel lblNewLabel_2;
 	private JLabel lblNewLabel_3;
 	private JLabel lblNewLabel_4;
-	private JTextField textField_1;
+	private JTextField emailField;
 	private JButton btnCancel;
 	private JPasswordField passwordField;
-	private JPasswordField passwordField_1;
+	private JPasswordField confirmField;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RegisterScreen frame = new RegisterScreen();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	private boolean handleRegister() {
+		String password = String.valueOf(passwordField.getPassword());
+		String passwordConfirm = String.valueOf(confirmField.getPassword());
+		if (userNameField.getText().length() == 0 || password.length() == 0 || emailField.getText().length() == 0
+				|| passwordConfirm.length() == 0) {
+			JOptionPane.showMessageDialog(this, "Missing connection config", "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+
+		if (!password.equals(passwordConfirm)) {
+			JOptionPane.showMessageDialog(this, "Password confirm is not valid!", "Warn", JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+
+		Controller.getInstance().register(userNameField.getText(), emailField.getText(), password);
+		return true;
 	}
 
-	/**
-	 * Create the frame.
-	 */
+	public void showMessage(String content, String heading, int opt) {
+		JOptionPane.showMessageDialog(this, content, heading, opt);
+	}
+
 	public RegisterScreen() {
 		setTitle("Register");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -63,12 +73,12 @@ public class RegisterScreen extends JFrame {
 		lblNewLabel_1.setBounds(59, 57, 77, 25);
 		contentPane.add(lblNewLabel_1);
 
-		textField = new JTextField();
-		lblNewLabel_1.setLabelFor(textField);
-		textField.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		textField.setBounds(182, 56, 186, 29);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		userNameField = new JTextField();
+		lblNewLabel_1.setLabelFor(userNameField);
+		userNameField.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		userNameField.setBounds(182, 56, 186, 29);
+		contentPane.add(userNameField);
+		userNameField.setColumns(10);
 
 		lblNewLabel_2 = new JLabel("Email");
 		lblNewLabel_2.setFont(new Font("Times New Roman", Font.BOLD, 15));
@@ -85,24 +95,40 @@ public class RegisterScreen extends JFrame {
 		lblNewLabel_4.setBounds(59, 180, 112, 25);
 		contentPane.add(lblNewLabel_4);
 
-		textField_1 = new JTextField();
-		lblNewLabel_2.setLabelFor(textField_1);
-		textField_1.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		textField_1.setColumns(10);
-		textField_1.setBounds(182, 95, 186, 29);
-		contentPane.add(textField_1);
+		emailField = new JTextField();
+		lblNewLabel_2.setLabelFor(emailField);
+		emailField.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		emailField.setColumns(10);
+		emailField.setBounds(182, 95, 186, 29);
+		contentPane.add(emailField);
 
-		JCheckBox chckbxNewCheckBox = new JCheckBox("Show password");
-		chckbxNewCheckBox.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
-		chckbxNewCheckBox.setBounds(182, 217, 130, 21);
-		contentPane.add(chckbxNewCheckBox);
+		JCheckBox showCheckBox = new JCheckBox("Show password");
+		showCheckBox.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		showCheckBox.setBounds(182, 217, 130, 21);
+		contentPane.add(showCheckBox);
+		showCheckBox.addActionListener(ae -> {
+			JCheckBox c = (JCheckBox) ae.getSource();
+			passwordField.setEchoChar(c.isSelected() ? '\u0000' : (Character) UIManager.get("PasswordField.echoChar"));
+			confirmField.setEchoChar(c.isSelected() ? '\u0000' : (Character) UIManager.get("PasswordField.echoChar"));
+		});
 
-		JButton btnNewButton = new JButton("REGISTER");
-		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD, 12));
-		btnNewButton.setBounds(309, 262, 117, 32);
-		contentPane.add(btnNewButton);
+		JButton btnRegister = new JButton("REGISTER");
+		btnRegister.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				handleRegister();
+			}
+		});
+		btnRegister.setFont(new Font("Times New Roman", Font.BOLD, 12));
+		btnRegister.setBounds(309, 262, 117, 32);
+		contentPane.add(btnRegister);
 
 		btnCancel = new JButton("BACK");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Controller.getInstance().handleScreen("homeScreen", true);
+				setVisible(false);
+			}
+		});
 		btnCancel.setFont(new Font("Times New Roman", Font.BOLD, 12));
 		btnCancel.setBounds(182, 262, 117, 32);
 		contentPane.add(btnCancel);
@@ -112,9 +138,16 @@ public class RegisterScreen extends JFrame {
 		passwordField.setBounds(182, 137, 186, 29);
 		contentPane.add(passwordField);
 
-		passwordField_1 = new JPasswordField();
-		lblNewLabel_4.setLabelFor(passwordField_1);
-		passwordField_1.setBounds(182, 176, 186, 29);
-		contentPane.add(passwordField_1);
+		confirmField = new JPasswordField();
+		lblNewLabel_4.setLabelFor(confirmField);
+		confirmField.setBounds(182, 176, 186, 29);
+		contentPane.add(confirmField);
+
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				setVisible(false);
+				Controller.getInstance().handleScreen("homeScreen", true);
+			}
+		});
 	}
 }

@@ -59,16 +59,16 @@ public class Controller extends Thread {
 				}
 				case "showAll": {
 					String data = api.Filter("showAllInf", "", 0).toString();
-					//System.out.println(data);
+					// System.out.println(data);
 					thisClient.sendString(new Packet("showAll", data, "").toString());
 					break;
 				}
-				case "orderName":{
+				case "orderName": {
 					String data = api.Filter("orderbyName", "ds", Integer.parseInt(pk.getData())).toString();
 					thisClient.sendString(new Packet("orderName", data, "").toString());
 					break;
 				}
-				case "orderCreateDate":{
+				case "orderCreateDate": {
 					String data = api.Filter("orderbyCreateDay", "ds", Integer.parseInt(pk.getData())).toString();
 					thisClient.sendString(new Packet("orderCreateDate", data, "").toString());
 					break;
@@ -80,7 +80,7 @@ public class Controller extends Thread {
 					String fn = myList.get(1);
 					String ad = myList.get(2);
 					String gm = myList.get(3);
-					String data = api.showDetailAccount(un,fn,ad,gm).toString();
+					String data = api.showDetailAccount(un, fn, ad, gm).toString();
 					thisClient.sendString(new Packet("showDetail", data, "").toString());
 					break;
 				}
@@ -95,7 +95,7 @@ public class Controller extends Thread {
 					String dob = myList.get(5);
 					String gd = myList.get(6);
 					String gm = myList.get(7);
-					api.addAccountSc(id,un,fn,pw,ad,dob,gd,gm);
+					api.addAccountSc(id, un, fn, pw, ad, dob, gd, gm);
 					thisClient.sendString(new Packet("addAccount", "Thêm thành công", "").toString());
 					break;
 				}
@@ -109,7 +109,7 @@ public class Controller extends Thread {
 					String gd = myList.get(4);
 					String ad = myList.get(5);
 					String gm = myList.get(6);
-					String data = api.updateUser(id,un,fn,dob,gd,ad,gm).toString();
+					String data = api.updateUser(id, un, fn, dob, gd, ad, gm).toString();
 					thisClient.sendString(new Packet("updateAccount", data, "").toString());
 					break;
 				}
@@ -132,7 +132,7 @@ public class Controller extends Thread {
 					String ad = myList.get(2);
 					String gm = myList.get(3);
 					String ac = myList.get(4);
-					api.blockAccount(un,fn,ad,gm,ac);
+					api.blockAccount(un, fn, ad, gm, ac);
 					thisClient.sendString(new Packet("lockAccount", "", "").toString());
 					break;
 				}
@@ -175,13 +175,30 @@ public class Controller extends Thread {
 					break;
 				}
 				case "signUp": {
+					String[] data = pk.getData().split("`");
+					String user = api.signup(data[0], data[1], data[2]);
+					thisClient.sendString(new Packet("signUp", user, "").toString());
 					break;
 				}
 				case "logIn": {
-					thisClient.sendString(new Packet("logIn", "Phan hoi ne", "DK").toString());
+					String[] req = pk.getData().split("`");
+					boolean check = api.login(req[0], req[1]);
+					if (check) {
+						String data = api.Filter("searchByName", req[0], 0).toString();
+						thisClient.sendString(new Packet("logIn", data, "").toString());
+					} else {
+						thisClient.sendString(new Packet("logIn", "Username or password is wrong!", "").toString());
+					}
 					break;
 				}
 				case "forgotPassword": {
+					String username = pk.getData();
+					boolean check = api.forgotPassword(username);
+					if (check) {
+						thisClient.sendString(new Packet("forgotPassword", "success", "").toString());
+					} else {
+						thisClient.sendString(new Packet("forgotPassword", "fail", "").toString());
+					}
 					break;
 				}
 				case "addFriend": {
@@ -275,35 +292,7 @@ public class Controller extends Thread {
 			}
 
 		} catch (IOException e) {
-//			if (!Main.socketController.s.isClosed() /* && thisClient.userName != null */) {
-//
-//				try {
-//					// for (ClientApp client : Main.socketController.connectedClient) {
-//					// if (!client.userName.equals(thisClient.userName)) {
-//					// client.sender.write("user quit");
-//					// client.sender.newLine();
-//					// client.sender.write(thisClient.userName);
-//					// client.sender.newLine();
-//					// client.sender.flush();
-//					// }
-//					// }
-//
-//					// for (Room room : Main.socketController.allRooms)
-//					// room.users.remove(thisClient.userName);
-//
-//					// thisClient.socket.close();
-//
-//				} catch (Exception e1) {
-//					e1.printStackTrace();
-//				}
-//				Main.socketController.connectedClient.remove(thisClient);
-//				// Main.mainScreen.updateClientTable();
-//			}
+			ServerApp.mainScreen.reConnect();
 		}
-	}
-
-	private String ParseInt(String data) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
