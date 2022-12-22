@@ -1,35 +1,35 @@
 package Client.Views;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import java.awt.Color;
-import javax.swing.JLabel;
+import java.awt.EventQueue;
 import java.awt.Font;
-import javax.swing.JButton;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JRadioButton;
-import com.toedter.calendar.JDateChooser;
-import Client.Controller;
-import Entity.Packet;
-
-import javax.swing.border.TitledBorder;
 import java.awt.GridLayout;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.swing.DefaultListModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+
+import com.toedter.calendar.JDateChooser;
+
+import Client.Controller;
+import Entity.Packet;
 
 public class User extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -46,6 +46,8 @@ public class User extends JFrame {
 	private JList<String> listFriend;
 	private JList<String> historyLogin;
 
+	String username;
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -60,7 +62,14 @@ public class User extends JFrame {
 		});
 	}
 
+	private void handleResetPassword() {
+		Controller.getInstance().resetPassword(username);
+		JOptionPane.showMessageDialog(this, "New password sent to this account's email!", "Success",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+
 	public User(String id, String username, String fullname, String addr, String dob, String gender, String email) {
+		this.username = username;
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 550, 725);
 		contentPane = new JPanel();
@@ -178,7 +187,8 @@ public class User extends JFrame {
 		JButton btnCpNhtThng = new JButton("Chỉnh sửa thông tin");
 		btnCpNhtThng.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				EditUser UpdateFrame = new EditUser(id, usernameFd.getText(), fullnameFd.getText(), flagGender, dateChooser.getDate(), addrFd.getText(), emailFd.getText());
+				EditUser UpdateFrame = new EditUser(id, usernameFd.getText(), fullnameFd.getText(), flagGender,
+						dateChooser.getDate(), addrFd.getText(), emailFd.getText());
 				UpdateFrame.setVisible(true);
 			}
 		});
@@ -189,6 +199,11 @@ public class User extends JFrame {
 		btnCpNhtThng.setFont(new Font("Tahoma", Font.BOLD, 13));
 
 		JButton btniMtKhu = new JButton("Đổi mật khẩu");
+		btniMtKhu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				handleResetPassword();
+			}
+		});
 		btniMtKhu.setBounds(372, 585, 134, 25);
 		panel.add(btniMtKhu);
 		btniMtKhu.setForeground(new Color(1, 128, 254));
@@ -245,7 +260,9 @@ public class User extends JFrame {
 					JOptionPane.YES_NO_OPTION);
 			if (response == JOptionPane.YES_OPTION) {
 				String activeSt = "0";
-				Controller.getInstance().sendTextMessage(new Packet("lockAccount",usernameFd.getText() + ", " + fullnameFd.getText()+ ", " + addrFd.getText()+ ", " + emailFd.getText() + ", " + activeSt, "").toString());
+				Controller.getInstance()
+						.sendTextMessage(new Packet("lockAccount", usernameFd.getText() + ", " + fullnameFd.getText()
+								+ ", " + addrFd.getText() + ", " + emailFd.getText() + ", " + activeSt, "").toString());
 				JOptionPane.showMessageDialog(this, "Khóa thành công");
 				setVisible(false);
 			}
@@ -254,7 +271,9 @@ public class User extends JFrame {
 					"Unblock Account", JOptionPane.YES_NO_OPTION);
 			if (response == JOptionPane.YES_OPTION) {
 				String activeSt = "1";
-				Controller.getInstance().sendTextMessage(new Packet("lockAccount",usernameFd.getText() + ", " + fullnameFd.getText()+ ", " + addrFd.getText()+ ", " + emailFd.getText() + ", " + activeSt, "").toString());
+				Controller.getInstance()
+						.sendTextMessage(new Packet("lockAccount", usernameFd.getText() + ", " + fullnameFd.getText()
+								+ ", " + addrFd.getText() + ", " + emailFd.getText() + ", " + activeSt, "").toString());
 				JOptionPane.showMessageDialog(this, "Mở khóa thành công");
 				setVisible(false);
 			}
@@ -266,7 +285,8 @@ public class User extends JFrame {
 		int response = JOptionPane.showConfirmDialog(this, "Are you sure to delete this account?", "Delete Account",
 				JOptionPane.YES_NO_OPTION);
 		if (response == JOptionPane.YES_OPTION) {
-			Controller.getInstance().sendTextMessage(new Packet("removeAccount",usernameFd.getText() + ", " + fullnameFd.getText()+ ", " + addrFd.getText()+ ", " + emailFd.getText(), "").toString());
+			Controller.getInstance().sendTextMessage(new Packet("removeAccount", usernameFd.getText() + ", "
+					+ fullnameFd.getText() + ", " + addrFd.getText() + ", " + emailFd.getText(), "").toString());
 			JOptionPane.showMessageDialog(this, "Xóa thành công");
 			Controller.getInstance().sendTextMessage(new Packet("showAll", "", "").toString());
 			setVisible(false);
@@ -280,7 +300,7 @@ public class User extends JFrame {
 		fullnameFd.setText(fullname);
 		addrFd.setText(addr);
 		emailFd.setText(email);
-		
+
 		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		try {
 			java.util.Date date = formatter.parse(dob);
@@ -299,40 +319,32 @@ public class User extends JFrame {
 			flagGender = true;
 		}
 
-		if(active.equals("1")) {
+		if (active.equals("1")) {
 			btnKho.setText("Khóa");
-		}
-		else {
+		} else {
 			btnKho.setText("Mở khóa");
 		}
-		
-		
-		
-		
-		//LIST
-		//List Friend
+
+		// LIST
+		// List Friend
 		System.out.print("Nhom nhan: " + listfriend);
 		List<String> ListFriend = new ArrayList<String>(Arrays.asList(listfriend.split(", ")));
 		DefaultListModel<String> dlm = new DefaultListModel<String>();
-		for (int i = 0; i < ListFriend.size(); i++) 
-		{
+		for (int i = 0; i < ListFriend.size(); i++) {
 			dlm.addElement(ListFriend.get(i));
 		}
 
 		listFriend.setModel(dlm);
-		
-		
-		//History login
+
+		// History login
 		System.out.print("Lich su nhan: " + listLogin);
 		List<String> HistoryLG = new ArrayList<String>(Arrays.asList(listLogin.split(", ")));
 		DefaultListModel<String> dlm1 = new DefaultListModel<String>();
-		for (int i = 0; i < HistoryLG.size(); i++) 
-		{
+		for (int i = 0; i < HistoryLG.size(); i++) {
 			dlm1.addElement(HistoryLG.get(i));
 		}
 
 		historyLogin.setModel(dlm1);
 	}
 
-	}
-
+}

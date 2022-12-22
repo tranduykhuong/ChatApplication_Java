@@ -206,7 +206,7 @@ public class ManageUsersList extends JFrame {
 		btnBack.setHorizontalAlignment(SwingConstants.LEFT);
 		btnBack.setForeground(new Color(1, 128, 254));
 		btnBack.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnBack.setBounds(887, 0, 81, 19);
+		btnBack.setBounds(880, 0, 88, 19);
 		pnControl.add(btnBack);
 
 		JButton btnXemChiTit = new JButton("Quản lí đăng nhập");

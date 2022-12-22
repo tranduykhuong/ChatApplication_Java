@@ -88,7 +88,7 @@ public class AccountController extends AccountModel {
 	}
 
 	public String checkAccountExist(String userName) {
-		MongoCursor<Document> document = CollectionAccount().find(Filters.regex("userName", userName)).iterator();
+		MongoCursor<Document> document = CollectionAccount().find(eq("userName", userName)).iterator();
 		try {
 			while (document.hasNext()) {
 				Document doc = document.next();
@@ -98,6 +98,28 @@ public class AccountController extends AccountModel {
 			document.close();
 		}
 		return "";
+	}
+
+	public ArrayList<String> findByUsername(String userName) {
+		MongoCursor<Document> document = CollectionAccount().find(eq("userName", userName)).iterator();
+		ArrayList<String> listData = new ArrayList<String>();
+		try {
+			while (document.hasNext()) {
+				Document doc = document.next();
+				listData.add((String) doc.get("userName"));
+				listData.add((String) doc.get("fullName"));
+				listData.add((String) doc.get("address"));
+				listData.add((String) doc.get("dob"));
+				listData.add((String) doc.get("gender").toString());
+				listData.add((String) doc.get("email"));
+				listData.add((String) doc.get("role"));
+				listData.add((String) doc.get("password"));
+				listData.add((String) doc.get("id"));
+			}
+		} finally {
+			document.close();
+		}
+		return listData;
 	}
 
 	public ArrayList<String> FilterByName(int status) {

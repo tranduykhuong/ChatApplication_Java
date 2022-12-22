@@ -46,6 +46,7 @@ public class Controller {
 
 	private String username;
 	private String id;
+	private String fullname;
 
 	private Controller() {
 		client = new TCP_Client();
@@ -360,6 +361,7 @@ public class Controller {
 					} else {
 						String[] dataArr = data.substring(1, data.length() - 1).split(", ");
 						this.username = dataArr[0];
+						this.fullname = dataArr[1];
 						this.id = dataArr[dataArr.length - 1];
 						loginScreen.showMessage("Login successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
 						loginScreen.setVisible(false);
@@ -488,6 +490,9 @@ public class Controller {
 				case "chatGroup": {
 					break;
 				}
+				case "resetPassword": {
+					break;
+				}
 				default: {
 					break;
 				}
@@ -523,6 +528,10 @@ public class Controller {
 	public boolean forgotPassword(String username) {
 		client.sendString(new Packet("forgotPassword", username, "").toString());
 		return true;
+	}
+
+	public void resetPassword(String username) {
+		client.sendString(new Packet("resetPassword", username, "").toString());
 	}
 
 	public void handleScreen(String screen, boolean status) {

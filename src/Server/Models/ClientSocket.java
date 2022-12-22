@@ -16,8 +16,11 @@ public class ClientSocket {
 	private InputStream is;
 	private OutputStream os;
 
+	private String id;
+
 	public ClientSocket(Socket client) {
 		this.client = client;
+		this.id = null;
 
 		try {
 			is = client.getInputStream();
@@ -95,5 +98,13 @@ public class ClientSocket {
 
 	public int getPort() {
 		return client.getPort();
+	}
+
+	public void setID(String id) {
+		this.id = id;
+	}
+
+	public String getID() {
+		return this.id;
 	}
 }

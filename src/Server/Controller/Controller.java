@@ -182,10 +182,11 @@ public class Controller extends Thread {
 				}
 				case "logIn": {
 					String[] req = pk.getData().split("`");
-					boolean check = api.login(req[0], req[1]);
-					if (check) {
-						String data = api.Filter("searchByName", req[0], 0).toString();
-						thisClient.sendString(new Packet("logIn", data, "").toString());
+					ArrayList<String> data = api.login(req[0], req[1]);
+					if (data.size() != 0) {
+						System.out.println("aa: " + data);
+						ClientConnected.getInstance().setID(thisClient, data.get(data.size() - 1));
+						thisClient.sendString(new Packet("logIn", data.toString(), "").toString());
 					} else {
 						thisClient.sendString(new Packet("logIn", "Username or password is wrong!", "").toString());
 					}
@@ -282,6 +283,16 @@ public class Controller extends Thread {
 					break;
 				}
 				case "chatGroup": {
+					break;
+				}
+				case "resetPassword": {
+					String username = pk.getData();
+					boolean check = api.forgotPassword(username);
+					if (check) {
+						thisClient.sendString(new Packet("resetPassword", "success", "").toString());
+					} else {
+						thisClient.sendString(new Packet("resetPassword", "fail", "").toString());
+					}
 					break;
 				}
 				default: {

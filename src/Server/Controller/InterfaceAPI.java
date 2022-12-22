@@ -28,13 +28,17 @@ public class InterfaceAPI {
 		accountApi.update(idUser, fullName, userName, password, dob, gender, address, email);
 	}
 
-	public boolean login(String userName, String password) {
-		String pwCheck = accountApi.checkAccountExist(userName);
-		if (pwCheck.length() == 0)
-			return false;
-		boolean matched = BCrypt.checkpw(password, pwCheck);
+	public ArrayList<String> login(String userName, String password) {
+		ArrayList<String> pwCheck = accountApi.findByUsername(userName);
+		if (pwCheck.size() == 0)
+			return pwCheck;
+		boolean matched = BCrypt.checkpw(password, pwCheck.get(pwCheck.size() - 2));
 
-		return matched;
+		if (matched) {
+			accountApi.updateHistoryLogin(pwCheck.get(pwCheck.size() - 1));
+			return pwCheck;
+		}
+		return new ArrayList<String>();
 	}
 
 	public String signup(String username, String email, String password) {

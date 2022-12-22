@@ -101,7 +101,7 @@ public class ConnectionScreen extends JFrame {
 	 */
 	public ConnectionScreen() {
 		setTitle("Connection");
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
 				String[] options = { "Yes", "No" };
