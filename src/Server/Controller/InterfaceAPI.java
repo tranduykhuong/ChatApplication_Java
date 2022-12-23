@@ -32,7 +32,7 @@ public class InterfaceAPI {
 		ArrayList<String> pwCheck = accountApi.findByUsername(userName);
 		if (pwCheck.size() == 0)
 			return pwCheck;
-		boolean matched = BCrypt.checkpw(password, pwCheck.get(pwCheck.size() - 2));
+		boolean matched = BCrypt.checkpw(password, pwCheck.get(pwCheck.size() - 3));
 
 		if (matched) {
 			accountApi.updateHistoryLogin(pwCheck.get(pwCheck.size() - 1));

@@ -534,6 +534,13 @@ public class Controller {
 		client.sendString(new Packet("resetPassword", username, "").toString());
 	}
 
+	public void logout() {
+		username = null;
+		id = null;
+		fullname = null;
+		homeScreen.setVisible(true);
+	}
+
 	public void handleScreen(String screen, boolean status) {
 		switch (screen) {
 		case "registerScreen": {

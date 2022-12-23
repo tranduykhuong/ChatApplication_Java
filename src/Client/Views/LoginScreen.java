@@ -47,7 +47,13 @@ public class LoginScreen extends JFrame {
 
 	public LoginScreen() {
 		setTitle("Login");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				setVisible(false);
+				Controller.getInstance().handleScreen("homeScreen", true);
+			}
+		});
 		setBounds(100, 100, 450, 301);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -123,13 +129,6 @@ public class LoginScreen extends JFrame {
 		btnForgot.setFont(new Font("Times New Roman", Font.ITALIC, 14));
 		btnForgot.setBounds(277, 174, 149, 21);
 		contentPane.add(btnForgot);
-
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent we) {
-				setVisible(false);
-				Controller.getInstance().handleScreen("homeScreen", true);
-			}
-		});
 	}
 
 }

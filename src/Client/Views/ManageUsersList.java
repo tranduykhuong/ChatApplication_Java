@@ -199,7 +199,7 @@ public class ManageUsersList extends JFrame {
 		JButton btnBack = new JButton("Log out");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Controller.getInstance().handleScreen("homeScreen", true);
+				Controller.getInstance().logout();
 				setVisible(false);
 			}
 		});

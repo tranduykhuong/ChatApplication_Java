@@ -55,7 +55,13 @@ public class RegisterScreen extends JFrame {
 
 	public RegisterScreen() {
 		setTitle("Register");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				setVisible(false);
+				Controller.getInstance().handleScreen("homeScreen", true);
+			}
+		});
 		setBounds(100, 100, 450, 341);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -142,12 +148,5 @@ public class RegisterScreen extends JFrame {
 		lblNewLabel_4.setLabelFor(confirmField);
 		confirmField.setBounds(182, 176, 186, 29);
 		contentPane.add(confirmField);
-
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent we) {
-				setVisible(false);
-				Controller.getInstance().handleScreen("homeScreen", true);
-			}
-		});
 	}
 }

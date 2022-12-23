@@ -184,6 +184,12 @@ public class ChatApplicationScreen extends JFrame {
 		panel_9.add(btnNewButton_6_1_1_1);
 
 		JButton btnNewButton_6_1_1_1_1 = new JButton("LOG OUT");
+		btnNewButton_6_1_1_1_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Controller.getInstance().logout();
+				setVisible(false);
+			}
+		});
 		btnNewButton_6_1_1_1_1.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		btnNewButton_6_1_1_1_1.setBounds(10, 284, 139, 27);
 		panel_9.add(btnNewButton_6_1_1_1_1);

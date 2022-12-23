@@ -112,8 +112,8 @@ public class AccountController extends AccountModel {
 				listData.add((String) doc.get("dob"));
 				listData.add((String) doc.get("gender").toString());
 				listData.add((String) doc.get("email"));
-				listData.add((String) doc.get("role"));
 				listData.add((String) doc.get("password"));
+				listData.add((String) doc.get("role"));
 				listData.add((String) doc.get("id"));
 			}
 		} finally {
