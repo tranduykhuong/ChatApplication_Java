@@ -27,20 +27,12 @@ import Server.TCP_Server;
 
 public class MainScreen extends JFrame {
 
-<<<<<<< HEAD
 	private static final long serialVersionUID = 1L;
 	private JPanel ipAddress;
 	private JTextField portField;
 	private TCP_Server server = null;
 	private JTextField ipField;
 	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
-=======
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
->>>>>>> c0e653d (first UI)
 
 	JButton btnRunServer;
 	JButton btnStopServer;

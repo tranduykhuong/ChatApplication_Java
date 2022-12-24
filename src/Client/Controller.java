@@ -200,61 +200,61 @@ public class Controller {
 					}
 					case "listLoginTime": {
 						String dataString = pk.getData();
-					ArrayList<ArrayList<String>> historyLogin = new ArrayList<>();
-					ArrayList<List<String>> tmpHistoryLogin = new ArrayList<List<String>>();
-					ArrayList<String> historyLoginArrayList = new ArrayList<String>();
-					String str = dataString.substring(1, dataString.length() - 1);
-//					System.out.println("Vinh" + str);
-					String[] userList = str.split("\\], ");
-					userList[userList.length - 1] = userList[userList.length - 1].substring(0,
-							userList[userList.length - 1].length() - 1);
-					for (String user : userList) {
-						ArrayList<String> userInfo = new ArrayList<String>();
-						String[] temp = user.split(", \\[");
-						userInfo.add(temp[0].split(", ").length >= 1 ? temp[0].split(", ")[0] : "");
-						userInfo.add(temp[0].split(", ").length > 1 ? temp[0].split(", ")[1] : "");
-						userInfo.add(temp[1]);
-						historyLogin.add(userInfo);
-					}
-					System.out.println(historyLogin);
-					for (int i = 0; i < historyLogin.size(); i++) {
-						String usname = historyLogin.get(i).get(0);
-						String fname = historyLogin.get(i).get(1);
+						ArrayList<ArrayList<String>> historyLogin = new ArrayList<>();
+						ArrayList<List<String>> tmpHistoryLogin = new ArrayList<List<String>>();
+						ArrayList<String> historyLoginArrayList = new ArrayList<String>();
+						String str = dataString.substring(1, dataString.length() - 1);
+						// System.out.println("Vinh" + str);
+						String[] userList = str.split("\\], ");
+						userList[userList.length - 1] = userList[userList.length - 1].substring(0,
+								userList[userList.length - 1].length() - 1);
+						for (String user : userList) {
+							ArrayList<String> userInfo = new ArrayList<String>();
+							String[] temp = user.split(", \\[");
+							userInfo.add(temp[0].split(", ").length >= 1 ? temp[0].split(", ")[0] : "");
+							userInfo.add(temp[0].split(", ").length > 1 ? temp[0].split(", ")[1] : "");
+							userInfo.add(temp[1]);
+							historyLogin.add(userInfo);
+						}
+						System.out.println(historyLogin);
+						for (int i = 0; i < historyLogin.size(); i++) {
+							String usname = historyLogin.get(i).get(0);
+							String fname = historyLogin.get(i).get(1);
 
-						ArrayList<String> listLogin = new ArrayList<>();
-						ArrayList<String> finals = new ArrayList<>();
+							ArrayList<String> listLogin = new ArrayList<>();
+							ArrayList<String> finals = new ArrayList<>();
 
-						for (int j = 2; j < historyLogin.get(i).size(); j++) {
+							for (int j = 2; j < historyLogin.get(i).size(); j++) {
 
-							listLogin.add(historyLogin.get(i).get(j));
-							String history = historyLogin.get(i).get(j);
-							List<String> tmpLogin = new ArrayList<>(Arrays.asList(history.split(", ")));
+								listLogin.add(historyLogin.get(i).get(j));
+								String history = historyLogin.get(i).get(j);
+								List<String> tmpLogin = new ArrayList<>(Arrays.asList(history.split(", ")));
 
-							for (int l = 0; l < tmpLogin.size(); l++) {
-								ArrayList<String> Detail = new ArrayList<>();
-								Detail.add(usname);
-								Detail.add(fname);
-								Detail.add(tmpLogin.get(l));
-								finals.add(Detail.toString().substring(1, (Detail.toString().length() - 1)));
+								for (int l = 0; l < tmpLogin.size(); l++) {
+									ArrayList<String> Detail = new ArrayList<>();
+									Detail.add(usname);
+									Detail.add(fname);
+									Detail.add(tmpLogin.get(l));
+									finals.add(Detail.toString().substring(1, (Detail.toString().length() - 1)));
 
-								List<String> tmpKo = new ArrayList<>(Arrays.asList(finals.get(l).split(", ")));
-								tmpHistoryLogin.add(tmpKo);
+									List<String> tmpKo = new ArrayList<>(Arrays.asList(finals.get(l).split(", ")));
+									tmpHistoryLogin.add(tmpKo);
+								}
 							}
 						}
-					}
-					for (int i1 = 0; i1 < tmpHistoryLogin.size() - 1; i1++) {
-						SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-						String startDate = tmpHistoryLogin.get(i1).get(2);
-						String endDate = tmpHistoryLogin.get(i1 + 1).get(2);
+						for (int i1 = 0; i1 < tmpHistoryLogin.size() - 1; i1++) {
+							SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+							String startDate = tmpHistoryLogin.get(i1).get(2);
+							String endDate = tmpHistoryLogin.get(i1 + 1).get(2);
 
-						try {
-							if (sdf.parse(startDate).after(sdf.parse(endDate))) {
-								Collections.swap(tmpHistoryLogin, i1, i1 + 1);
+							try {
+								if (sdf.parse(startDate).after(sdf.parse(endDate))) {
+									Collections.swap(tmpHistoryLogin, i1, i1 + 1);
+								}
+							} catch (ParseException e1) {
+								e1.printStackTrace();
 							}
-						} catch (ParseException e1) {
-							e1.printStackTrace();
 						}
-					}
 
 					for (int i = 0; i < tmpHistoryLogin.size(); i++) {
 						for (int j = 0; j < 3; j++) {
