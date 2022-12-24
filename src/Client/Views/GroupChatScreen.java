@@ -3,11 +3,13 @@ package Client.Views;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -52,6 +54,7 @@ public class GroupChatScreen extends JFrame {
 	private ArrayList<String> idMemberBecomeAdmin = new ArrayList<String>();
 	private ArrayList<String> idMemberDeleteRoom = new ArrayList<String>();
 	private ArrayList<String> packetIdMemberDeleteRoom = new ArrayList<String>();
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	/**
 	 * Launch the application.
@@ -73,6 +76,8 @@ public class GroupChatScreen extends JFrame {
 	 * Create the frame.
 	 */
 	public GroupChatScreen() {
+		Image icon = iconTitle.getImage();    
+		setIconImage(icon); 
 		setTitle("Nhóm anh em");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 602, 321);

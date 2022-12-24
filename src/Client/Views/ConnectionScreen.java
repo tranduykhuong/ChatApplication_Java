@@ -1,11 +1,13 @@
 package Client.Views;
 
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -26,6 +28,7 @@ public class ConnectionScreen extends JFrame {
 	JCheckBox autoCheckBox;
 	JButton btnConnect;
 	JButton btnDisconnect;
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	private boolean checkValidation() {
 		if (portField.getText().length() == 0 || ipField.getText().length() == 0) {
@@ -100,6 +103,8 @@ public class ConnectionScreen extends JFrame {
 	 * Create the frame.
 	 */
 	public ConnectionScreen() {
+		Image icon = iconTitle.getImage();    
+		setIconImage(icon); 
 		setTitle("Connection");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {

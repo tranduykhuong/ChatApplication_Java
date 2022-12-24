@@ -7,7 +7,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Image;
+
 import javax.swing.JPasswordField;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 public class ChangePasswordScreen extends JFrame {
@@ -19,6 +22,7 @@ public class ChangePasswordScreen extends JFrame {
 	private JPasswordField passwordField_1;
 	private JPasswordField passwordField_2;
 	private JButton btnNewButton;
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	/**
 	 * Launch the application.
@@ -40,6 +44,8 @@ public class ChangePasswordScreen extends JFrame {
 	 * Create the frame.
 	 */
 	public ChangePasswordScreen() {
+		Image icon = iconTitle.getImage();    
+		setIconImage(icon);
 		setTitle("Change Password");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 380, 188);

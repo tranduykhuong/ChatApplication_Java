@@ -2,6 +2,7 @@ package Client.Views;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,6 +12,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -40,8 +42,11 @@ public class ManageUsersList extends JFrame {
 	private JTable tableUsersList;
 	private Boolean statusFilterName = false;
 	private Boolean statusFilterDate = false;
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	public ManageUsersList() {
+		Image icon = iconTitle.getImage();    
+		setIconImage(icon); 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
@@ -89,10 +94,13 @@ public class ManageUsersList extends JFrame {
 				String dob = (String) tableUsersList.getValueAt(row, 3);
 				String gender = (String) tableUsersList.getValueAt(row, 4);
 				String email = (String) tableUsersList.getValueAt(row, 5);
+				
+				Controller.getInstance().handleScreen("loadingScreen", true);
 
 				Controller.getInstance().sendTextMessage(
 						new Packet("showDetail", username + ", " + fullname + ", " + address + ", " + email, "")
 								.toString());
+				
 			}
 		});
 		scrollPane.setViewportView(tableUsersList);
@@ -174,8 +182,10 @@ public class ManageUsersList extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				statusFilterName = !statusFilterName;
 				if (statusFilterName == true) {
+					Controller.getInstance().handleScreen("loadingScreen", true);
 					Controller.getInstance().sendTextMessage(new Packet("orderName", "1", "").toString());
 				} else {
+					Controller.getInstance().handleScreen("loadingScreen", true);
 					Controller.getInstance().sendTextMessage(new Packet("orderName", "-1", "").toString());
 				}
 			}
@@ -190,8 +200,10 @@ public class ManageUsersList extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				statusFilterDate = !statusFilterDate;
 				if (statusFilterDate == true) {
+					Controller.getInstance().handleScreen("loadingScreen", true);
 					Controller.getInstance().sendTextMessage(new Packet("orderCreateDate", "1", "").toString());
 				} else {
+					Controller.getInstance().handleScreen("loadingScreen", true);
 					Controller.getInstance().sendTextMessage(new Packet("orderCreateDate", "-1", "").toString());
 				}
 			}
@@ -229,6 +241,7 @@ public class ManageUsersList extends JFrame {
 		JButton btnLc = new JButton("Lọc");
 		btnLc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Controller.getInstance().handleScreen("loadingScreen", true);
 				Controller.getInstance()
 						.sendTextMessage(new Packet("filterList", usernameField.getText(), "").toString());
 			}
@@ -266,6 +279,31 @@ public class ManageUsersList extends JFrame {
 			String genderTmp = (listUser.get(i + 4).equals("true")) ? "Nữ" : "Nam";
 			tableModel.addRow(new Object[] { listUser.get(i), listUser.get(i + 1), listUser.get(i + 2),
 					listUser.get(i + 3), genderTmp, listUser.get(i + 5) });
+		}
+	}
+	
+	public void showInforWithRole(List<String> listUser) {
+		if(listUser.size() > 1)
+		{
+		DefaultTableModel tableModel;
+		tableUsersList.getModel();
+		tableModel = (DefaultTableModel) tableUsersList.getModel();
+		tableModel.setRowCount(0);
+		for (int i = 0; i < listUser.size(); i = i + 8) {
+			System.out.println(listUser.get(i));
+			String genderTmp = (listUser.get(i + 4).equals("true")) ? "Nữ" : "Nam";
+			tableModel.addRow(new Object[] { listUser.get(i), listUser.get(i + 1), listUser.get(i + 2),
+					listUser.get(i + 3), genderTmp, listUser.get(i + 5) });
+		}
+	}
+		else
+		{
+			DefaultTableModel tableModel;
+			tableUsersList.getModel();
+			tableModel = (DefaultTableModel) tableUsersList.getModel();
+			tableModel.setRowCount(0);
+			JOptionPane.showMessageDialog(this, "Không có dữ liệu!", "Warning", JOptionPane.WARNING_MESSAGE);
+			return;
 		}
 	}
 }

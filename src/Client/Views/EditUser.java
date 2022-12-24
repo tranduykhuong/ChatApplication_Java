@@ -9,10 +9,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.awt.Image;
 import java.text.SimpleDateFormat;
 import java.awt.Font;
 import java.text.SimpleDateFormat;
 import java.awt.Color;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
@@ -28,6 +31,7 @@ import java.awt.event.ActionEvent;
 
 public class EditUser extends JFrame {
 	private static final long serialVersionUID = 1L;
+	private static final String EMAIL_PATTERN = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
 	private JPanel contentPane;
 	private JTextField nameFd;
 	private JTextField fnameFd;
@@ -36,7 +40,11 @@ public class EditUser extends JFrame {
 	private JRadioButton namFd;
 	private JRadioButton nuFd;
 	private JDateChooser dateFd;
+	private JRadioButton rdbtnCustomer;
+	private JRadioButton rdbtnAdmin;
 	private boolean flagGender;
+	private boolean flagRole;
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	/**
 	 * Launch the application.
@@ -45,7 +53,7 @@ public class EditUser extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					EditUser frame = new EditUser("", "", "", true, null, "", "");
+					EditUser frame = new EditUser("", "", "", true, null, "", "", true);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -55,7 +63,9 @@ public class EditUser extends JFrame {
 	}
 
 	public EditUser(String id, String userName, String fullName, boolean gender, java.util.Date date, String address,
-			String email) {
+			String email, boolean role) {
+		Image icon = iconTitle.getImage();    
+		setIconImage(icon);
 		setTitle("Update Account");
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 471, 463);
@@ -146,8 +156,9 @@ public class EditUser extends JFrame {
 		namFd.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				namFd.setSelected(true);
 				nuFd.setSelected(false);
+				namFd.setSelected(true);
+				flagGender = false;
 			}
 		});
 		namFd.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -158,8 +169,9 @@ public class EditUser extends JFrame {
 		nuFd.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				nuFd.setSelected(true);
 				namFd.setSelected(false);
+				nuFd.setSelected(true);
+				flagGender = true;
 			}
 		});
 		nuFd.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -181,11 +193,42 @@ public class EditUser extends JFrame {
 		btnLuThayi.setBounds(147, 320, 155, 21);
 		panel.add(btnLuThayi);
 
-		showCurrentInfor(userName, fullName, gender, date, address, email);
+		JLabel lblNewLabel_1_1_4_1 = new JLabel("Role:");
+		lblNewLabel_1_1_4_1.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblNewLabel_1_1_4_1.setBounds(30, 280, 106, 13);
+		panel.add(lblNewLabel_1_1_4_1);
+
+		rdbtnCustomer = new JRadioButton("User");
+		rdbtnCustomer.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				rdbtnAdmin.setSelected(false);
+				rdbtnCustomer.setSelected(true);
+				flagRole = true;
+			}
+		});
+		rdbtnCustomer.setFont(new Font("Tahoma", Font.BOLD, 13));
+		rdbtnCustomer.setBounds(147, 275, 103, 21);
+		panel.add(rdbtnCustomer);
+
+		rdbtnAdmin = new JRadioButton("Admin");
+		rdbtnAdmin.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				rdbtnCustomer.setSelected(false);
+				rdbtnAdmin.setSelected(true);
+				flagRole = false;
+			}
+		});
+		rdbtnAdmin.setFont(new Font("Tahoma", Font.BOLD, 13));
+		rdbtnAdmin.setBounds(297, 275, 103, 21);
+		panel.add(rdbtnAdmin);
+
+		showCurrentInfor(userName, fullName, gender, date, address, email, role);
 	}
 
 	public void showCurrentInfor(String userName, String fullName, boolean gender, java.util.Date date, String address,
-			String email) {
+			String email, boolean role) {
 
 		nameFd.setText(userName);
 		fnameFd.setText(fullName);
@@ -202,6 +245,17 @@ public class EditUser extends JFrame {
 			nuFd.setSelected(true);
 			flagGender = true;
 		}
+		
+		if (role == false) {
+			rdbtnAdmin.setSelected(true);
+			rdbtnCustomer.setSelected(false);
+			flagRole = false;
+		} else {
+			rdbtnAdmin.setSelected(false);
+			rdbtnCustomer.setSelected(true);
+			flagRole = true;
+		}
+
 	}
 
 	public void UpdateInfor(String id) {
@@ -212,12 +266,29 @@ public class EditUser extends JFrame {
 				JOptionPane.YES_NO_OPTION);
 		if (response == JOptionPane.YES_OPTION) {
 
-			System.out.print(nameFd.getText() + " " + fnameFd.getText() + " " + flagGender + " " + addFd.getText() + " "
-					+ emailFd.getText());
+			if (nameFd.getText().equals("") || fnameFd.getText().equals("") || addFd.getText().equals("")
+					|| emailFd.getText().equals("") || !emailFd.getText().matches(EMAIL_PATTERN)) {
+				JOptionPane.showMessageDialog(this, "Field invalid!", "Warning", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
 
+			Controller.getInstance().handleScreen("loadingScreen", true);
+			
 			Controller.getInstance()
-					.sendTextMessage(new Packet("updateAccount", id + ", " + nameFd.getText() + ", " + fnameFd.getText() + ", "
-							+ strDate + ", " + flagGender + ", " + addFd.getText() + ", " + emailFd.getText(), "").toString());
+					.sendTextMessage(
+							new Packet("updateAccount",
+									id + ", " + nameFd.getText() + ", " + fnameFd.getText() + ", " + strDate + ", "
+											+ flagGender + ", " + addFd.getText() + ", " + emailFd.getText() + ", " + flagRole,
+									"").toString());
+			
+			
+
+			Controller.getInstance().sendTextMessage(new Packet("showDetail",
+					nameFd.getText() + ", " + fnameFd.getText() + ", " + addFd.getText() + ", " + emailFd.getText(), "")
+					.toString());
+			
+			Controller.getInstance().handleScreen("loadingScreen", true);
+			
 			Controller.getInstance().sendTextMessage(new Packet("showAll", "", "").toString());
 			setVisible(false);
 		}

@@ -1,6 +1,7 @@
 package Client;
 
 import Client.Views.ConnectionScreen;
+import Client.Views.LoadingScreen;
 
 public class ClientApp {
 	public static ConnectionScreen connectionScreen;

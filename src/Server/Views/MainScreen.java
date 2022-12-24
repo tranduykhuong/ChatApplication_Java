@@ -3,12 +3,14 @@ package Server.Views;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -20,6 +22,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import Client.Views.HomeScreen;
 import Server.TCP_Server;
 
 public class MainScreen extends JFrame {
@@ -29,6 +32,7 @@ public class MainScreen extends JFrame {
 	private JTextField portField;
 	private TCP_Server server = null;
 	private JTextField ipField;
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	JButton btnRunServer;
 	JButton btnStopServer;
@@ -130,6 +134,8 @@ public class MainScreen extends JFrame {
 	 * Create the frame.
 	 */
 	public MainScreen() {
+		Image icon = iconTitle.getImage();    
+		setIconImage(icon); 
 		setResizable(false);
 		setTitle("SERVER");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
