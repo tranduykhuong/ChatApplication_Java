@@ -45,6 +45,8 @@ public class AddUser extends JFrame {
 	private JRadioButton femaleFd;
 	private JDateChooser dateChooser;
 	private JTextField emailFd;
+	private JRadioButton rdbtnUser;
+	private JRadioButton rdbtnAdmin;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -163,6 +165,37 @@ public class AddUser extends JFrame {
 		btnThmNgiDng.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnThmNgiDng.setBounds(147, 320, 155, 21);
 		panel.add(btnThmNgiDng);
+
+		JLabel lblNewLabel_1_1_4_1 = new JLabel("Role:");
+		lblNewLabel_1_1_4_1.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblNewLabel_1_1_4_1.setBounds(30, 275, 106, 13);
+		panel.add(lblNewLabel_1_1_4_1);
+
+		rdbtnUser = new JRadioButton("User");
+		rdbtnUser.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				rdbtnUser.setSelected(true);
+				rdbtnAdmin.setSelected(false);
+			}
+		});
+		rdbtnUser.setSelected(true);
+		rdbtnUser.setFont(new Font("Tahoma", Font.BOLD, 13));
+		rdbtnUser.setBounds(147, 271, 103, 21);
+		panel.add(rdbtnUser);
+
+		rdbtnAdmin = new JRadioButton("Admin");
+		rdbtnAdmin.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				rdbtnAdmin.setSelected(true);
+				rdbtnUser.setSelected(false);
+			}
+		});
+		rdbtnAdmin.setFont(new Font("Tahoma", Font.BOLD, 13));
+		rdbtnAdmin.setBounds(297, 271, 103, 21);
+		panel.add(rdbtnAdmin);
+
 		JLabel lblNewLabel = new JLabel("Thêm người dùng");
 		lblNewLabel.setForeground(new Color(30, 113, 225));
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -183,8 +216,9 @@ public class AddUser extends JFrame {
 
 	public void getCreateInfor() {
 		boolean gender;
+		String role;
 
-		if (userFd.getText() == "" || fullnameFd.getText() == "" || addrFd.getText() == "" || emailFd.getText() == ""
+		if (userFd.getText().equals("") || fullnameFd.getText().equals("") || addrFd.getText().equals("") || emailFd.getText().equals("")
 				|| !emailFd.getText().matches(EMAIL_PATTERN) || dateChooser.getDate() == null) {
 			JOptionPane.showMessageDialog(this, "Field invalid!", "Warning", JOptionPane.WARNING_MESSAGE);
 			return;
@@ -198,6 +232,12 @@ public class AddUser extends JFrame {
 		} else {
 			gender = true;
 		}
+		
+		if (rdbtnAdmin.isSelected()) {
+			role = "admin";
+		} else {
+			role = "user";
+		}
 
 		String id = UUID.randomUUID().toString();
 		String password = UUID.randomUUID().toString();
@@ -205,7 +245,7 @@ public class AddUser extends JFrame {
 		Controller.getInstance()
 				.sendTextMessage(new Packet("addAccount",
 						id + ", " + userFd.getText() + ", " + fullnameFd.getText() + ", " + password + ", "
-								+ addrFd.getText() + ", " + strDate + ", " + gender + ", " + emailFd.getText(),
+								+ addrFd.getText() + ", " + strDate + ", " + gender + ", " + emailFd.getText() + ", " + role,
 						"").toString());
 		JOptionPane.showMessageDialog(this, "Thêm thành công");
 		Controller.getInstance().sendTextMessage(new Packet("showAll", "", "").toString());

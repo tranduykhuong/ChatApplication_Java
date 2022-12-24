@@ -2,11 +2,13 @@ package Client.Views;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,6 +23,7 @@ public class ForgotPWScreen extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField usernameField;
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	private boolean handleResetPW() {
 		if (usernameField.getText().length() == 0) {
@@ -38,6 +41,8 @@ public class ForgotPWScreen extends JFrame {
 	}
 
 	public ForgotPWScreen() {
+		Image icon = iconTitle.getImage();    
+		setIconImage(icon);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 224);
 		contentPane = new JPanel();

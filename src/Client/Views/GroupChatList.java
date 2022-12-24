@@ -11,6 +11,8 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JList;
 import java.awt.GridLayout;
+import java.awt.Image;
+
 import javax.swing.border.TitledBorder;
 
 import Client.Controller;
@@ -18,6 +20,7 @@ import Entity.Packet;
 
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -42,6 +45,7 @@ public class GroupChatList extends JFrame {
 	private String selectedString;
 	private int firstSelIx;
 
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 	/**
 	 * Launch the application.
 	 */
@@ -62,6 +66,8 @@ public class GroupChatList extends JFrame {
 	 * Create the frame.
 	 */
 	public GroupChatList() {
+		Image icon = iconTitle.getImage();    
+		setIconImage(icon);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 842, 483);
 		contentPane = new JPanel();

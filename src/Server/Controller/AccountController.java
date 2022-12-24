@@ -48,7 +48,7 @@ public class AccountController extends AccountModel {
 	}
 
 	public void createAccount(String id, String userName, String fullName, String password, String dob, boolean gender,
-			String address, String email) {
+			String address, String email, String role) {
 
 		ArrayList<String> listFriend = new ArrayList<String>();
 		ArrayList<String> listRoom = new ArrayList<String>();
@@ -63,7 +63,7 @@ public class AccountController extends AccountModel {
 				.append("password", password).append("dob", dob).append("gender", gender).append("address", address)
 				.append("email", email).append("listFriend", listFriend).append("listRoom", listRoom)
 				.append("listMessage", listMessage).append("createTime", formatter.format(date)).append("active", 1)
-				.append("historyLogin", historyLogin);
+				.append("historyLogin", historyLogin).append("role", role);
 		CollectionAccount().insertOne(document);
 		System.out.println("successful");
 	}
@@ -210,6 +210,7 @@ public class AccountController extends AccountModel {
 				Document doc = document.next();
 				listData.add((String) doc.get("id"));
 				listData.add((String) doc.get("active").toString());
+				listData.add((String) doc.get("role"));
 				listData.add((String) doc.get("userName"));
 				listData.add((String) doc.get("fullName"));
 				listData.add((String) doc.get("address"));
@@ -368,9 +369,9 @@ public class AccountController extends AccountModel {
 	}
 
 	public void updateAccount(String id, String userName, String fullName, String dob, boolean gender, String address,
-			String email) {
+			String email, String role) {
 		CollectionAccount().updateOne(eq("id", id), combine(set("userName", userName), set("fullName", fullName),
-				set("dob", dob), set("address", address), set("gender", gender), set("email", email)));
+				set("dob", dob), set("address", address), set("gender", gender), set("email", email), set("role", role)));
 	}
 
 	public void delete(String id) {

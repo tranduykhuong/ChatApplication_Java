@@ -2,9 +2,11 @@ package Client.Views;
 
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.SystemColor;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -20,6 +22,7 @@ public class UpdateProfileScreen extends JFrame {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	/**
 	 * Launch the application.
@@ -41,6 +44,8 @@ public class UpdateProfileScreen extends JFrame {
 	 * Create the frame.
 	 */
 	public UpdateProfileScreen() {
+		Image icon = iconTitle.getImage();    
+		setIconImage(icon); 
 		setTitle("Update Profile");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 241);

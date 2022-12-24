@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -45,8 +48,11 @@ public class ChatApplicationScreen extends JFrame {
 	private DefaultListModel<String> dmodel = new DefaultListModel<String>();
 	private ArrayList<String> showListNameRoom = new ArrayList<String>();
 	private ArrayList<String> getshowListNameRoom = new ArrayList<String>();
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	public ChatApplicationScreen() {
+		Image icon = iconTitle.getImage();    
+		setIconImage(icon);
 		setTitle("Chat Application");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
