@@ -59,7 +59,6 @@ public class Controller extends Thread {
 				}
 				case "showAll": {
 					String data = api.Filter("showAllInf", "", 0).toString();
-					// System.out.println(data);
 					thisClient.sendString(new Packet("showAll", data, "").toString());
 					break;
 				}
@@ -95,7 +94,8 @@ public class Controller extends Thread {
 					String dob = myList.get(5);
 					String gd = myList.get(6);
 					String gm = myList.get(7);
-					api.addAccountSc(id, un, fn, pw, ad, dob, gd, gm);
+					String rl = myList.get(8);
+					api.addAccountSc(id, un, fn, pw, ad, dob, gd, gm, rl);
 					thisClient.sendString(new Packet("addAccount", "Thêm thành công", "").toString());
 					break;
 				}
@@ -109,7 +109,8 @@ public class Controller extends Thread {
 					String gd = myList.get(4);
 					String ad = myList.get(5);
 					String gm = myList.get(6);
-					String data = api.updateUser(id, un, fn, dob, gd, ad, gm).toString();
+					String rl = myList.get(7);
+					String data = api.updateUser(id, un, fn, dob, gd, ad, gm, rl).toString();
 					thisClient.sendString(new Packet("updateAccount", data, "").toString());
 					break;
 				}

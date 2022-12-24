@@ -16,6 +16,7 @@ import Client.Views.ForgotPWScreen;
 import Client.Views.GroupChatList;
 import Client.Views.GroupChatScreen;
 import Client.Views.HomeScreen;
+import Client.Views.LoadingScreen;
 import Client.Views.LoginList;
 import Client.Views.LoginScreen;
 import Client.Views.ManageUsersList;
@@ -47,6 +48,8 @@ public class Controller {
 	private RegisterScreen registerScreen = new RegisterScreen();
 	private HomeScreen homeScreen = new HomeScreen();
 	private ForgotPWScreen forgotScreen = new ForgotPWScreen();
+
+	private LoadingScreen ldscreen = new LoadingScreen();
 
 	private String username;
 	private String id;
@@ -99,13 +102,19 @@ public class Controller {
 				switch (header) {
 					case "filterList": {
 						data = pk.getData();
+						if (!data.equals("")) {
+							ldscreen.setVisible(false);
+						}
 						String replace1 = data.substring(1, data.lastIndexOf("]"));
 						List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
-						MNUserList.showInfor(myList);
+						MNUserList.showInforWithRole(myList);
 						break;
 					}
 					case "showAll": {
 						data = pk.getData();
+						if (!data.equals("")) {
+							ldscreen.setVisible(false);
+						}
 						String replace1 = data.substring(1, data.lastIndexOf("]"));
 						List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
 						System.out.println("List packet display:" + myList);
@@ -114,6 +123,9 @@ public class Controller {
 					}
 					case "orderName": {
 						data = pk.getData();
+						if (!data.equals("")) {
+							ldscreen.setVisible(false);
+						}
 						String replace1 = data.substring(1, data.lastIndexOf("]"));
 						List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
 						MNUserList.showInfor(myList);
@@ -121,6 +133,9 @@ public class Controller {
 					}
 					case "orderCreateDate": {
 						data = pk.getData();
+						if (!data.equals("")) {
+							ldscreen.setVisible(false);
+						}
 						String replace1 = data.substring(1, data.lastIndexOf("]"));
 						List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
 						MNUserList.showInfor(myList);
@@ -128,17 +143,21 @@ public class Controller {
 					}
 					case "showDetail": {
 						data = pk.getData();
+						if (!data.equals("")) {
+							ldscreen.setVisible(false);
+						}
 						String replace1 = data.substring(1, data.lastIndexOf("]"));
 						List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
 
 						String id = myList.get(0);
 						String active = myList.get(1);
-						String usname = myList.get(2);
-						String fname = myList.get(3);
-						String addr = myList.get(4);
-						String dob = myList.get(5);
-						String gender = myList.get(6);
-						String email = myList.get(7);
+						String role = myList.get(2);
+						String usname = myList.get(3);
+						String fname = myList.get(4);
+						String addr = myList.get(5);
+						String dob = myList.get(6);
+						String gender = myList.get(7);
+						String email = myList.get(8);
 
 						String tmpKo = data.substring(1, data.lastIndexOf("]"));
 						String tmp = tmpKo.substring(tmpKo.indexOf("[", tmpKo.indexOf("[")) + 1, tmpKo.lastIndexOf("]"));
@@ -149,14 +168,21 @@ public class Controller {
 
 						userframe = new User(id, usname, fname, addr, dob, gender, email);
 						userframe.setVisible(true);
-						userframe.showInformation(active, usname, fname, addr, dob, gender, email, listFriend, historyLg);
+						userframe.showInformation(active, usname, fname, addr, dob, gender, email, listFriend, historyLg, role);
 					}
 					case "addAccount": {
 						data = pk.getData();
+						if (!data.equals("")) {
+							ldscreen.setVisible(false);
+						}
 						break;
 					}
 					case "updateAccount": {
 						data = pk.getData();
+						userframe.setVisible(false);
+						if (!data.equals("")) {
+							ldscreen.setVisible(true);
+						}
 						break;
 					}
 					case "removeAccount": {
@@ -665,6 +691,10 @@ public class Controller {
 			}
 			case "forgotScreen": {
 				forgotScreen.setVisible(status);
+				break;
+			}
+			case "loadingScreen": {
+				ldscreen.setVisible(status);
 				break;
 			}
 			default:

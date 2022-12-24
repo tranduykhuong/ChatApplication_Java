@@ -2,6 +2,7 @@ package Client.Views;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -22,8 +23,12 @@ import Client.Controller;
 public class HomeScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private ImageIcon iconLogo = new ImageIcon(HomeScreen.class.getResource("/Image/AppChat.png"));
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	public HomeScreen() {
+		Image icon = iconTitle.getImage();    
+		setIconImage(icon); 
 		setTitle("Home");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 469, 326);
@@ -78,7 +83,9 @@ public class HomeScreen extends JFrame {
 
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\ACER\\Downloads\\AppChat.png"));
+		Image imgLogo = iconLogo.getImage();
+//		Image imgLogo2 = imgLogo.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
+		lblNewLabel.setIcon(new ImageIcon(imgLogo));
 		lblNewLabel.setBounds(65, -33, 326, 252);
 		contentPane.add(lblNewLabel);
 	}
