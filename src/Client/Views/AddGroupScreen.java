@@ -4,11 +4,13 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -40,6 +42,7 @@ public class AddGroupScreen extends JFrame {
 	private DefaultListModel dmodel = new DefaultListModel();
 	private DefaultListModel dmodelSelected = new DefaultListModel();
 	private ArrayList<String> createRoomForID = new ArrayList<String>();
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	/**
 	 * Launch the application.
@@ -61,6 +64,8 @@ public class AddGroupScreen extends JFrame {
 	 * Create the frame.
 	 */
 	public AddGroupScreen() {
+		Image icon = iconTitle.getImage();    
+		setIconImage(icon); 
 		setTitle("Create New Group");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 354);

@@ -6,8 +6,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionListener;
@@ -45,6 +47,7 @@ public class LoginList extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private AccountController account = new AccountController();
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -66,6 +69,8 @@ public class LoginList extends JFrame {
 	 * Create the frame.
 	 */
 	public LoginList() {
+		Image icon = iconTitle.getImage();    
+		setIconImage(icon); 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 740, 547);
 		contentPane = new JPanel();

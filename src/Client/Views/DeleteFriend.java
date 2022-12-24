@@ -7,7 +7,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Image;
+
 import javax.swing.JTextField;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
@@ -17,6 +20,7 @@ public class DeleteFriend extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textField;
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	/**
 	 * Launch the application.
@@ -38,6 +42,8 @@ public class DeleteFriend extends JFrame {
 	 * Create the frame.
 	 */
 	public DeleteFriend() {
+		Image icon = iconTitle.getImage();    
+		setIconImage(icon);
 		setTitle("Unfriend");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 460, 158);

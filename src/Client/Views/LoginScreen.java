@@ -2,11 +2,13 @@ package Client.Views;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -29,6 +31,7 @@ public class LoginScreen extends JFrame {
 	private JButton btnCancel;
 	private JPasswordField passwordField;
 	private JButton btnForgot;
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	private boolean handleClickLogin() {
 		if (userNameField.getText().length() == 0 || String.valueOf(passwordField.getPassword()).length() == 0) {
@@ -46,6 +49,8 @@ public class LoginScreen extends JFrame {
 	}
 
 	public LoginScreen() {
+		Image icon = iconTitle.getImage();    
+		setIconImage(icon); 
 		setTitle("Login");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {

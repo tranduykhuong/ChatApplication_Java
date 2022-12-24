@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
@@ -14,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,6 +23,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -41,10 +44,14 @@ public class User extends JFrame {
 	private JRadioButton maleTick;
 	private JRadioButton femaleTick;
 	private JTextField emailFd;
+	private JRadioButton btncus;
+	private JRadioButton btnadm;
 	private boolean flagGender;
+	private boolean flagRole;
 	private JButton btnKho;
 	private JList<String> listFriend;
 	private JList<String> historyLogin;
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	String username;
 
@@ -70,8 +77,10 @@ public class User extends JFrame {
 
 	public User(String id, String username, String fullname, String addr, String dob, String gender, String email) {
 		this.username = username;
+		Image icon = iconTitle.getImage();
+		setIconImage(icon);
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 550, 725);
+		setBounds(100, 100, 550, 749);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -80,14 +89,14 @@ public class User extends JFrame {
 
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
-		panel.setBounds(10, 65, 516, 620);
+		panel.setBounds(10, 65, 516, 647);
 		contentPane.add(panel);
 		panel.setLayout(null);
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setLayout(null);
 		panel_2.setBackground(Color.WHITE);
-		panel_2.setBounds(28, 10, 455, 271);
+		panel_2.setBounds(28, 10, 455, 300);
 		panel.add(panel_2);
 
 		JLabel lblNewLabel_1 = new JLabel("Tên người dùng:");
@@ -164,35 +173,54 @@ public class User extends JFrame {
 		dateChooser.setBounds(157, 155, 253, 19);
 		panel_2.add(dateChooser);
 
+		JLabel lblNewLabel_1_1_3_1 = new JLabel("Role:");
+		lblNewLabel_1_1_3_1.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblNewLabel_1_1_3_1.setBounds(30, 277, 106, 13);
+		panel_2.add(lblNewLabel_1_1_3_1);
+
+		btncus = new JRadioButton("User");
+		btncus.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btncus.setEnabled(false);
+		btncus.setBounds(157, 274, 103, 21);
+		panel_2.add(btncus);
+
+		btnadm = new JRadioButton("Admin");
+		btnadm.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnadm.setEnabled(false);
+		btnadm.setBounds(307, 274, 103, 21);
+		panel_2.add(btnadm);
+
 		JPanel panel_3 = new JPanel();
 		panel_3.setBackground(Color.WHITE);
-		panel_3.setBounds(10, 291, 496, 281);
+		panel_3.setBounds(10, 320, 496, 281);
 		panel.add(panel_3);
-		panel_3.setLayout(new GridLayout(1, 0, 0, 0));
+		panel_3.setLayout(new GridLayout(0, 2, 0, 0));
 
 		listFriend = new JList<String>();
 		listFriend.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		listFriend.setBorder(new TitledBorder(null, "Danh s\u00E1ch b\u1EA1n b\u00E8", TitledBorder.LEADING,
 				TitledBorder.TOP, null, null));
 		listFriend.setBackground(new Color(236, 251, 255));
-		panel_3.add(listFriend);
+		JScrollPane scrollPane1 = new JScrollPane(listFriend);
+		panel_3.add(scrollPane1);
 
 		historyLogin = new JList<String>();
 		historyLogin.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		historyLogin.setBorder(new TitledBorder(null, "L\u1ECBch s\u1EED \u0111\u0103ng nh\u1EADp",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		historyLogin.setBackground(new Color(236, 251, 255));
-		panel_3.add(historyLogin);
+		JScrollPane scrollPane = new JScrollPane(historyLogin);
+		panel_3.add(scrollPane);
 
 		JButton btnCpNhtThng = new JButton("Chỉnh sửa thông tin");
 		btnCpNhtThng.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EditUser UpdateFrame = new EditUser(id, usernameFd.getText(), fullnameFd.getText(), flagGender,
-						dateChooser.getDate(), addrFd.getText(), emailFd.getText());
+						dateChooser.getDate(), addrFd.getText(), emailFd.getText(), flagRole);
 				UpdateFrame.setVisible(true);
 			}
 		});
-		btnCpNhtThng.setBounds(204, 585, 165, 25);
+		btnCpNhtThng.setBounds(204, 612, 165, 25);
 		panel.add(btnCpNhtThng);
 		btnCpNhtThng.setHorizontalAlignment(SwingConstants.LEFT);
 		btnCpNhtThng.setForeground(new Color(1, 128, 254));
@@ -204,7 +232,7 @@ public class User extends JFrame {
 				handleResetPassword();
 			}
 		});
-		btniMtKhu.setBounds(372, 585, 134, 25);
+		btniMtKhu.setBounds(372, 612, 134, 25);
 		panel.add(btniMtKhu);
 		btniMtKhu.setForeground(new Color(1, 128, 254));
 		btniMtKhu.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -217,7 +245,7 @@ public class User extends JFrame {
 		});
 		btnXa.setForeground(new Color(1, 128, 254));
 		btnXa.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnXa.setBounds(113, 585, 87, 25);
+		btnXa.setBounds(113, 612, 87, 25);
 		panel.add(btnXa);
 
 		btnKho = new JButton("Khóa");
@@ -228,7 +256,7 @@ public class User extends JFrame {
 		});
 		btnKho.setForeground(new Color(1, 128, 254));
 		btnKho.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnKho.setBounds(10, 585, 98, 25);
+		btnKho.setBounds(10, 612, 98, 25);
 		panel.add(btnKho);
 
 		JPanel panel_1 = new JPanel();
@@ -294,8 +322,8 @@ public class User extends JFrame {
 	}
 
 	public void showInformation(String active, String username, String fullname, String addr, String dob, String gender,
-			String email, String listfriend, String listLogin) {
-		System.out.print("Infor" + active + "/" + username + fullname + addr + dob + gender + email);
+			String email, String listfriend, String listLogin, String role) {
+		System.out.print("Infor" + active + "/" + username + fullname + addr + dob + gender + email + role);
 		usernameFd.setText(username);
 		fullnameFd.setText(fullname);
 		addrFd.setText(addr);
@@ -317,6 +345,16 @@ public class User extends JFrame {
 			maleTick.setSelected(false);
 			femaleTick.setSelected(true);
 			flagGender = true;
+		}
+
+		if (role.equals("admin")) {
+			btnadm.setSelected(true);
+			btncus.setSelected(false);
+			flagRole = false;
+		} else {
+			btnadm.setSelected(false);
+			btncus.setSelected(true);
+			flagRole = true;
 		}
 
 		if (active.equals("1")) {
@@ -346,5 +384,4 @@ public class User extends JFrame {
 
 		historyLogin.setModel(dlm1);
 	}
-
 }

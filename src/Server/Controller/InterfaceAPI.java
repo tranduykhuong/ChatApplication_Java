@@ -15,9 +15,9 @@ public class InterfaceAPI {
 	private MessageController messageApi = new MessageController();
 
 	public String createAccount(String fullName, String userName, String password, String name, String dob,
-			boolean gender, String address, String email) {
+			boolean gender, String address, String email, String role) {
 		String id = UUID.randomUUID().toString();
-		accountApi.createAccount(id, userName, password, name, dob, gender, address, email);
+		accountApi.createAccount(id, userName, password, name, dob, gender, address, email, role);
 
 		return id;
 	}
@@ -71,22 +71,24 @@ public class InterfaceAPI {
 	}
 
 	public ArrayList<String> updateUser(String id, String userName, String fullName, String dob, String gender,
-			String address, String email) {
+			String address, String email, String role) {
 		boolean mainGD;
+		String mainRole;
 		ArrayList<String> res = new ArrayList<String>();
 		if (gender.equals("false")) {
 			mainGD = false;
 		} else {
 			mainGD = true;
 		}
-		accountApi.updateAccount(id, userName, fullName, dob, mainGD, address, email);
+		
+		if (role.equals("false")) {
+			mainRole = "admin";
+		} else {
+			mainRole = "user";
+		}
+		
+		accountApi.updateAccount(id, userName, fullName, dob, mainGD, address, email, mainRole);
 		res.add(id);
-		res.add(userName);
-		res.add(fullName);
-		res.add(dob);
-		res.add(gender);
-		res.add(address);
-		res.add(email);
 		return res;
 	}
 
@@ -156,14 +158,14 @@ public class InterfaceAPI {
 	}
 
 	public void addAccountSc(String id, String userName, String fullName, String password, String address, String dob,
-			String gd, String email) {
+			String gd, String email, String role) {
 		boolean mainGD;
 		if (gd.equals("false")) {
 			mainGD = false;
 		} else {
 			mainGD = true;
 		}
-		accountApi.createAccount(id, userName, fullName, password, dob, mainGD, address, email);
+		accountApi.createAccount(id, userName, fullName, password, dob, mainGD, address, email, role);
 	}
 
 	public void blockAccount(String userName, String fullName, String address, String email, String active) {
@@ -215,7 +217,7 @@ public class InterfaceAPI {
 		ArrayList<String> res = new ArrayList<String>();
 		ArrayList<String> finalRes = new ArrayList<String>();
 		res = accountApi.FindID(us, fn, addr, em);
-		String listid = res.get(8);
+		String listid = res.get(9);
 		String listfriend = listid.substring(1, listid.length() - 1);
 		List<String> ListFriend = new ArrayList<String>(Arrays.asList(listfriend.split(", ")));
 		for (int i = 0; i < ListFriend.size(); i++) {

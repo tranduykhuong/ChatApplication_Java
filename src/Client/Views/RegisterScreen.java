@@ -1,11 +1,13 @@
 package Client.Views;
 
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -30,6 +32,7 @@ public class RegisterScreen extends JFrame {
 	private JButton btnCancel;
 	private JPasswordField passwordField;
 	private JPasswordField confirmField;
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	private boolean handleRegister() {
 		String password = String.valueOf(passwordField.getPassword());
@@ -54,6 +57,8 @@ public class RegisterScreen extends JFrame {
 	}
 
 	public RegisterScreen() {
+		Image icon = iconTitle.getImage();    
+		setIconImage(icon); 
 		setTitle("Register");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {

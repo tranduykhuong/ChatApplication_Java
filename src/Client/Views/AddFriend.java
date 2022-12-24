@@ -6,15 +6,20 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Image;
+
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 public class AddFriend extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textField;
+	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	/**
 	 * Launch the application.
@@ -36,6 +41,8 @@ public class AddFriend extends JFrame {
 	 * Create the frame.
 	 */
 	public AddFriend() {
+		Image icon = iconTitle.getImage();    
+		setIconImage(icon); 
 		setTitle("Add Friend");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 136);
