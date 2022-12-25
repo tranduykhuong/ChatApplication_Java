@@ -115,7 +115,7 @@ public class LoginList extends JFrame {
 	}
 
 	public void showHistoryLoginList(List<String> listUserLogin) {
-		List<String> sortedList = new ArrayList<>();
+//		List<String> sortedList = new ArrayList<>();
 		DefaultTableModel tableModel;
 		table.getModel();
 		tableModel = (DefaultTableModel) table.getModel();
