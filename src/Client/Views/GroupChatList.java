@@ -24,6 +24,14 @@ import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
+
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class GroupChatList extends JFrame {
 
@@ -33,7 +41,6 @@ public class GroupChatList extends JFrame {
 	private JList<String> listAdmin;
 	private String selectedString;
 	private int firstSelIx;
-
 	/**
 	 * Launch the application.
 	 */
@@ -122,16 +129,15 @@ public class GroupChatList extends JFrame {
 				new TitledBorder(null, "T\u00EAn nh\u00F3m chat", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.add(pnGroupName);
 		pnGroupName.setLayout(null);
-
 		listGroupChat = new JList<String>();
 		listGroupChat.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				selectedString = listGroupChat.getSelectedValue().toString();
-//				firstSelIx = listGroupChat.getSelectedIndex();
+				// firstSelIx = listGroupChat.getSelectedIndex();
 				Controller.getInstance().sendTextMessage(new Packet("showMemberList", selectedString, "").toString());
 				Controller.getInstance().sendTextMessage(new Packet("showAdminList", selectedString, "").toString());
-//				System.out.println(firstSelIx);
+				// System.out.println(firstSelIx);
 			}
 		});
 		listGroupChat.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -143,18 +149,16 @@ public class GroupChatList extends JFrame {
 				TitledBorder.TOP, null, null));
 		panel.add(pnMemberList);
 		pnMemberList.setLayout(null);
-
 		listMember = new JList<String>();
 		listMember.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		listMember.setBounds(10, 21, 249, 293);
 		pnMemberList.add(listMember);
 
 		JPanel pnAdminList = new JPanel();
-		pnAdminList.setBorder(
-				new TitledBorder(null, "Danh s\u00E1ch admin", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		pnAdminList
+				.setBorder(new TitledBorder(null, "Danh s\u00E1ch admin", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.add(pnAdminList);
 		pnAdminList.setLayout(null);
-
 		listAdmin = new JList<String>();
 		listAdmin.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		listAdmin.setBounds(10, 21, 249, 293);
@@ -169,28 +173,22 @@ public class GroupChatList extends JFrame {
 		}
 		System.out.println(groupChatList);
 	}
-
 	public void showGroupChatListSortedByName(List<String> groupChatList) {
 		DefaultListModel<String> listModel = new DefaultListModel<String>();
 		listGroupChat.setModel(listModel);
 		for (int i = 0; i < groupChatList.size(); i++) {
 			listModel.addElement(groupChatList.get(i));
 		}
-		System.out.println("Vinh name ");
+		System.out.println(groupChatList);
 	}
 
 	public void showGroupChatListSortedByCreateDate(List<String> groupChatList) {
 		DefaultListModel<String> listModel = new DefaultListModel<String>();
 		listGroupChat.setModel(listModel);
-
-		if (groupChatList.size() >= 1) {
-			for (int i = groupChatList.size() - 1; i >= 0; i--) {
-				listModel.addElement(groupChatList.get(i));
-				System.out.println("Vinh: " + groupChatList.get(i));
-			}
+		for (int i = 0; i < groupChatList.size(); i++) {
+			listModel.addElement(groupChatList.get(i));
 		}
-		System.out.println("Vinh date");
-//		System.out.println(groupChatList);
+		System.out.println(groupChatList);
 	}
 
 	public void showMemberList(List<String> userList) {

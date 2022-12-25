@@ -51,7 +51,7 @@ public class AddFriend extends JFrame {
 		contentPane.add(btnNewButton);
 
 		JLabel lblNewLabel = new JLabel("Tên bạn muốn add:");
-		lblNewLabel.setBounds(10, 20, 131, 25);
+		lblNewLabel.setBounds(10, 20, 131, 25);		
 		contentPane.add(lblNewLabel);
 		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 15));
 

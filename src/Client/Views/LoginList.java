@@ -25,6 +25,21 @@ import Client.Controller;
 import Entity.Packet;
 import Server.Controller.AccountController;
 
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import org.bson.Document;
+
+import Client.Controller;
+import Entity.Packet;
+import Server.Controller.AccountController;
+
 public class LoginList extends JFrame {
 
 	private JPanel contentPane;
@@ -58,7 +73,6 @@ public class LoginList extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(10, 73, 706, 427);
@@ -83,6 +97,7 @@ public class LoginList extends JFrame {
 				setVisible(false);
 			}
 		});
+
 		
 		btnBack.setForeground(new Color(1, 128, 254));
 		btnBack.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -102,7 +117,7 @@ public class LoginList extends JFrame {
 	}
 
 	public void showHistoryLoginList(List<String> listUserLogin) {
-//		List<String> sortedList = new ArrayList<>();
+		List<String> sortedList = new ArrayList<>();
 		DefaultTableModel tableModel;
 		table.getModel();
 		tableModel = (DefaultTableModel) table.getModel();

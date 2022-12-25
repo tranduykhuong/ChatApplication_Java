@@ -4,29 +4,56 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+
+import Client.Controller;
 
 public class LoginScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField_1;
-	private JCheckBox chckbxNewCheckBox;
-	private JButton btnNewButton;
+	private JTextField userNameField;
+	private JCheckBox showCheckBox;
+	private JButton btnLogin;
 	private JButton btnCancel;
 	private JPasswordField passwordField;
-	private JButton btnNewButton_1;
+	private JButton btnForgot;
+
+	private boolean handleClickLogin() {
+		if (userNameField.getText().length() == 0 || String.valueOf(passwordField.getPassword()).length() == 0) {
+			JOptionPane.showMessageDialog(this, "Missing connection config", "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+
+		Controller.getInstance().login(userNameField.getText(), String.valueOf(passwordField.getPassword()));
+
+		return true;
+	}
+
+	public void showMessage(String content, String heading, int opt) {
+		JOptionPane.showMessageDialog(this, content, heading, opt);
+	}
 
 	public LoginScreen() {
 		setTitle("Login");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				setVisible(false);
+				Controller.getInstance().handleScreen("homeScreen", true);
+			}
+		});
 		setBounds(100, 100, 450, 301);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -50,26 +77,35 @@ public class LoginScreen extends JFrame {
 		lblNewLabel_2.setBounds(36, 112, 78, 16);
 		contentPane.add(lblNewLabel_2);
 
-		textField_1 = new JTextField();
-		lblNewLabel_1.setLabelFor(textField_1);
-		textField_1.setColumns(10);
-		textField_1.setBounds(157, 73, 209, 25);
-		contentPane.add(textField_1);
+		userNameField = new JTextField();
+		lblNewLabel_1.setLabelFor(userNameField);
+		userNameField.setColumns(10);
+		userNameField.setBounds(157, 73, 209, 25);
+		contentPane.add(userNameField);
 
-		chckbxNewCheckBox = new JCheckBox("Show Password");
-		chckbxNewCheckBox.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
-		chckbxNewCheckBox.setBounds(157, 140, 130, 21);
-		contentPane.add(chckbxNewCheckBox);
+		showCheckBox = new JCheckBox("Show Password");
+		showCheckBox.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		showCheckBox.setBounds(157, 140, 130, 21);
+		contentPane.add(showCheckBox);
+		showCheckBox.addActionListener(ae -> {
+			JCheckBox c = (JCheckBox) ae.getSource();
+			passwordField.setEchoChar(c.isSelected() ? '\u0000' : (Character) UIManager.get("PasswordField.echoChar"));
+		});
 
-		btnNewButton = new JButton("LOG IN");
-		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		btnNewButton.setBounds(327, 220, 99, 34);
-		contentPane.add(btnNewButton);
+		btnLogin = new JButton("LOG IN");
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				handleClickLogin();
+			}
+		});
+		btnLogin.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		btnLogin.setBounds(327, 220, 99, 34);
+		contentPane.add(btnLogin);
 
 		btnCancel = new JButton("BACK");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new HomeScreen().setVisible(true);
+				Controller.getInstance().handleScreen("homeScreen", true);
 				setVisible(false);
 			}
 		});
@@ -81,12 +117,18 @@ public class LoginScreen extends JFrame {
 		passwordField.setBounds(157, 108, 209, 25);
 		contentPane.add(passwordField);
 
-		btnNewButton_1 = new JButton("Forger Password");
-		btnNewButton_1.setForeground(new Color(0, 0, 160));
-		btnNewButton_1.setBackground(new Color(192, 192, 192));
-		btnNewButton_1.setFont(new Font("Times New Roman", Font.ITALIC, 14));
-		btnNewButton_1.setBounds(277, 174, 149, 21);
-		contentPane.add(btnNewButton_1);
+		btnForgot = new JButton("Forger Password");
+		btnForgot.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Controller.getInstance().handleScreen("forgotScreen", true);
+				setVisible(false);
+			}
+		});
+		btnForgot.setForeground(new Color(0, 0, 160));
+		btnForgot.setBackground(new Color(192, 192, 192));
+		btnForgot.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		btnForgot.setBounds(277, 174, 149, 21);
+		contentPane.add(btnForgot);
 	}
 
 }

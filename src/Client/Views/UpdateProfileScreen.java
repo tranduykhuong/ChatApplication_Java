@@ -1,18 +1,18 @@
 package Client.Views;
 
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import java.awt.SystemColor;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
 import java.awt.Font;
-import javax.swing.JComboBox;
+import java.awt.SystemColor;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 public class UpdateProfileScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -56,7 +56,7 @@ public class UpdateProfileScreen extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 
-		JLabel lblNewLabel = new JLabel("Tên đăng nhập");
+		JLabel lblNewLabel = new JLabel("Họ tên");
 		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		lblNewLabel.setBounds(20, 26, 107, 13);
 		panel.add(lblNewLabel);
@@ -73,7 +73,7 @@ public class UpdateProfileScreen extends JFrame {
 		lblNewLabel_1.setBounds(46, 49, 107, 13);
 		panel.add(lblNewLabel_1);
 
-		JLabel lblHTn = new JLabel("Họ Tên");
+		JLabel lblHTn = new JLabel("Ngày sinh");
 		lblHTn.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		lblHTn.setBounds(20, 85, 107, 13);
 		panel.add(lblHTn);

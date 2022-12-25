@@ -42,4 +42,17 @@ public class ClientConnected {
 			}
 		}
 	}
+
+	public void setID(ClientSocket cli, String id) {
+		for (ClientSocket e : connectedClient) {
+			if (e.getPort() == cli.getPort()) {
+				e.setID(id);
+				return;
+			}
+		}
+	}
+
+//	function gửi message cho client đã đăng nhập
+//	Nhớ check id != null (id == null tức là client connected nhưng chưa login nên chưa có id)
+//	Lặp qua connectedClient, sử dụng hàm getID() để lấy id
 }

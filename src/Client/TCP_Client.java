@@ -79,7 +79,7 @@ public class TCP_Client {
 
 	public void DisconnectToServer() {
 		try {
-			if (client != null) {
+			if (client.isConnected()) {
 				inData.close();
 				outData.close();
 				client.close();
