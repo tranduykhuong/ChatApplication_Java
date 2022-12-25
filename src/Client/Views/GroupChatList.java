@@ -41,6 +41,7 @@ public class GroupChatList extends JFrame {
 	private JList<String> listAdmin;
 	private String selectedString;
 	private int firstSelIx;
+
 	/**
 	 * Launch the application.
 	 */
@@ -125,7 +126,7 @@ public class GroupChatList extends JFrame {
 				new TitledBorder(null, "T\u00EAn nh\u00F3m chat", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.add(pnGroupName);
 		pnGroupName.setLayout(null);
-		
+
 		listGroupChat = new JList<String>();
 		listGroupChat.addMouseListener(new MouseAdapter() {
 			@Override
@@ -176,16 +177,21 @@ public class GroupChatList extends JFrame {
 		for (int i = 0; i < groupChatList.size(); i++) {
 			listModel.addElement(groupChatList.get(i));
 		}
-		System.out.println(groupChatList);
+		System.out.println("Vinh name ");
 	}
 
 	public void showGroupChatListSortedByCreateDate(List<String> groupChatList) {
 		DefaultListModel<String> listModel = new DefaultListModel<String>();
 		listGroupChat.setModel(listModel);
-		for (int i = 0; i < groupChatList.size(); i++) {
-			listModel.addElement(groupChatList.get(i));
+
+		if (groupChatList.size() >= 1) {
+			for (int i = groupChatList.size() - 1; i >= 0; i--) {
+				listModel.addElement(groupChatList.get(i));
+				System.out.println("Vinh: " + groupChatList.get(i));
+			}
 		}
-		System.out.println(groupChatList);
+		System.out.println("Vinh date");
+//		System.out.println(groupChatList);
 	}
 
 	public void showMemberList(List<String> userList) {
