@@ -174,19 +174,19 @@ public class Controller {
 					ArrayList<List<String>> tmpHistoryLogin = new ArrayList<List<String>>();
 					ArrayList<String> historyLoginArrayList = new ArrayList<String>();
 					String str = dataString.substring(1, dataString.length() - 1);
-//					System.out.println(str);
-
+//					System.out.println("Vinh" + str);
 					String[] userList = str.split("\\], ");
 					userList[userList.length - 1] = userList[userList.length - 1].substring(0,
 							userList[userList.length - 1].length() - 1);
 					for (String user : userList) {
 						ArrayList<String> userInfo = new ArrayList<String>();
 						String[] temp = user.split(", \\[");
-						userInfo.add(temp[0].split(", ")[0]);
-						userInfo.add(temp[0].split(", ")[1]);
+						userInfo.add(temp[0].split(", ").length >= 1 ? temp[0].split(", ")[0] : "");
+						userInfo.add(temp[0].split(", ").length > 1 ? temp[0].split(", ")[1] : "");
 						userInfo.add(temp[1]);
 						historyLogin.add(userInfo);
 					}
+					System.out.println(historyLogin);
 					for (int i = 0; i < historyLogin.size(); i++) {
 						String usname = historyLogin.get(i).get(0);
 						String fname = historyLogin.get(i).get(1);
@@ -213,12 +213,12 @@ public class Controller {
 						}
 					}
 					for (int i1 = 0; i1 < tmpHistoryLogin.size() - 1; i1++) {
-						SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+						SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 						String startDate = tmpHistoryLogin.get(i1).get(2);
 						String endDate = tmpHistoryLogin.get(i1 + 1).get(2);
-						System.out.println(tmpHistoryLogin.get(i1));
+
 						try {
-							if (sdf.parse(startDate).before(sdf.parse(endDate))) {
+							if (sdf.parse(startDate).after(sdf.parse(endDate))) {
 								Collections.swap(tmpHistoryLogin, i1, i1 + 1);
 							}
 						} catch (ParseException e1) {
@@ -231,7 +231,7 @@ public class Controller {
 							historyLoginArrayList.add(tmpHistoryLogin.get(i).get(j));
 						}
 					}
-//					System.out.println(historyLoginArrayList);
+					System.out.println(historyLoginArrayList);
 					LoginList historyLoginList = new LoginList();
 					historyLoginList.showHistoryLoginList(historyLoginArrayList);
 					historyLoginList.setVisible(true);
@@ -334,7 +334,7 @@ public class Controller {
 					for (int i = 0; i < listCreateDateGroup.size(); i++) {
 						finalSortGroupList.add(listCreateDateGroup.get(i).get(0));
 					}
-					groupChatLists.showGroupChatListSortedByName(finalSortGroupList);
+					groupChatLists.showGroupChatListSortedByCreateDate(finalSortGroupList);
 					groupChatLists.setVisible(true);
 					break;
 				}

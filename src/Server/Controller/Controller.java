@@ -183,7 +183,7 @@ public class Controller extends Thread {
 				case "logIn": {
 					String[] req = pk.getData().split("`");
 					ArrayList<String> data = api.login(req[0], req[1]);
-					if (data.size() != 0) {
+					if (!data.isEmpty()) {
 						System.out.println("aa: " + data);
 						ClientConnected.getInstance().setID(thisClient, data.get(data.size() - 1));
 						thisClient.sendString(new Packet("logIn", data.toString(), "").toString());
