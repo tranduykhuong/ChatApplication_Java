@@ -128,9 +128,15 @@ public class LoginList extends JFrame {
 		table.getModel();
 		tableModel = (DefaultTableModel) table.getModel();
 		tableModel.setRowCount(0);
-		for (int i = 0; i < listUserLogin.size(); i = i + 3) {
+		
+//		for (int i = 0; i < listUserLogin.size(); i = i + 3) {
+//			tableModel
+//					.addRow(new Object[] { listUserLogin.get(i + 2), listUserLogin.get(i), listUserLogin.get(i + 1) });
+//		}
+		
+		for (int i = listUserLogin.size() - 1; i >= 2; i = i - 3) {
 			tableModel
-					.addRow(new Object[] { listUserLogin.get(i + 2), listUserLogin.get(i), listUserLogin.get(i + 1) });
+					.addRow(new Object[] { listUserLogin.get(i), listUserLogin.get(i-2), listUserLogin.get(i - 1) });
 		}
 	}
 }

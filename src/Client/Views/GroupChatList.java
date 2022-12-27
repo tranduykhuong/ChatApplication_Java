@@ -189,6 +189,7 @@ public class GroupChatList extends JFrame {
 		}
 		System.out.println(groupChatList);
 	}
+
 	public void showGroupChatListSortedByName(List<String> groupChatList) {
 		DefaultListModel<String> listModel = new DefaultListModel<String>();
 		listGroupChat.setModel(listModel);
