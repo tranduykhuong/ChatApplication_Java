@@ -366,7 +366,8 @@ public class Controller {
 						loginScreen.showMessage("Login successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
 						loginScreen.setVisible(false);
 						if (dataArr[dataArr.length - 2].equals("user"))
-							chatAppScreen.setVisible(true);
+							loginScreen.controllShowListGroup(this.id);
+//							chatAppScreen.setVisible(true);
 						else {
 							MNUserList.setVisible(true);
 							MNUserList.run();
@@ -416,7 +417,9 @@ public class Controller {
 				}
 				case "showListGr": {
 					data = pk.getData();
+					String id = pk.getAuthor();
 
+					chatAppScreen.setId(id);
 					chatAppScreen.destroyChatAppForm();
 					chatAppScreen.setVisible(true);
 					chatAppScreen.showListNameGr(data);
@@ -425,17 +428,31 @@ public class Controller {
 				case "showListFriend": {
 					data = pk.getData();
 
+					addGrScreen.setID(this.id);
 					addGrScreen.destroyAddGroupScreen();
-					addGrScreen.setVisible(true);
-					addGrScreen.showlistFriend(data);
+					String listIdAndName = data.substring(1, data.length() - 1);
+					if (listIdAndName.split("], ").length > 1) {
+						addGrScreen.setVisible(true);
+						addGrScreen.showlistFriend(listIdAndName);
+					} else {
+						addGrScreen.checkMessage(listIdAndName);
+					}
 					break;
 				}
 				case "createGroup": {
 					data = pk.getData();
 
-					addGrScreen.notifyCreateGroup(data);
-					chatAppScreen.destroyChatAppForm();
-					chatAppScreen.refeshDataForm();
+					String notifyCreateGroup = data.replace("[", "").replace("]", "");
+					if (notifyCreateGroup.equals("Tạo thành công")) {
+						addGrScreen.checkMessage(notifyCreateGroup);
+						addGrScreen.setVisible(false);
+						addGrScreen.destroyAddGroupScreen();
+//							chatAppScreen.destroyChatAppForm();
+						chatAppScreen.refeshDataForm();
+					} else {
+						addGrScreen.checkMessage(notifyCreateGroup);
+					}
+
 					break;
 				}
 				case "showListMemberRoom": {
@@ -446,45 +463,129 @@ public class Controller {
 					String listIDMemberAdmin = res.split("]], ")[1];
 					String idGrSelected = res.split("]], ")[2].replace("[", "").replace("]", "");
 					String isAdmin = res.split("]], ")[3].replace("[", "").replace("]", "");
-					String idUser = res.split("]], ")[4].replace("[", "").replace("]", "");
-					String nameGr = res.split("]], ")[5];
+					String nameGr = res.split("]], ")[4];
 
 					String listIdAdmin = listIDMemberAdmin.split("], ")[0].replace("[", "").replace("]", "");
 					String listIdMember = listIDMemberAdmin.split("], ")[1].replace("[", "").replace("]", "");
 
 					grChat.destroyGroupChatScreen();
+					grChat.setId(this.id);
+					grChat.setListNameMember(listNameMember);
+					grChat.setListIdAdmin(listIdAdmin);
+					grChat.setListIdMember(listIdMember);
+					grChat.setThisIdGr(idGrSelected);
+					grChat.setIsAmin(isAdmin);
+					grChat.setNameGroup(nameGr);
 					grChat.setVisible(true);
 					grChat.setTitle(nameGr);
-					grChat.showInfoGroupChat(listNameMember, idGrSelected, isAdmin, listIdMember, nameGr, listIdAdmin,
-							idUser);
+					grChat.showInfoGroupChat();
 					break;
 				}
 				case "changeNameGroup": {
 					data = pk.getData();
 
-					grChat.checkChangeNameGr(data, chatAppScreen.getDataControlListMemberRoom());
-					chatAppScreen.destroyChatAppForm();
-//					Bug trùng tên
-					chatAppScreen.refeshDataForm();
+					String notifyChangeNameGr = data.replace("[", "").replace("]", "");
+					if (notifyChangeNameGr.equals("Thay đổi thành công")) {
+						grChat.checkMessage(notifyChangeNameGr);
+						grChat.setTitle(grChat.getNameGr());
+						grChat.destroyName();
+						chatAppScreen.destroyChatAppForm();
+						chatAppScreen.refeshDataForm();
+					} else {
+						grChat.checkMessage(notifyChangeNameGr);
+					}
+
 					break;
 				}
 				case "administator": {
 					data = pk.getData();
 
-					grChat.checkUpdateAdmin(data);
+					String notifyUpdateAdmin = data.replace("[", "").replace("]", "");
+					if (notifyUpdateAdmin.equals("Update thành công")) {
+						grChat.checkMessage(notifyUpdateAdmin);
+						grChat.destroyAdmin();
+					} else {
+						grChat.checkMessage(notifyUpdateAdmin);
+						grChat.destroyAdmin();
+					}
+
 					break;
 				}
 				case "removeMember": {
 					data = pk.getData();
 
-//					còn 1 bug ở chỗ xóa này nếu nó bấm sang một gr khác (merge xong fix tiếp)
-					grChat.checkDeleteMember(data, chatAppScreen.getDataControlListMemberRoom());
+//					System.out.println(data);
+
+					String notifyDeleteMember = data.replace("[", "").replace("]", "");
+					ArrayList<String> listGr = new ArrayList<String>();
+					ArrayList<String> currGr = new ArrayList<String>();
+					listGr = chatAppScreen.getDataControlListMemberRoom();
+					currGr.add(listGr.get(listGr.size() - 1));
+
+					if (notifyDeleteMember.equals("Xóa thành công")) {
+						grChat.checkMessage(notifyDeleteMember);
+						System.out.println(currGr);
+						grChat.controlShowListMember(currGr);
+					} else {
+						grChat.checkMessage(notifyDeleteMember);
+					}
+
 					break;
 				}
 				case "addMemberGroup": {
 					data = pk.getData();
 
-					grChat.checkAddMember(data, chatAppScreen.getDataControlListMemberRoom());
+					if (data.split(", ").length > 1) {
+						String notifyAddMember = data.split(", ")[0].replace("[", "").replace("]", "");
+						String fullnameshowListMember = data.split(", ")[1].replace("[", "").replace("]", "");
+						String idshowListMember = data.split(", ")[2].replace("[", "").replace("]", "");
+						ArrayList<String> listGr = new ArrayList<String>();
+						ArrayList<String> currGr = new ArrayList<String>();
+						listGr = chatAppScreen.getDataControlListMemberRoom();
+						currGr.add(listGr.get(listGr.size() - 1));
+
+						if (notifyAddMember.equals("Thêm thành công")) {
+							grChat.checkMessage(notifyAddMember);
+							grChat.controlShowListMember(currGr);
+						}
+					} else {
+						String notifyAddMember = data.replace("[", "").replace("]", "");
+						if (notifyAddMember.equals("Không có thông tin bạn bè này")) {
+							grChat.checkMessage(notifyAddMember);
+						} else {
+							grChat.checkMessage(notifyAddMember);
+						}
+					}
+
+					break;
+				}
+				case "sendNotifyCreateGr": {
+					data = pk.getData();
+
+					chatAppScreen.sendMessage(data);
+					chatAppScreen.refeshDataForm();
+
+					break;
+				}
+				case "sendNotifyAddGr": {
+					data = pk.getData();
+
+					grChat.checkMessage(data);
+
+					break;
+				}
+				case "sendNotifyDeleteGr": {
+					data = pk.getData();
+
+					grChat.checkMessage(data);
+
+					break;
+				}
+				case "sendNotifyAdminGr": {
+					data = pk.getData();
+
+					grChat.checkMessage(data);
+
 					break;
 				}
 				case "chatGroup": {

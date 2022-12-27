@@ -335,25 +335,31 @@ public class InterfaceAPI {
 
 		resListIdFriend = accountApi.searchListFriend(id);
 
-		for (int i = 0; i < resListIdFriend.size(); i++) {
-			String temp = resListIdFriend.get(i).replace("[", "").replace("]", "");
+		if (resListIdFriend.get(0).equals("[]")) {
+			data.add("Chưa có bạn bè.");
 
-			int size = temp.split(", ").length;
-			for (int j = 0; j < size; j++) {
-				resIdName.add(temp.split(", ")[j]);
+			return data;
+		} else {
+			for (int i = 0; i < resListIdFriend.size(); i++) {
+				String temp = resListIdFriend.get(i).replace("[", "").replace("]", "");
+
+				int size = temp.split(", ").length;
+				for (int j = 0; j < size; j++) {
+					resIdName.add(temp.split(", ")[j]);
+				}
 			}
+
+			for (int i = 0; i < resIdName.size(); i++) {
+				ArrayList<String> dataString = new ArrayList<String>();
+				dataString = accountApi.getFullnameToById(resIdName.get(i));
+				dataName.add(dataString.get(0));
+			}
+
+			data.add(dataName.toString());
+			data.add(resIdName.toString());
+
+			return data;
 		}
-
-		for (int i = 0; i < resIdName.size(); i++) {
-			ArrayList<String> dataString = new ArrayList<String>();
-			dataString = accountApi.getFullnameToById(resIdName.get(i));
-			dataName.add(dataString.get(0));
-		}
-
-		data.add(dataName.toString());
-		data.add(resIdName.toString());
-
-		return data;
 	}
 
 	public void addMemberListRoom(String idRoom, String IdUser, String listIdNewMember) {
@@ -370,9 +376,9 @@ public class InterfaceAPI {
 
 		ArrayList<String> listDataNameGr = new ArrayList<String>();
 		ArrayList<String> listIdGr = new ArrayList<String>();
-		listDataNameGr = roomApi.getListNameGr();
-
 		ArrayList<String> createNewGr = new ArrayList<String>();
+
+		listDataNameGr = roomApi.getListNameGr();
 		boolean flag = true;
 		for (int i = 0; i < listDataNameGr.size(); i++) {
 			if (nameGr.equals(listDataNameGr.get(i))) {
@@ -391,6 +397,7 @@ public class InterfaceAPI {
 			listIdGr = roomApi.getListIdMemberRoom(id);
 			addMemberListRoom(id, idSender, listId);
 			createNewGr.add("Tạo thành công");
+			createNewGr.add(Ids.toString());
 		} else {
 			createNewGr.add("Nhóm đã tồn tại!!");
 		}
@@ -422,8 +429,6 @@ public class InterfaceAPI {
 	public ArrayList<String> listIdMemGr(String data, String idSender) {
 		ArrayList<String> listIdMemAdRoom = new ArrayList<String>();
 		ArrayList<String> listNameRoom = new ArrayList<String>();
-//		ArrayList<String> listIdAdminRoom = new ArrayList<String>();
-//		ArrayList<String> listIdMemberRoom = new ArrayList<String>();
 		ArrayList<String> listIdMemberRoomAndNameRoom = new ArrayList<String>();
 		String checkAdmin = "0";
 
@@ -439,6 +444,7 @@ public class InterfaceAPI {
 					.getFullnameToById(listIdAdminRoom.split(", ")[i].replace("[", "").replace("]", "")).toString());
 			if (idSender.equals(listIdAdminRoom.split(", ")[i].replace("[", "").replace("]", ""))) {
 				checkAdmin = "1";
+				break;
 			}
 		}
 
@@ -451,7 +457,6 @@ public class InterfaceAPI {
 		listIdMemberRoomAndNameRoom.add(listIdMemAdRoom.toString());
 		listIdMemberRoomAndNameRoom.add("[[" + idGr + "]]");
 		listIdMemberRoomAndNameRoom.add("[[" + checkAdmin + "]]");
-		listIdMemberRoomAndNameRoom.add("[[" + idSender + "]]");
 		listIdMemberRoomAndNameRoom.add(nameGr);
 
 		return listIdMemberRoomAndNameRoom;
@@ -475,11 +480,10 @@ public class InterfaceAPI {
 		}
 		if (flag) {
 			message.add("Thay đổi thành công");
+			roomApi.changeNameGr(idRoom, newName);
 		} else {
 			message.add("Nhóm đã tồn tại!!");
 		}
-
-		roomApi.changeNameGr(idRoom, newName);
 
 		return message;
 	}
@@ -571,8 +575,12 @@ public class InterfaceAPI {
 			newListRoombyId.add(listRoombyId.get(0).split(", ")[i].replace("[", "").replace("]", ""));
 		}
 
-		for (int i = 0; i < newListRoombyId.get(0).split(", ").length; i++) {
-			resNewListRoombyId.add(newListRoombyId.get(0).split(", ")[i].replace("[", "").replace("]", ""));
+		if (newListRoombyId.size() == 0) {
+			resNewListRoombyId = newListRoombyId;
+		} else {
+			for (int i = 0; i < newListRoombyId.get(0).split(", ").length; i++) {
+				resNewListRoombyId.add(newListRoombyId.get(0).split(", ")[i].replace("[", "").replace("]", ""));
+			}
 		}
 		if (checkExist) {
 			roomApi.updateAdmin(roomId, listNewAdmin);
@@ -586,50 +594,62 @@ public class InterfaceAPI {
 		return message;
 	}
 
-	public ArrayList<String> addMemberGroup(String data) {
+	public ArrayList<String> addMemberGroup(String data, String idSender) {
 		ArrayList<String> dataMessage = new ArrayList<String>();
 		ArrayList<String> fullnameId = new ArrayList<String>();
 		ArrayList<String> listRoomById = new ArrayList<String>();
 		ArrayList<String> listUsername = new ArrayList<String>();
+		ArrayList<String> listFriend = new ArrayList<String>();
 
 		String idRoom = data.split(", ")[0].replace("[", "").replace("]", "");
 		String userName = data.split(", ")[1].replace("[", "").replace("]", "");
 
 		fullnameId = accountApi.getFullnameIdToByUsername(userName);
-		listUsername = accountApi.getGetListUsername();
 
 		if (fullnameId.size() == 0) {
-			dataMessage.add("Không có thông tin bạn bè này");
+			dataMessage.add("Không tồn tại username này");
+
+			return dataMessage;
+		}
+		String fullName = fullnameId.get(0);
+		String id = fullnameId.get(1);
+
+		listFriend = accountApi.searchListFriend(idSender);
+		boolean isFriend = false;
+
+		for (int i = 0; i < listFriend.get(0).split(", ").length; i++) {
+			if (id.equals(listFriend.get(0).split(", ")[i].replace("[", "").replace("]", ""))) {
+				isFriend = true;
+				break;
+			}
+		}
+
+		listUsername = accountApi.getGetListUsername();
+
+		if (!isFriend) {
+			dataMessage.add("Không phải là bạn bè");
 
 			return dataMessage;
 		} else {
-			for (int i = 0; i < listUsername.size(); i++) {
-				if (userName.equals(listUsername.get(i))) {
-					String fullName = fullnameId.get(0);
-					String id = fullnameId.get(1);
-					boolean checkExist = false;
+			boolean checkExist = false;
 
-					listRoomById = accountApi.getListIdGrToId(id);
+			listRoomById = accountApi.getListIdGrToId(id);
 
-					for (int j = 0; j < listRoomById.get(0).split(", ").length; j++) {
-						if (idRoom.equals(listRoomById.get(0).split(", ")[j].replace("[", "").replace("]", ""))) {
-							checkExist = true;
-							break;
-						}
-					}
-
-					if (checkExist) {
-						dataMessage.add("Thành viên này đã có trong nhóm");
-					} else {
-						accountApi.updateMemberIdInListRoom(id, idRoom);
-						roomApi.updateMemberIdInGr(idRoom, id);
-						dataMessage.add("Thêm thành công");
-						dataMessage.add(fullName);
-						dataMessage.add(id);
-					}
-
+			for (int j = 0; j < listRoomById.get(0).split(", ").length; j++) {
+				if (idRoom.equals(listRoomById.get(0).split(", ")[j].replace("[", "").replace("]", ""))) {
+					checkExist = true;
 					break;
 				}
+			}
+
+			if (checkExist) {
+				dataMessage.add("Thành viên này đã có trong nhóm");
+			} else {
+				accountApi.updateMemberIdInListRoom(id, idRoom);
+				roomApi.updateMemberIdInGr(idRoom, id);
+				dataMessage.add("Thêm thành công");
+				dataMessage.add(fullName);
+				dataMessage.add(id);
 			}
 		}
 

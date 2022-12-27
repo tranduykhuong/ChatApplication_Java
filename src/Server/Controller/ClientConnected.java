@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import Entity.Packet;
 import Server.ServerApp;
 import Server.Models.ClientSocket;
 
@@ -48,6 +49,48 @@ public class ClientConnected {
 			if (e.getPort() == cli.getPort()) {
 				e.setID(id);
 				return;
+			}
+		}
+	}
+
+	public void sendMessage(String listIdUser, String nameGr, String type) {
+		if (type.equals("createGroup")) {
+			for (ClientSocket e : connectedClient) {
+				if (e.getID() != null) {
+					for (int i = 0; i < listIdUser.split(", ").length; i++) {
+						if (e.getID().equals(listIdUser.split(", ")[i].replace("[", "").replace("]", ""))) {
+							e.sendString(new Packet("sendNotifyCreateGr",
+									"Bạn đã trở thành thành viên của nhóm " + nameGr, "").toString());
+						}
+					}
+				}
+			}
+		} else if (type.equals("addAdmin")) {
+			for (ClientSocket e : connectedClient) {
+				if (e.getID() != null) {
+					if (e.getID().equals(listIdUser)) {
+						e.sendString(new Packet("sendNotifyAdminGr", "Bạn đã trở thành admin của nhóm " + nameGr, "")
+								.toString());
+					}
+				}
+			}
+		} else if (type.equals("removeMember")) {
+			for (ClientSocket e : connectedClient) {
+				if (e.getID() != null) {
+					if (e.getID().equals(listIdUser)) {
+						e.sendString(
+								new Packet("sendNotifyDeleteGr", "Bạn đã bị xóa khỏi nhóm " + nameGr, "").toString());
+					}
+				}
+			}
+		} else if (type.equals("addMember")) {
+			for (ClientSocket e : connectedClient) {
+				if (e.getID() != null) {
+					if (e.getID().equals(listIdUser)) {
+						e.sendString(
+								new Packet("sendNotifyAddGr", "Bạn đã được thêm vào nhóm " + nameGr, "").toString());
+					}
+				}
 			}
 		}
 	}

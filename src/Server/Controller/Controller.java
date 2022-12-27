@@ -309,12 +309,15 @@ public class Controller extends Thread {
 				}
 				case "showListGr": {
 					String data = pk.getData();
+					String idSender = pk.getAuthor();
 					String res = api.returnListNameGr(data).toString();
-					thisClient.sendString(new Packet("showListGr", res, "").toString());
+					thisClient.sendString(new Packet("showListGr", res, idSender).toString());
+
 					break;
 				}
 				case "showListFriend": {
 					String data = pk.getData();
+
 					String res = api.searchListFriend(data).toString();
 					thisClient.sendString(new Packet("showListFriend", res, "").toString());
 					break;
@@ -322,8 +325,22 @@ public class Controller extends Thread {
 				case "createGroup": {
 					String data = pk.getData();
 					String idSender = pk.getAuthor();
-					String res = api.createGroup(data, idSender).toString();
-					thisClient.sendString(new Packet("createGroup", res, "").toString());
+					ArrayList<String> createGr = new ArrayList<String>();
+
+					createGr = api.createGroup(data, idSender);
+					String res;
+					if (createGr.size() <= 1) {
+						res = createGr.get(0);
+
+						thisClient.sendString(new Packet("createGroup", res, "").toString());
+					} else {
+						res = createGr.get(0);
+						String listUserGr = createGr.get(1);
+						String nameGr = data.split("], ")[0].replace("[", "");
+
+						thisClient.sendString(new Packet("createGroup", res, "").toString());
+						ClientConnected.getInstance().sendMessage(listUserGr, nameGr, "createGroup");
+					}
 					break;
 				}
 				case "showListMemberRoom": {
@@ -343,23 +360,60 @@ public class Controller extends Thread {
 				case "administator": {
 					String data = pk.getData();
 
-					String res = api.updateAdmin(data).toString();
-					thisClient.sendString(new Packet("administator", res.toString(), "").toString());
+					String nameGr = data.split("`, ")[0].replace("[", "");
+					String dataIdGrUser = "[" + data.split("`, ")[1].replace("[", "");
+
+					String res = api.updateAdmin(dataIdGrUser).toString();
+					if (res.replace("[", "").replace("]", "").equals("Update thành công")) {
+						thisClient.sendString(new Packet("administator", res.toString(), "").toString());
+						String idUserNotify = dataIdGrUser.split(", ")[1].replace("[", "").replace("]", "");
+						ClientConnected.getInstance().sendMessage(idUserNotify, nameGr, "addAdmin");
+					} else {
+						thisClient.sendString(new Packet("administator", res.toString(), "").toString());
+					}
 					break;
 				}
 				case "removeMember": {
 					String data = pk.getData();
 
-					String res = api.removeMember(data).toString();
-					thisClient.sendString(new Packet("removeMember", res.toString(), "").toString());
+					String nameGr = data.split("`, ")[0].replace("[", "");
+					String dataIdGrUser = "[" + data.split("`, ")[1].replace("[", "");
+
+					String res = api.removeMember(dataIdGrUser).toString();
+					if (res.replace("[", "").replace("]", "").equals("Xóa thành công")) {
+						thisClient.sendString(new Packet("removeMember", res.toString(), "").toString());
+						String idUserNotify = dataIdGrUser.split(", ")[1].replace("[", "").replace("]", "");
+						ClientConnected.getInstance().sendMessage(idUserNotify, nameGr, "removeMember");
+					} else {
+						thisClient.sendString(new Packet("removeMember", res.toString(), "").toString());
+					}
+
 					break;
 				}
 				case "addMemberGroup": {
 					String data = pk.getData();
-					String res = api.addMemberGroup(data).toString();
-					thisClient.sendString(new Packet("addMemberGroup", res.toString(), "").toString());
+					String idSender = pk.getAuthor();
+
+					String nameGr = data.split("`, ")[0].replace("[", "");
+					String dataIdGrUser = "[" + data.split("`, ")[1].replace("[", "");
+
+					String res = api.addMemberGroup(dataIdGrUser, idSender).toString();
+					if (res.split(", ").length > 1) {
+						thisClient.sendString(new Packet("addMemberGroup", res.toString(), "").toString());
+						String idUserNotify = res.split(", ")[2].replace("[", "").replace("]", "");
+						ClientConnected.getInstance().sendMessage(idUserNotify, nameGr, "addMember");
+					} else {
+						thisClient.sendString(new Packet("addMemberGroup", res.toString(), "").toString());
+					}
 					break;
 				}
+//				case "sendNotifyCreateGr": {
+//					String data = pk.getData();
+//
+//					thisClient.sendString(new Packet("sendNotifyCreateGr", data, "").toString());
+//
+//					break;
+//				}
 				case "chatGroup": {
 					String replace1 = pk.getData().substring(0, pk.getData().length());
 					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));

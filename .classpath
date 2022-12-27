@@ -13,8 +13,8 @@
 	<classpathentry exported="true" kind="lib" path="jgoodies-looks-2.4.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="jgoodies-common-1.2.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="mongo-java-driver-3.12.11.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/ASUS/Downloads/spring-security-crypto-5.8.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/ASUS/Downloads/activation.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/ASUS/Downloads/mail.jar"/>
+	<classpathentry exported="true" kind="lib" path="spring-security-crypto-5.8.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

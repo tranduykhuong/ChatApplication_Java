@@ -31,6 +31,8 @@ public class AddGroupScreen extends JFrame {
 	private JList<String> list;
 	private JList<String> list_1;
 
+	private String id;
+
 	private String listID = "";
 	private String listName = "";
 	private String selectedAdd = "";
@@ -171,7 +173,6 @@ public class AddGroupScreen extends JFrame {
 					concatGrNameListId.add("[" + nameGroup + "]");
 					concatGrNameListId.add(createRoomForID.toString());
 
-					String id = "63b533f8-1e88-4a22-9069-51d9507f94ed";
 					Controller.getInstance()
 							.sendTextMessage(new Packet("createGroup", concatGrNameListId.toString(), id).toString());
 				}
@@ -207,8 +208,13 @@ public class AddGroupScreen extends JFrame {
 		textField.setText("");
 	}
 
-	public void showlistFriend(String data) {
-		String listIdAndName = data.substring(1, data.length() - 1);
+	public void setID(String _id) {
+		id = _id;
+	}
+
+	public void showlistFriend(String listIdAndName) {
+//		String listIdAndName = data.substring(1, data.length() - 1);
+
 		listName = listIdAndName.split("], ")[0].replace("[", "");
 		listID = listIdAndName.split("], ")[1].replace("]", "").replace("[", "");
 
@@ -217,14 +223,7 @@ public class AddGroupScreen extends JFrame {
 		}
 	}
 
-	public void notifyCreateGroup(String data) {
-		notifyCreateGroup = data.replace("[", "").replace("]", "");
-		if (notifyCreateGroup.equals("Tạo thành công")) {
-			JOptionPane.showMessageDialog(panel, notifyCreateGroup, "Notify", JOptionPane.INFORMATION_MESSAGE);
-			this.setVisible(false);
-			destroyAddGroupScreen();
-		} else {
-			JOptionPane.showMessageDialog(panel, notifyCreateGroup, "Notify", JOptionPane.INFORMATION_MESSAGE);
-		}
+	public void checkMessage(String notify) {
+		JOptionPane.showMessageDialog(panel, notify, "Notify", JOptionPane.INFORMATION_MESSAGE);
 	}
 }

@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -39,9 +38,11 @@ public class ChatApplicationScreen extends JFrame {
 	private JPanel contentPane;
 	JList<String> list_2;
 
+	private String id;
+
 	private String listNameGr = "";
 	private String listIdGr = "";
-	private DefaultListModel dmodel = new DefaultListModel();
+	private DefaultListModel<String> dmodel = new DefaultListModel<String>();
 	private ArrayList<String> showListNameRoom = new ArrayList<String>();
 	private ArrayList<String> getshowListNameRoom = new ArrayList<String>();
 
@@ -64,15 +65,10 @@ public class ChatApplicationScreen extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
-		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[] { 0, 0, 0, 0, 4, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 24, 73, 0 };
-		gbl_contentPane.rowHeights = new int[] { 85, 2, 0, 0, 0, 0, 0, 70, 22, 0 };
-		gbl_contentPane.columnWeights = new double[] { 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-				0.0, 1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
-		gbl_contentPane.rowWeights = new double[] { 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
-		contentPane.setLayout(gbl_contentPane);
+		contentPane.setLayout(null);
 
 		JList<String> list = new JList<String>();
+		list.setBounds(5, 5, 113, 92);
 		list.setModel(new AbstractListModel<String>() {
 			private static final long serialVersionUID = 1L;
 			String[] values = new String[] { "IP: 123", "Port: 999", "Số user online: 1" };
@@ -90,24 +86,12 @@ public class ChatApplicationScreen extends JFrame {
 		list.setBorder(new TitledBorder(
 				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Server",
 				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		GridBagConstraints gbc_list = new GridBagConstraints();
-		gbc_list.gridwidth = 4;
-		gbc_list.insets = new Insets(0, 0, 5, 5);
-		gbc_list.fill = GridBagConstraints.BOTH;
-		gbc_list.gridx = 0;
-		gbc_list.gridy = 0;
-		contentPane.add(list, gbc_list);
+		contentPane.add(list);
 
 		JPanel panel = new JPanel();
+		panel.setBounds(123, 5, 577, 356);
 		panel.setBorder(new MatteBorder(2, 2, 3, 2, (Color) new Color(128, 128, 128)));
-		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.gridheight = 8;
-		gbc_panel.gridwidth = 13;
-		gbc_panel.insets = new Insets(0, 0, 5, 5);
-		gbc_panel.fill = GridBagConstraints.BOTH;
-		gbc_panel.gridx = 4;
-		gbc_panel.gridy = 0;
-		contentPane.add(panel, gbc_panel);
+		contentPane.add(panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[] { 0, 0 };
 		gbl_panel.rowHeights = new int[] { 0, 0 };
@@ -195,6 +179,7 @@ public class ChatApplicationScreen extends JFrame {
 		panel_9.add(btnNewButton_6_1_1_1_1);
 
 		JList<String> list_3 = new JList<String>();
+		list_3.setBounds(705, 5, 193, 356);
 		list_3.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		list_3.setModel(new AbstractListModel<String>() {
 			private static final long serialVersionUID = 1L;
@@ -211,15 +196,10 @@ public class ChatApplicationScreen extends JFrame {
 		list_3.setBorder(new TitledBorder(
 				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
 				"Danh s\u00E1ch b\u1EA1n", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		GridBagConstraints gbc_list_3 = new GridBagConstraints();
-		gbc_list_3.insets = new Insets(0, 0, 5, 0);
-		gbc_list_3.gridheight = 8;
-		gbc_list_3.fill = GridBagConstraints.BOTH;
-		gbc_list_3.gridx = 17;
-		gbc_list_3.gridy = 0;
-		contentPane.add(list_3, gbc_list_3);
+		contentPane.add(list_3);
 
 		JList<String> list_1 = new JList<String>();
+		list_1.setBounds(5, 102, 113, 99);
 		list_1.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		list_1.setModel(new AbstractListModel<String>() {
 			private static final long serialVersionUID = 1L;
@@ -236,16 +216,13 @@ public class ChatApplicationScreen extends JFrame {
 		list_1.setBorder(new TitledBorder(
 				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
 				"B\u1EA1n b\u00E8 Online", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		GridBagConstraints gbc_list_1 = new GridBagConstraints();
-		gbc_list_1.gridheight = 3;
-		gbc_list_1.gridwidth = 4;
-		gbc_list_1.insets = new Insets(0, 0, 5, 5);
-		gbc_list_1.fill = GridBagConstraints.BOTH;
-		gbc_list_1.gridx = 0;
-		gbc_list_1.gridy = 1;
-		contentPane.add(list_1, gbc_list_1);
+		// contentPane.add(list_1);
+		JScrollPane scroll1 = new JScrollPane(list_1);
+		scroll1.setBounds(5, 102, 113, 99);
+		contentPane.add(scroll1);
 
 		list_2 = new JList<String>();
+		list_2.setBounds(5, 206, 113, 155);
 		list_2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -259,7 +236,6 @@ public class ChatApplicationScreen extends JFrame {
 				}
 				getshowListNameRoom.add(showListNameRoom.toString());
 
-				String id = "63b533f8-1e88-4a22-9069-51d9507f94ed";
 				Controller.getInstance()
 						.sendTextMessage(new Packet("showListMemberRoom", showListNameRoom.toString(), id).toString());
 
@@ -270,30 +246,19 @@ public class ChatApplicationScreen extends JFrame {
 		list_2.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		list_2.setBorder(
 				new TitledBorder(null, "Nh\u00F3m", TitledBorder.LEADING, TitledBorder.TOP, null, Color.BLACK));
-		GridBagConstraints gbc_list_2 = new GridBagConstraints();
-		gbc_list_2.gridwidth = 4;
-		gbc_list_2.gridheight = 4;
-		gbc_list_2.insets = new Insets(0, 0, 5, 5);
-		gbc_list_2.fill = GridBagConstraints.BOTH;
-		gbc_list_2.gridx = 0;
-		gbc_list_2.gridy = 4;
-		contentPane.add(list_2, gbc_list_2);
+		// contentPane.add(list_2);
+		JScrollPane scroll2 = new JScrollPane(list_2);
+		scroll2.setBounds(5, 206, 113, 155);
+		contentPane.add(scroll2);
 
 		JPanel panel_2 = new JPanel();
-		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
-		gbc_panel_2.gridwidth = 4;
-		gbc_panel_2.insets = new Insets(0, 0, 0, 5);
-		gbc_panel_2.fill = GridBagConstraints.BOTH;
-		gbc_panel_2.gridx = 0;
-		gbc_panel_2.gridy = 8;
-		contentPane.add(panel_2, gbc_panel_2);
+		panel_2.setBounds(5, 366, 113, 38);
+		contentPane.add(panel_2);
 		panel_2.setLayout(new GridLayout(1, 0, 0, 0));
 
 		JButton btnNewButton = new JButton("Tạo Nhóm");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String id = "63b533f8-1e88-4a22-9069-51d9507f94ed";
-
 				Controller.getInstance().sendTextMessage(new Packet("showListFriend", id, "").toString());
 			}
 		});
@@ -301,13 +266,8 @@ public class ChatApplicationScreen extends JFrame {
 		panel_2.add(btnNewButton);
 
 		JPanel panel_5 = new JPanel();
-		GridBagConstraints gbc_panel_5 = new GridBagConstraints();
-		gbc_panel_5.gridwidth = 11;
-		gbc_panel_5.insets = new Insets(0, 0, 0, 5);
-		gbc_panel_5.fill = GridBagConstraints.BOTH;
-		gbc_panel_5.gridx = 4;
-		gbc_panel_5.gridy = 8;
-		contentPane.add(panel_5, gbc_panel_5);
+		panel_5.setBounds(123, 366, 515, 38);
+		contentPane.add(panel_5);
 		panel_5.setLayout(new GridLayout(1, 0, 0, 0));
 
 		JScrollPane scrollPane_1 = new JScrollPane();
@@ -320,13 +280,8 @@ public class ChatApplicationScreen extends JFrame {
 		scrollPane_1.setViewportView(textArea);
 
 		JPanel panel_3 = new JPanel();
-		GridBagConstraints gbc_panel_3 = new GridBagConstraints();
-		gbc_panel_3.gridwidth = 2;
-		gbc_panel_3.insets = new Insets(0, 0, 0, 5);
-		gbc_panel_3.fill = GridBagConstraints.BOTH;
-		gbc_panel_3.gridx = 15;
-		gbc_panel_3.gridy = 8;
-		contentPane.add(panel_3, gbc_panel_3);
+		panel_3.setBounds(643, 366, 57, 38);
+		contentPane.add(panel_3);
 		panel_3.setLayout(new GridLayout(1, 0, 0, 0));
 
 		JButton btnNewButton_1 = new JButton("GỬI");
@@ -334,11 +289,8 @@ public class ChatApplicationScreen extends JFrame {
 		panel_3.add(btnNewButton_1);
 
 		JPanel panel_1 = new JPanel();
-		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
-		gbc_panel_1.fill = GridBagConstraints.BOTH;
-		gbc_panel_1.gridx = 17;
-		gbc_panel_1.gridy = 8;
-		contentPane.add(panel_1, gbc_panel_1);
+		panel_1.setBounds(705, 366, 193, 38);
+		contentPane.add(panel_1);
 		panel_1.setLayout(new GridLayout(1, 0, 0, 0));
 
 		JButton btnNewButton_3 = new JButton("Unfriend");
@@ -354,9 +306,12 @@ public class ChatApplicationScreen extends JFrame {
 		return getshowListNameRoom;
 	}
 
+	public void setId(String _id) {
+		this.id = _id;
+	}
+
 	public void refeshDataForm() {
-		String id = "63b533f8-1e88-4a22-9069-51d9507f94ed";
-		Controller.getInstance().sendTextMessage(new Packet("showListGr", id, "").toString());
+		Controller.getInstance().sendTextMessage(new Packet("showListGr", id, id).toString());
 	}
 
 	public void showListNameGr(String _data) {
@@ -367,6 +322,10 @@ public class ChatApplicationScreen extends JFrame {
 		for (int i = 0; i < listNameGr.split(", ").length; i++) {
 			dmodel.addElement(listNameGr.split(", ")[i]);
 		}
+	}
+
+	public void destroyListNameRoom() {
+		getshowListNameRoom.clear();
 	}
 
 	public void destroyChatAppForm() {
@@ -381,7 +340,12 @@ public class ChatApplicationScreen extends JFrame {
 			}
 		}
 
+		list_2.setModel(dmodel);
 		showListNameRoom.clear();
 		getshowListNameRoom.clear();
+	}
+
+	public void sendMessage(String notify) {
+		JOptionPane.showMessageDialog(contentPane, notify, "Notify", JOptionPane.INFORMATION_MESSAGE);
 	}
 }

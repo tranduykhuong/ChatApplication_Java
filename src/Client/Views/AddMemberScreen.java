@@ -25,6 +25,8 @@ public class AddMemberScreen extends JFrame {
 
 	private String userName = "";
 	private String idRoom = "";
+	private String idSender = "";
+	private String nameGr = "";
 
 	/**
 	 * Launch the application.
@@ -84,6 +86,7 @@ public class AddMemberScreen extends JFrame {
 							JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					ArrayList<String> dataUsername = new ArrayList<String>();
+					dataUsername.add(nameGr + "`");
 					dataUsername.add(idRoom);
 					dataUsername.add(userName);
 					controllerAddMember(dataUsername);
@@ -100,7 +103,15 @@ public class AddMemberScreen extends JFrame {
 		idRoom = _idRoom;
 	}
 
+	public void setIdSender(String _id) {
+		idSender = _id;
+	}
+
+	public void setNameGr(String _nameGr) {
+		nameGr = _nameGr;
+	}
+
 	public void controllerAddMember(ArrayList<String> data) {
-		Controller.getInstance().sendTextMessage(new Packet("addMemberGroup", data.toString(), "").toString());
+		Controller.getInstance().sendTextMessage(new Packet("addMemberGroup", data.toString(), idSender).toString());
 	}
 }
