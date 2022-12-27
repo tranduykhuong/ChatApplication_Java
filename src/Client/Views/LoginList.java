@@ -46,22 +46,6 @@ public class LoginList extends JFrame {
 	private JTable table;
 	private AccountController account = new AccountController();
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AccountController b = new AccountController();
-					b.listHistoryLogin();
-					LoginList frame = new LoginList();
-					frame.setVisible(true);
-					frame.setTitle("Login List");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	/**
 	 * Create the frame.
 	 */
@@ -97,7 +81,7 @@ public class LoginList extends JFrame {
 				setVisible(false);
 			}
 		});
-		
+
 		btnBack.setForeground(new Color(1, 128, 254));
 		btnBack.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnBack.setBounds(10, 10, 89, 21);
@@ -115,14 +99,21 @@ public class LoginList extends JFrame {
 	}
 
 	public void showHistoryLoginList(List<String> listUserLogin) {
-//		List<String> sortedList = new ArrayList<>();
+		// List<String> sortedList = new ArrayList<>();
 		DefaultTableModel tableModel;
 		table.getModel();
 		tableModel = (DefaultTableModel) table.getModel();
 		tableModel.setRowCount(0);
-		for (int i = 0; i < listUserLogin.size(); i = i + 3) {
+
+		// for (int i = 0; i < listUserLogin.size(); i = i + 3) {
+		// tableModel
+		// .addRow(new Object[] { listUserLogin.get(i + 2), listUserLogin.get(i),
+		// listUserLogin.get(i + 1) });
+		// }
+
+		for (int i = listUserLogin.size() - 1; i >= 2; i = i - 3) {
 			tableModel
-					.addRow(new Object[] { listUserLogin.get(i + 2), listUserLogin.get(i), listUserLogin.get(i + 1) });
+					.addRow(new Object[] { listUserLogin.get(i), listUserLogin.get(i - 2), listUserLogin.get(i - 1) });
 		}
 	}
 }

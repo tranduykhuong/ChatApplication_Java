@@ -153,8 +153,8 @@ public class GroupChatList extends JFrame {
 		pnMemberList.add(listMember);
 
 		JPanel pnAdminList = new JPanel();
-		pnAdminList
-				.setBorder(new TitledBorder(null, "Danh s\u00E1ch admin", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		pnAdminList.setBorder(
+				new TitledBorder(null, "Danh s\u00E1ch admin", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.add(pnAdminList);
 		pnAdminList.setLayout(null);
 		listAdmin = new JList<String>();
@@ -171,6 +171,7 @@ public class GroupChatList extends JFrame {
 		}
 		System.out.println(groupChatList);
 	}
+
 	public void showGroupChatListSortedByName(List<String> groupChatList) {
 		DefaultListModel<String> listModel = new DefaultListModel<String>();
 		listGroupChat.setModel(listModel);
@@ -183,15 +184,13 @@ public class GroupChatList extends JFrame {
 	public void showGroupChatListSortedByCreateDate(List<String> groupChatList) {
 		DefaultListModel<String> listModel = new DefaultListModel<String>();
 		listGroupChat.setModel(listModel);
-
-		if (groupChatList.size() >= 1) {
+		if (!groupChatList.isEmpty()) {
 			for (int i = groupChatList.size() - 1; i >= 0; i--) {
 				listModel.addElement(groupChatList.get(i));
-				System.out.println("Vinh: " + groupChatList.get(i));
 			}
 		}
-		System.out.println("Vinh date");
-//		System.out.println(groupChatList);
+
+		System.out.println(groupChatList);
 	}
 
 	public void showMemberList(List<String> userList) {

@@ -6,7 +6,7 @@ import static com.mongodb.client.model.Updates.set;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+//import java.util.Collections;
 import java.util.Date;
 
 import org.bson.Document;
@@ -50,6 +50,7 @@ public class RoomController extends RoomModel {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void addPeopleRoom(String idUser, String idRoom) {
 		ArrayList<String> document = new ArrayList<String>();
 		document = (ArrayList<String>) CollectionRoom().find().iterator().next().get("listMember");
@@ -62,6 +63,7 @@ public class RoomController extends RoomModel {
 		System.out.println("successful");
 	}
 
+	@SuppressWarnings("unchecked")
 	public void deletePeopleRoom(String idRoom, String idDelMember) {
 		ArrayList<String> document = new ArrayList<String>();
 		document = (ArrayList<String>) CollectionRoom()
@@ -154,6 +156,7 @@ public class RoomController extends RoomModel {
 		return dataIdAdminList;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void insertPeopleRoom(String idUser, String idRoom) {
 		ArrayList<String> document = new ArrayList<String>();
 		document = (ArrayList<String>) CollectionRoom().find().iterator().next().get("listMember");
