@@ -1,13 +1,10 @@
 package Server.Controller;
 
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-=======
 import java.awt.image.RescaleOp;
 import java.util.ArrayList;
->>>>>>> 85ff174 (Done task part 23)
 import java.util.UUID;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -22,12 +19,8 @@ public class InterfaceAPI {
 	public String createAccount(String fullName, String userName, String password, String name, String dob,
 			boolean gender, String address, String email) {
 		String id = UUID.randomUUID().toString();
-<<<<<<< HEAD
 		accountApi.createAccount(id, userName, password, name, dob, gender, address, email);
 
-=======
-		accountApi.create(id, userName, password, name, dob, gender, address, email);
->>>>>>> 85ff174 (Done task part 23)
 		return id;
 	}
 
@@ -198,24 +191,24 @@ public class InterfaceAPI {
 	public ArrayList<String> Filter(String key, String data, int status) {
 		ArrayList<String> res = new ArrayList<String>();
 		switch (key) {
-		case "searchByName":
-			res = accountApi.SearchByName(data);
-			break;
+			case "searchByName":
+				res = accountApi.SearchByName(data);
+				break;
 
-		case "orderbyName":
-			res = accountApi.FilterByName(status);
-			break;
+			case "orderbyName":
+				res = accountApi.FilterByName(status);
+				break;
 
-		case "orderbyCreateDay":
-			res = accountApi.FilterByDate(status);
-			break;
+			case "orderbyCreateDay":
+				res = accountApi.FilterByDate(status);
+				break;
 
-		case "showAllInf":
-			res = accountApi.read();
-			break;
+			case "showAllInf":
+				res = accountApi.read();
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 		return res;
 	}
@@ -235,63 +228,6 @@ public class InterfaceAPI {
 		res.add(finalRes.toString());
 
 		return res;
-	}
-
-	public ArrayList<String> showHistoryLogin() {
-		ArrayList<String> res = new ArrayList<String>();
-		res = accountApi.listHistoryLogin();
-		return res;
-	}
-
-	public ArrayList<String> showGroupChatList() {
-		ArrayList<String> res = new ArrayList<>();
-		res = roomApi.listGroupChat();
-		return res;
-	}
-
-	public ArrayList<String> showGroupChatListToSort() {
-		ArrayList<String> res = new ArrayList<>();
-		res = roomApi.sortByGroupName();
-		return res;
-	}
-
-	public ArrayList<String> showGroupChatListByCreateDate() {
-		ArrayList<String> res = new ArrayList<>();
-		res = roomApi.sortByCreateDateGroup();
-		return res;
-	}
-
-	public ArrayList<String> showMemberGroup(String groupName) {
-		ArrayList<String> res = new ArrayList<>();
-		ArrayList<String> listMemberInGroup = new ArrayList<>();
-		res = roomApi.listMember(groupName);
-		String idMemberString = res.toString();
-
-		String str = idMemberString.substring(2, idMemberString.length() - 2);
-
-		String[] idMember = str.split(", ");
-		for (int i = 0; i < idMember.length; i++) {
-			ArrayList<String> findName = new ArrayList<>();
-//			System.out.println("Member " + idMember[i]);
-			findName = accountApi.listAdminGroupChat(idMember[i]);
-			listMemberInGroup.add(findName.get(0));
-		}
-		return listMemberInGroup;
-	}
-
-	public ArrayList<String> showAdminGroup(String groupName) {
-		ArrayList<String> res = new ArrayList<>();
-		ArrayList<String> listAdminInGroup = new ArrayList<>();
-		res = roomApi.listAdmin(groupName);
-		String idAdminString = res.toString();
-		String str = idAdminString.substring(2, idAdminString.length() - 2);
-		String[] idAdmin = str.split(", ");
-		for (int i = 0; i < idAdmin.length; i++) {
-			ArrayList<String> findName = new ArrayList<>();
-			findName = accountApi.listAdminGroupChat(idAdmin[i]);
-			listAdminInGroup.add(findName.get(0));
-		}
-		return listAdminInGroup;
 	}
 
 	public ArrayList<String> searchListFriend(String id) {
@@ -566,104 +502,90 @@ public class InterfaceAPI {
 		ArrayList<String> fullnameId = new ArrayList<String>();
 		ArrayList<String> listRoomById = new ArrayList<String>();
 		ArrayList<String> listUsername = new ArrayList<String>();
-		ArrayList<String> listFriend = new ArrayList<String>();
 
 		String idRoom = data.split(", ")[0].replace("[", "").replace("]", "");
 		String userName = data.split(", ")[1].replace("[", "").replace("]", "");
 
 		fullnameId = accountApi.getFullnameIdToByUsername(userName);
-
-		if (fullnameId.size() == 0) {
-			dataMessage.add("Không tồn tại username này");
-
-			return dataMessage;
-		}
-		String fullName = fullnameId.get(0);
-		String id = fullnameId.get(1);
-
-		listFriend = accountApi.searchListFriend(idSender);
-		boolean isFriend = false;
-
-		for (int i = 0; i < listFriend.get(0).split(", ").length; i++) {
-			if (id.equals(listFriend.get(0).split(", ")[i].replace("[", "").replace("]", ""))) {
-				isFriend = true;
-				break;
-			}
-		}
-
 		listUsername = accountApi.getGetListUsername();
 
-		if (!isFriend) {
-			dataMessage.add("Không phải là bạn bè");
+		if (fullnameId.size() == 0) {
+			dataMessage.add("Không có thông tin bạn bè này");
 
 			return dataMessage;
 		} else {
-			boolean checkExist = false;
+			for (int i = 0; i < listUsername.size(); i++) {
+				if (userName.equals(listUsername.get(i))) {
+					String fullName = fullnameId.get(0);
+					String id = fullnameId.get(1);
+					boolean checkExist = false;
 
-			listRoomById = accountApi.getListIdGrToId(id);
+					listRoomById = accountApi.getListIdGrToId(id);
 
-			for (int j = 0; j < listRoomById.get(0).split(", ").length; j++) {
-				if (idRoom.equals(listRoomById.get(0).split(", ")[j].replace("[", "").replace("]", ""))) {
-					checkExist = true;
+					for (int j = 0; j < listRoomById.get(0).split(", ").length; j++) {
+						if (idRoom.equals(listRoomById.get(0).split(", ")[j].replace("[", "").replace("]", ""))) {
+							checkExist = true;
+							break;
+						}
+					}
+
+					if (checkExist) {
+						dataMessage.add("Thành viên này đã có trong nhóm");
+					} else {
+						accountApi.updateMemberIdInListRoom(id, idRoom);
+						roomApi.updateMemberIdInGr(idRoom, id);
+						dataMessage.add("Thêm thành công");
+						dataMessage.add(fullName);
+						dataMessage.add(id);
+					}
 					break;
 				}
-			}
-
-			if (checkExist) {
-				dataMessage.add("Thành viên này đã có trong nhóm");
-			} else {
-				accountApi.updateMemberIdInListRoom(id, idRoom);
-				roomApi.updateMemberIdInGr(idRoom, id);
-				dataMessage.add("Thêm thành công");
-				dataMessage.add(fullName);
-				dataMessage.add(id);
 			}
 		}
 
 		return dataMessage;
 	}
-	
+
 	public ArrayList<String> showHistoryLogin() {
 		ArrayList<String> res = new ArrayList<String>();
 		res = accountApi.listHistoryLogin();
 		return res;
 	}
-	
+
 	public ArrayList<String> showGroupChatList() {
 		ArrayList<String> res = new ArrayList<>();
 		res = roomApi.listGroupChat();
 		return res;
 	}
-	
+
 	public ArrayList<String> showGroupChatListToSort() {
 		ArrayList<String> res = new ArrayList<>();
 		res = roomApi.sortByGroupName();
 		return res;
-	} 
-	
+	}
+
 	public ArrayList<String> showGroupChatListByCreateDate() {
 		ArrayList<String> res = new ArrayList<>();
 		res = roomApi.sortByCreateDateGroup();
 		return res;
-	} 
+	}
+
 	public ArrayList<String> showMemberGroup(String groupName) {
 		ArrayList<String> res = new ArrayList<>();
 		ArrayList<String> listMemberInGroup = new ArrayList<>();
 		res = roomApi.listMember(groupName);
 		String idMemberString = res.toString();
-
 		String str = idMemberString.substring(2, idMemberString.length() - 2);
-
 		String[] idMember = str.split(", ");
-		for(int i = 0; i < idMember.length; i++) {
+		for (int i = 0; i < idMember.length; i++) {
 			ArrayList<String> findName = new ArrayList<>();
-//			System.out.println("Member " + idMember[i]);
+
 			findName = accountApi.listAdminGroupChat(idMember[i]);
-			listMemberInGroup.add(findName.get(0));
+			listMemberInGroup.add(!findName.isEmpty() ? findName.get(0) : " ");
 		}
 		return listMemberInGroup;
 	}
-	
+
 	public ArrayList<String> showAdminGroup(String groupName) {
 		ArrayList<String> res = new ArrayList<>();
 		ArrayList<String> listAdminInGroup = new ArrayList<>();
@@ -671,10 +593,10 @@ public class InterfaceAPI {
 		String idAdminString = res.toString();
 		String str = idAdminString.substring(2, idAdminString.length() - 2);
 		String[] idAdmin = str.split(", ");
-		for(int i = 0; i < idAdmin.length; i++) {
+		for (int i = 0; i < idAdmin.length; i++) {
 			ArrayList<String> findName = new ArrayList<>();
 			findName = accountApi.listAdminGroupChat(idAdmin[i]);
-			listAdminInGroup.add(findName.get(0));
+			listAdminInGroup.add(!findName.isEmpty() ? findName.get(0) : " ");
 		}
 		return listAdminInGroup;
 	}
