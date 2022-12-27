@@ -30,6 +30,8 @@ public class GroupChatScreen extends JFrame {
 	private JButton btnNewButton_1_1;
 	private JPanel panel;
 
+	private String id;
+
 	private DefaultListModel dmodel = new DefaultListModel();
 	private String thisIdGr = "";
 	private String isAdmin = "";
@@ -38,7 +40,6 @@ public class GroupChatScreen extends JFrame {
 	private String listNameMember = "";
 	private String nameGr = "";
 	private String newNameGr = "";
-	private String idThisUser = "";
 	private String notifyUpdateAdmin = "";
 	private String notifyChangeNameGr = "";
 	private String notifyDeleteMember = "";
@@ -116,6 +117,7 @@ public class GroupChatScreen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				setVisible(false);
+				destroyGroupChatScreen();
 			}
 		});
 		btnOk.setFont(new Font("Times New Roman", Font.BOLD, 13));
@@ -147,8 +149,9 @@ public class GroupChatScreen extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				AddMemberScreen addMember = new AddMemberScreen();
 				addMember.setIdRoom(thisIdGr);
+				addMember.setIdSender(id);
+				addMember.setNameGr(nameGr);
 				addMember.setVisible(true);
-//				username = addMember.getUserName();
 			}
 		});
 		btnNewButton_1_1_1.setFont(new Font("Times New Roman", Font.BOLD, 13));
@@ -175,7 +178,6 @@ public class GroupChatScreen extends JFrame {
 				newNameGroup.clear();
 				newNameGroup.add(thisIdGr);
 				newNameGr = textField.getText();
-				getNameGr = newNameGr;
 				if (newNameGr.length() == 0) {
 					JOptionPane.showMessageDialog(panel, "Vui lòng nhập tên nhóm mới", "Error",
 							JOptionPane.INFORMATION_MESSAGE);
@@ -187,6 +189,7 @@ public class GroupChatScreen extends JFrame {
 							"Bạn đã chắc chắn muốn đổi tên nhóm thành '" + newNameGr + "' không?", "Notify",
 							JOptionPane.YES_NO_OPTION);
 					if (dialogResult == JOptionPane.YES_OPTION) {
+						getNameGr = newNameGr;
 						newNameGroup.add(newNameGr);
 						Controller.getInstance()
 								.sendTextMessage(new Packet("changeNameGroup", newNameGroup.toString(), "").toString());
@@ -200,7 +203,6 @@ public class GroupChatScreen extends JFrame {
 	}
 
 	public void controlShowListMember(ArrayList<String> showListNameRoom) {
-		String id = "63b533f8-1e88-4a22-9069-51d9507f94ed";
 		Controller.getInstance()
 				.sendTextMessage(new Packet("showListMemberRoom", showListNameRoom.toString(), id).toString());
 	}
@@ -209,26 +211,56 @@ public class GroupChatScreen extends JFrame {
 		return getNameGr;
 	}
 
-	public void destroyGroupChatScreen() {
-		thisIdGr = "";
-		isAdmin = "";
-		listIDMember = "";
-		listIdAdmin = "";
-		listNameMember = "";
+	public void setId(String _id) {
+		id = _id;
+	}
+
+	public void setThisIdGr(String idGrSelected) {
+		thisIdGr = idGrSelected;
+	}
+
+	public void setIsAmin(String _isAdmin) {
+		isAdmin = _isAdmin;
+	}
+
+	public void setListIdMember(String _listIdMember) {
+		listIDMember = _listIdMember;
+	}
+
+	public void setListIdAdmin(String _listIdAdmin) {
+		listIdAdmin = _listIdAdmin;
+	}
+
+	public void setListNameMember(String _listNameMember) {
+		listNameMember = _listNameMember;
+	}
+
+	public void setNameGroup(String _nameGr) {
+		nameGr = _nameGr;
+	}
+
+	public void destroyName() {
 		nameGr = "";
-		newNameGr = "";
-		idThisUser = "";
-		notifyUpdateAdmin = "";
-		notifyChangeNameGr = "";
-		notifyDeleteMember = "";
-		notifyAddMember = "";
-		fullnameshowListMember = "";
-		idshowListMember = "";
-		username = "";
 		getNameGr = "";
+		newNameGr = "";
 		newNameGroup.clear();
+
+		textField.setText("");
+	}
+
+	public void destroyGroupChatScreen() {
+		destroyAdd();
+		destroyAdmin();
+		destroyDelete();
+		destroyName();
+	}
+
+	public void destroyAdmin() {
 		packetIdMemberBecomeAdmin.clear();
 		idMemberBecomeAdmin.clear();
+	}
+
+	public void destroyDelete() {
 		idMemberDeleteRoom.clear();
 		packetIdMemberDeleteRoom.clear();
 
@@ -239,12 +271,17 @@ public class GroupChatScreen extends JFrame {
 				sizeDmodel -= 1;
 			}
 		}
+	}
 
-		textField.setText("");
+	public void destroyAdd() {
+		fullnameshowListMember = "";
+		idshowListMember = "";
+		username = "";
 	}
 
 	private void clickedDeleteMember() {
 		packetIdMemberDeleteRoom.clear();
+		packetIdMemberDeleteRoom.add(nameGr + "`");
 		packetIdMemberDeleteRoom.add(thisIdGr);
 		String selected = list.getSelectedValue().toString();
 		String listIdAdminMember = listIdAdmin + ", " + listIDMember;
@@ -254,7 +291,7 @@ public class GroupChatScreen extends JFrame {
 			if (selected.equals(listNameMember.split(", ")[i])) {
 				idMemberDeleteRoom.add(listIdAdminMember.split(", ")[i]);
 
-				if (listIdAdminMember.split(", ")[i].equals(idThisUser)) {
+				if (listIdAdminMember.split(", ")[i].equals(id)) {
 					JOptionPane.showMessageDialog(panel, "Bạn không thể chọn chính bạn", "Error",
 							JOptionPane.INFORMATION_MESSAGE);
 					flag = false;
@@ -267,6 +304,7 @@ public class GroupChatScreen extends JFrame {
 					"Bạn chắc chắn muốn xóa " + selected + " khỏi nhóm không?", "Notify", JOptionPane.YES_NO_OPTION);
 			if (dialogResult == JOptionPane.YES_OPTION) {
 				packetIdMemberDeleteRoom.add(idMemberDeleteRoom.toString());
+
 				Controller.getInstance().sendTextMessage(
 						new Packet("removeMember", packetIdMemberDeleteRoom.toString(), "").toString());
 			}
@@ -277,6 +315,7 @@ public class GroupChatScreen extends JFrame {
 
 	private void clickedUpdateAdmin() {
 		packetIdMemberBecomeAdmin.clear();
+		packetIdMemberBecomeAdmin.add(nameGr + "`");
 		packetIdMemberBecomeAdmin.add(thisIdGr);
 		String selected = list.getSelectedValue().toString();
 		String listIdAdminMember = listIdAdmin + ", " + listIDMember;
@@ -286,7 +325,7 @@ public class GroupChatScreen extends JFrame {
 		for (int i = 0; i < listNameMember.split(", ").length; i++) {
 			if (selected.equals(listNameMember.split(", ")[i])) {
 				idMemberBecomeAdmin.add(listIdAdminMember.split(", ")[i]);
-				if (listIdAdminMember.split(", ")[i].equals(idThisUser)) {
+				if (listIdAdminMember.split(", ")[i].equals(id)) {
 					JOptionPane.showMessageDialog(panel, "Bạn không thể chọn chính bạn", "Error",
 							JOptionPane.INFORMATION_MESSAGE);
 					flag = false;
@@ -307,86 +346,25 @@ public class GroupChatScreen extends JFrame {
 		idMemberBecomeAdmin.clear();
 	}
 
-	public void showInfoGroupChat(String _listNameMember, String idGrSelected, String _isAdmin, String _listIdMember,
-			String _nameGr, String _listIdAdmin, String _idUser) {
-		thisIdGr = idGrSelected;
-		isAdmin = _isAdmin;
-		listIDMember = _listIdMember;
-		listNameMember = _listNameMember;
-		listIdAdmin = _listIdAdmin;
-		nameGr = _nameGr;
-		idThisUser = _idUser;
-
+	public void showInfoGroupChat() {
 		if (isAdmin.equals("0")) {
 			btnNewButton_1.setEnabled(false);
 			btnNewButton_1_1.setEnabled(false);
+		} else {
+			btnNewButton_1.setEnabled(true);
+			btnNewButton_1_1.setEnabled(true);
 		}
+
 		for (int i = 0; i < listNameMember.split(", ").length; i++) {
 			dmodel.addElement(listNameMember.split(", ")[i]);
 		}
 	}
 
-	public void checkChangeNameGr(String data, ArrayList<String> refeshData) {
-		notifyChangeNameGr = data.replace("[", "").replace("]", "");
-		if (notifyChangeNameGr.equals("Thay đổi thành công")) {
-			JOptionPane.showMessageDialog(panel, notifyChangeNameGr, "Notify", JOptionPane.INFORMATION_MESSAGE);
-			destroyGroupChatScreen();
-			controlShowListMember(refeshData);
-			this.setTitle(getNameGr);
-		} else {
-			JOptionPane.showMessageDialog(panel, notifyChangeNameGr, "Notify", JOptionPane.INFORMATION_MESSAGE);
-		}
-	}
-
-	public void checkUpdateAdmin(String data) {
-		notifyUpdateAdmin = data.replace("[", "").replace("]", "");
-		if (notifyUpdateAdmin.equals("Update thành công")) {
-			JOptionPane.showMessageDialog(panel, notifyUpdateAdmin, "Notify", JOptionPane.INFORMATION_MESSAGE);
-		} else {
-			JOptionPane.showMessageDialog(panel, notifyUpdateAdmin, "Notify", JOptionPane.INFORMATION_MESSAGE);
-		}
-	}
-
-	public void checkAddMember(String data, ArrayList<String> refeshData) {
-		if (data.split(", ").length > 1) {
-			notifyAddMember = data.split(", ")[0].replace("[", "").replace("]", "");
-			fullnameshowListMember = data.split(", ")[1].replace("[", "").replace("]", "");
-			idshowListMember = data.split(", ")[2].replace("[", "").replace("]", "");
-
-			if (notifyAddMember.equals("Thêm thành công")) {
-				JOptionPane.showMessageDialog(panel, notifyAddMember, "Notify", JOptionPane.INFORMATION_MESSAGE);
-				destroyGroupChatScreen();
-				controlShowListMember(refeshData);
-			} else if (notifyAddMember.equals("Không có thông tin bạn bè này")) {
-				JOptionPane.showMessageDialog(panel, notifyAddMember, "Notify", JOptionPane.INFORMATION_MESSAGE);
-			} else {
-				JOptionPane.showMessageDialog(panel, notifyAddMember, "Notify", JOptionPane.INFORMATION_MESSAGE);
-			}
-		} else {
-			notifyAddMember = data.replace("[", "").replace("]", "");
-			if (notifyAddMember.equals("Thêm thành công")) {
-				JOptionPane.showMessageDialog(panel, notifyAddMember, "Notify", JOptionPane.INFORMATION_MESSAGE);
-			} else if (notifyAddMember.equals("Không có thông tin bạn bè này")) {
-				JOptionPane.showMessageDialog(panel, notifyAddMember, "Notify", JOptionPane.INFORMATION_MESSAGE);
-			} else {
-				JOptionPane.showMessageDialog(panel, notifyAddMember, "Notify", JOptionPane.INFORMATION_MESSAGE);
-			}
-		}
-	}
-
-	public void checkDeleteMember(String data, ArrayList<String> refeshData) {
-		notifyDeleteMember = data.replace("[", "").replace("]", "");
-		if (notifyDeleteMember.equals("Xóa thành công")) {
-			JOptionPane.showMessageDialog(panel, notifyDeleteMember, "Notify", JOptionPane.INFORMATION_MESSAGE);
-			destroyGroupChatScreen();
-			controlShowListMember(refeshData);
-		} else {
-			JOptionPane.showMessageDialog(panel, notifyDeleteMember, "Notify", JOptionPane.INFORMATION_MESSAGE);
-		}
+	public void checkMessage(String data) {
+		JOptionPane.showMessageDialog(panel, data, "Notify", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public void refeshDataForm() {
-		String id = "63b533f8-1e88-4a22-9069-51d9507f94ed";
 		Controller.getInstance().sendTextMessage(new Packet("showListGr", id, "").toString());
 	}
 }

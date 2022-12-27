@@ -13,8 +13,8 @@
 	<classpathentry kind="lib" path="jgoodies-looks-2.4.1.jar"/>
 	<classpathentry kind="lib" path="jgoodies-common-1.2.0.jar"/>
 	<classpathentry kind="lib" path="mongo-java-driver-3.12.11.jar"/>
-	<classpathentry kind="lib" path="C:/Users/ASUS/Downloads/spring-security-crypto-5.8.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/ASUS/Downloads/activation.jar"/>
-	<classpathentry kind="lib" path="C:/Users/ASUS/Downloads/mail.jar"/>
+	<classpathentry kind="lib" path="D:/study/CNTT/N3/hk1/lap_trinh_ung_dung_java/project/ChatApplication_Java/spring-security-crypto-5.8.0.jar"/>
+	<classpathentry kind="lib" path="D:/study/CNTT/N3/hk1/lap_trinh_ung_dung_java/project/ChatApplication_Java/activation.jar"/>
+	<classpathentry kind="lib" path="D:/study/CNTT/N3/hk1/lap_trinh_ung_dung_java/project/ChatApplication_Java/mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -19,6 +19,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import Client.Controller;
+import Entity.Packet;
 
 public class LoginScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -43,6 +44,10 @@ public class LoginScreen extends JFrame {
 
 	public void showMessage(String content, String heading, int opt) {
 		JOptionPane.showMessageDialog(this, content, heading, opt);
+	}
+
+	public void controllShowListGroup(String id) {
+		Controller.getInstance().sendTextMessage(new Packet("showListGr", id, id).toString());
 	}
 
 	public LoginScreen() {
