@@ -16,5 +16,8 @@
 	<classpathentry kind="lib" path="spring-security-crypto-5.8.0.jar"/>
 	<classpathentry kind="lib" path="activation.jar"/>
 	<classpathentry kind="lib" path="mail.jar"/>
+	<classpathentry kind="lib" path="slf4j-reload4j-2.0.6.jar"/>
+	<classpathentry kind="lib" path="slf4j-api-2.0.6.jar"/>
+	<classpathentry kind="lib" path="reload4j-1.2.22.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
