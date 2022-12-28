@@ -96,6 +96,7 @@ public class AccountController extends AccountModel {
 	}
 	
 	public ArrayList<String> listHistoryLogin() {
+		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		MongoCursor<Document> documentCursor = CollectionAccount().find().iterator();
 		ArrayList<String> dataArrayList = new ArrayList<>();
 		try {
