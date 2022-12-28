@@ -16,10 +16,16 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import Server.Models.AccountModel;
 
 public class AccountController extends AccountModel {
+	Logger logger1 = LoggerFactory.getLogger("org.mongodb.driver");
+	
 	public String formatDate() {
+		
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
 
@@ -48,7 +54,7 @@ public class AccountController extends AccountModel {
 
 	public void createAccount(String id, String userName, String fullName, String password, String dob, boolean gender,
 			String address, String email, String role) {
-
+		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		ArrayList<String> listFriend = new ArrayList<String>();
 		ArrayList<String> listRoom = new ArrayList<String>();
 		ArrayList<String> listMessage = new ArrayList<String>();
@@ -68,6 +74,7 @@ public class AccountController extends AccountModel {
 	}
 
 	public ArrayList<String> read() {
+		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		MongoCursor<Document> document = CollectionAccount().find().iterator();
 		ArrayList<String> listData = new ArrayList<String>();
 		try {
@@ -101,6 +108,7 @@ public class AccountController extends AccountModel {
 	}
 
 	public ArrayList<String> findByUsername(String userName) {
+		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		MongoCursor<Document> document = CollectionAccount().find(eq("userName", userName)).iterator();
 		ArrayList<String> listData = new ArrayList<String>();
 		try {
@@ -123,6 +131,7 @@ public class AccountController extends AccountModel {
 	}
 
 	public ArrayList<String> FilterByName(int status) {
+		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		List<Document> document = CollectionAccount().find()
 				.sort(new BasicDBObject("userName".substring("userName".lastIndexOf("|") + 1), status))
 				.into(new ArrayList<>());
@@ -142,6 +151,7 @@ public class AccountController extends AccountModel {
 	}
 
 	public ArrayList<String> FilterByDate(int status) {
+		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		List<Document> document = CollectionAccount().find().sort(new BasicDBObject("createTime", status))
 				.into(new ArrayList<>());
 		ArrayList<String> listData = new ArrayList<String>();
@@ -160,6 +170,7 @@ public class AccountController extends AccountModel {
 	}
 
 	public ArrayList<String> SearchByName(String userName) {
+		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		MongoCursor<Document> document = CollectionAccount()
 				.find(Filters.or(Filters.regex("fullName", userName), Filters.regex("userName", userName))).iterator();
 		ArrayList<String> listData = new ArrayList<String>();
@@ -183,6 +194,7 @@ public class AccountController extends AccountModel {
 	}
 
 	public ArrayList<String> SearchByID(String id) {
+		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		Document filterDoc = new Document();
 		filterDoc.append("id", id);
 		MongoCursor<Document> document = CollectionAccount().find(filterDoc).iterator();
@@ -199,6 +211,7 @@ public class AccountController extends AccountModel {
 	}
 
 	public ArrayList<String> FindID(String userName, String fullName, String address, String email) {
+		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		Document filterDoc = new Document();
 		filterDoc.append("userName", userName).append("fullName", fullName).append("address", address).append("email",
 				email);
@@ -226,6 +239,7 @@ public class AccountController extends AccountModel {
 	}
 
 	public ArrayList<String> listHistoryLogin() {
+		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		MongoCursor<Document> documentCursor = CollectionAccount().find().iterator();
 		ArrayList<String> dataArrayList = new ArrayList<>();
 		try {
@@ -347,18 +361,20 @@ public class AccountController extends AccountModel {
 
 	public void update(String idUser, String fullName, String userName, String password, String dob, boolean gender,
 			String address, String email) {
-
+		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		CollectionAccount().updateOne(eq("id", idUser), combine(set("fullName", fullName), set("password", password),
 				set("dob", dob), set("gender", gender), set("address", address), set("email", email)));
 		System.out.println("successful");
 	}
 
 	public void blockAccount(String id, int active) {
+		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		CollectionAccount().updateOne(eq("id", id), combine(set("active", active)));
 	}
 
 	public void updateAccount(String id, String userName, String fullName, String dob, boolean gender, String address,
 			String email, String role) {
+		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		CollectionAccount().updateOne(eq("id", id), combine(set("userName", userName), set("fullName", fullName),
 				set("dob", dob), set("address", address), set("gender", gender), set("email", email), set("role", role)));
 	}
@@ -368,10 +384,12 @@ public class AccountController extends AccountModel {
 	}
 
 	public void removeAccount(String id) {
+		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		CollectionAccount().deleteMany(eq("id", id));
 	}
 
 	public void updateStatusUser(String idUser) {
+		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		Object document = new ArrayList<String>();
 		document = CollectionAccount().find(eq("id", idUser)).iterator().next().get("active");
 
