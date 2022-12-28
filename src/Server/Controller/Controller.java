@@ -136,10 +136,16 @@ public class Controller extends Thread {
 					thisClient.sendString(new Packet("lockAccount", "", "").toString());
 					break;
 				}
-				case "historyLogin": {
+				case "saveHistoryLogin": {
+					String idUser = pk.getData();
+					api.saveTimeLogin(idUser);
+					thisClient.sendString(new Packet("saveHistoryLogin", "savedHistoryLogin", "").toString());
 					break;
 				}
-				case "listFriend": {
+				case "getListFriend": {
+					String idUser = pk.getData();
+					String dataString =api.seeListFriend(idUser).toString();
+					thisClient.sendString(new Packet("getListFriend", dataString, "").toString());
 					break;
 				}
 				case "listLoginTime": {
@@ -203,30 +209,102 @@ public class Controller extends Thread {
 					break;
 				}
 				case "addFriend": {
+					String replace1 = pk.getData().substring(0, pk.getData().length());
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					String idUserRequest = myList.get(0);
+					String idUserSentRequest = myList.get(1);
+					api.addFriend(idUserRequest, idUserSentRequest);
+					thisClient.sendString(new Packet("addFriend", "add friend successfully", "").toString());
 					break;
 				}
 				case "unFriend": {
+					String replace1 = pk.getData().substring(0, pk.getData().length());
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					String idUser = myList.get(0);
+					String idFriendDel = myList.get(1);
+					api.deleteFriend(idUser, idFriendDel);
+					thisClient.sendString(new Packet("unFriend", "unfriend successfully", "").toString());
+					break;
+				}
+				case "acceptRequestFriend": {
+					String replace1 = pk.getData().substring(0, pk.getData().length());
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					String idUser = myList.get(0);
+					String idNewFriend = myList.get(1);
+					api.acceptFriend(idUser, idNewFriend);
+					thisClient.sendString(new Packet("acceptRequestFriend", "accept request add friend successfully", "").toString());
+					break;
+				}
+				case "rejectRequestFriend": {
+					String replace1 = pk.getData().substring(0, pk.getData().length());
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					String idUser = myList.get(0);
+					String idFriendReject = myList.get(1);
+					api.rejectFriend(idUser, idFriendReject);
+					thisClient.sendString(new Packet("rejectRequestFriend", "reject request add friend successfully", "").toString());
+					break;
+				}
+				case "setStatus":{
+					String idUser = pk.getData();
+					api.setActive(idUser);
+					thisClient.sendString(new Packet("setStatus", "set new status successfully", "").toString());
 					break;
 				}
 				case "listFriendOnline": {
+					String idUser = pk.getData();
+					String dataString = api.getListFriendOnline(idUser).toString();
+					thisClient.sendString(new Packet("listFriendOnline", dataString, "").toString());
 					break;
 				}
 				case "chatWithFriendOnline": {
+					String replace1 = pk.getData().substring(0, pk.getData().length());
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					String idSender = myList.get(0);
+					String nameSender = myList.get(1);
+					String idReceiver = myList.get(2);
+					String message = myList.get(3);
+					api.sendMessageU2U( idSender,  nameSender,  idReceiver,  message);
+					thisClient.sendString(new Packet("chatWithFriendOnline", "chat with friend successfully", "").toString());
 					break;
 				}
 				case "chatWithFriendOffline": {
+					String replace1 = pk.getData().substring(0, pk.getData().length());
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					String idSender = myList.get(0);
+					String nameSender = myList.get(1);
+					String idReceiver = myList.get(2);
+					String message = myList.get(3);
+					api.sendMessageU2UOffline( idSender,  nameSender,  idReceiver,  message);
+					thisClient.sendString(new Packet("chatWithFriendOnline", "chat with friend successfully", "").toString());
 					break;
 				}
-				case "viewChatHistory": {
+				case "viewChatHistoryWithFriend": {
+					String replace1 = pk.getData().substring(0, pk.getData().length());
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					String idUser1 = myList.get(0);
+					String idUser2 = myList.get(1);
+					String dataString = api.showMessageU2U(idUser1, idUser2).toString();;
+					thisClient.sendString(new Packet("viewChatHistoryWithFriend", dataString, "").toString());
 					break;
 				}
-				case "romoveChatHistory": {
+				case "removeChatWithFriendHistory": {
+					String replace1 = pk.getData().substring(0, pk.getData().length());
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					String idSender = myList.get(0);
+					String idReceiver = myList.get(1);
+					api.removeMessageU2U( idSender,  idReceiver);
+					thisClient.sendString(new Packet("removeChatWithFriendHistory", "remove message successfully", "").toString());
+					
 					break;
 				}
-				case "searchStringChatSingle": {
-					break;
-				}
-				case "searchStringChatMultiple": {
+				case "searchMessageOfFriendChat": {
+					String replace1 = pk.getData().substring(0, pk.getData().length());
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					String idSender = myList.get(0);
+					String idReceiver = myList.get(1);
+					String keyword = myList.get(2);
+					String dataString = api.findMessage(idSender, idReceiver, keyword).toString();
+					thisClient.sendString(new Packet("searchMessageOfFriendChat", dataString, "").toString());
 					break;
 				}
 				case "showListGr": {
@@ -283,6 +361,15 @@ public class Controller extends Thread {
 					break;
 				}
 				case "chatGroup": {
+					String replace1 = pk.getData().substring(0, pk.getData().length());
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					String idSender = myList.get(0);
+					String nameSender = myList.get(1);
+					String idRoom = myList.get(2);
+					String message = myList.get(3);
+					api.sendMessageRoom( idSender,  nameSender,  idRoom,  message);
+					thisClient.sendString(new Packet("chatGroup", "chat with group successfully", "").toString());
+					
 					break;
 				}
 				case "resetPassword": {

@@ -296,7 +296,16 @@ public class AccountController extends AccountModel {
 
 		CollectionAccount().updateOne(eq("id", idDelMember), combine(set("listRoom", document)));
 	}
-
+	
+	public ArrayList<String> getListFriend (String idUser)
+	{
+		ArrayList<String> document = new ArrayList<String>();
+		document = (ArrayList<String>) CollectionAccount().find(eq("id", idUser)).iterator().next()
+				.get("listFriend");
+		
+		return document;
+	}
+	
 	public void updateListRequestAddFriend(String idUserSentRequest, String idUserRequest) {
 		ArrayList<String> document = new ArrayList<String>();
 		document = (ArrayList<String>) CollectionAccount().find(eq("id", idUserSentRequest)).iterator().next()
@@ -369,7 +378,16 @@ public class AccountController extends AccountModel {
 	public void removeAccount(String id) {
 		CollectionAccount().deleteMany(eq("id", id));
 	}
-
+	
+	public Number getStatus(String idUser)
+	{
+		Object document = new ArrayList<String>();
+		document = CollectionAccount().find(eq("id", idUser)).iterator().next().get("active");
+		
+	 
+		
+		return 1;
+	}
 	public void updateStatusUser(String idUser) {
 		Object document = new ArrayList<String>();
 		document = CollectionAccount().find(eq("id", idUser)).iterator().next().get("active");
@@ -379,7 +397,35 @@ public class AccountController extends AccountModel {
 		CollectionAccount().updateOne(eq("id", idUser), combine(set("active", document)));
 
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> getListFriendOnline(String idUser)
+	{
+		ArrayList<String> documentListFriend = new ArrayList<String>();
+		documentListFriend = (ArrayList<String>) CollectionAccount().find(eq("id", idUser)).iterator().next().get("listFriend");
+		
+		 MongoCursor<Document> dcListOnline = 
+				 (MongoCursor<Document>) CollectionAccount().find(eq("active", 1)).iterator();		 
+		 ArrayList<String> convertString = new ArrayList<>();
+		 while (dcListOnline.hasNext()) {
+			 convertString.add((String) dcListOnline.next().get("id"));
+	     }
+		 
+		ArrayList<String> listFriendsOnline = new ArrayList<>();
+		for( int i=0; i< documentListFriend.size(); i++)
+		{
+			if(convertString.contains(documentListFriend.get(i)))
+			{
+				System.out.println(documentListFriend.get(i) );
+				listFriendsOnline.add(documentListFriend.get(i));
+			}
+		}
+		
+		return listFriendsOnline;
+			
+		
+	}
+	
 	public String updatePassword(String userName, String password) {
 		CollectionAccount().updateOne(eq("userName", userName), combine(set("password", password)));
 		ArrayList<String> result = SearchByName(userName);

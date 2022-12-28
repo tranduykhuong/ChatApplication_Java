@@ -107,6 +107,11 @@ public class InterfaceAPI {
 		accountApi.deletePeopleRoom(idRoom, idDelMember);
 	}
 
+	
+	public ArrayList<String> seeListFriend(String idUser)
+	{
+		return accountApi.getListFriend(idUser);
+	}
 	/// idUserRequest : id người gửi
 	// idUserSentRequest : id người nhận
 	public void addFriend(String idUserRequest, String idUserSentRequest) {
@@ -132,16 +137,53 @@ public class InterfaceAPI {
 	///
 	public void sendMessageU2U(String idSender, String nameSender, String idReceiver, String message) {
 
-		if (messageApi.checkExistChatU2U(idSender, idReceiver))
-			messageApi.updateChatU2U(idSender, nameSender, idReceiver, message);
-		else
+		if (!messageApi.checkExistChatU2U(idSender, idReceiver))
 			messageApi.createChatU2U(idSender, idReceiver);
+		
+		messageApi.updateChatU2U(idSender, nameSender, idReceiver, message);
+	}
+	
+	public void sendMessageU2UOffline(String idSender, String nameSender, String idReceiver, String message) {
+
+		if (!messageApi.checkExistChatU2U(idSender, idReceiver))
+			messageApi.createChatU2U(idSender, idReceiver);
+		
+		messageApi.updateChatU2UOffline(idSender, nameSender, idReceiver, message);
+	}
+	
+	public void removeMessageU2U(String idSender, String idReceiver)
+	{
+		messageApi.removeMessageU2U(idSender, idReceiver);
+	}
+	public void sendMessageRoom(String idSender, String nameSender, String idRoom, String message) {
+
+		messageApi.updateChatRoom(idSender, nameSender, idRoom, message);
+	}
+	public void removeMessageRoom(String idSender, String idRoom)
+	{
+		messageApi.removeMessageRoom(idSender, idRoom);
+	}
+	
+	
+	
+	public ArrayList<Object> showMessageU2U(String idUser1, String idUser2)
+	{
+		return messageApi.showHistoryMessageU2U(idUser1, idUser2);
 	}
 
 	public void setActive(String idUser) {
 		accountApi.updateStatusUser(idUser);
 	}
-
+	public Number getStatus(String idUser)
+	{
+		return accountApi.getStatus(idUser);
+	}
+	
+	
+	public ArrayList<String> getListFriendOnline( String idUser ) {
+		return accountApi.getListFriendOnline(idUser);
+	}
+	
 	public void saveTimeLogin(String idUser) {
 		accountApi.updateHistoryLogin(idUser);
 	}
