@@ -51,10 +51,9 @@ public class AddMemberScreen extends JFrame {
 	 * Create the frame.
 	 */
 	public AddMemberScreen() {
-		Image icon = iconTitle.getImage();    
-		setIconImage(icon); 
+		Image icon = iconTitle.getImage();
+		setIconImage(icon);
 		setTitle("Add member");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 395, 140);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

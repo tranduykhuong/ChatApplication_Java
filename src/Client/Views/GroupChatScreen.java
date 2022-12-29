@@ -77,10 +77,9 @@ public class GroupChatScreen extends JFrame {
 	 * Create the frame.
 	 */
 	public GroupChatScreen() {
-		Image icon = iconTitle.getImage();    
-		setIconImage(icon); 
+		Image icon = iconTitle.getImage();
+		setIconImage(icon);
 		setTitle("Nhóm anh em");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 602, 321);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

@@ -1,18 +1,25 @@
 package Client.Views;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import java.awt.Color;
-import javax.swing.JLabel;
+import java.awt.EventQueue;
 import java.awt.Font;
-import javax.swing.JButton;
-import javax.swing.JList;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
 
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import Client.Controller;
@@ -59,6 +66,7 @@ public class GroupChatList extends JFrame {
 	private int firstSelIx;
 
 	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
+
 	/**
 	 * Launch the application.
 	 */
@@ -79,7 +87,7 @@ public class GroupChatList extends JFrame {
 	 * Create the frame.
 	 */
 	public GroupChatList() {
-		Image icon = iconTitle.getImage();    
+		Image icon = iconTitle.getImage();
 		setIconImage(icon);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 842, 483);
@@ -145,7 +153,13 @@ public class GroupChatList extends JFrame {
 				new TitledBorder(null, "T\u00EAn nh\u00F3m chat", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.add(pnGroupName);
 		pnGroupName.setLayout(null);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 21, 249, 292);
+		pnGroupName.add(scrollPane);
+
 		listGroupChat = new JList<String>();
+		scrollPane.setViewportView(listGroupChat);
 		listGroupChat.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -157,28 +171,32 @@ public class GroupChatList extends JFrame {
 			}
 		});
 		listGroupChat.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		listGroupChat.setBounds(10, 21, 249, 293);
-		pnGroupName.add(listGroupChat);
 
 		JPanel pnMemberList = new JPanel();
 		pnMemberList.setBorder(new TitledBorder(null, "Danh s\u00E1ch th\u00E0nh vi\u00EAn", TitledBorder.LEADING,
 				TitledBorder.TOP, null, null));
 		panel.add(pnMemberList);
 		pnMemberList.setLayout(null);
+
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 21, 249, 292);
+		pnMemberList.add(scrollPane_1);
 		listMember = new JList<String>();
+		scrollPane_1.setViewportView(listMember);
 		listMember.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		listMember.setBounds(10, 21, 249, 293);
-		pnMemberList.add(listMember);
 
 		JPanel pnAdminList = new JPanel();
 		pnAdminList.setBorder(
 				new TitledBorder(null, "Danh s\u00E1ch admin", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.add(pnAdminList);
 		pnAdminList.setLayout(null);
+
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(10, 21, 249, 292);
+		pnAdminList.add(scrollPane_2);
 		listAdmin = new JList<String>();
+		scrollPane_2.setViewportView(listAdmin);
 		listAdmin.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		listAdmin.setBounds(10, 21, 249, 293);
-		pnAdminList.add(listAdmin);
 	}
 
 	public void showGroupChatList(List<String> groupChatList) {

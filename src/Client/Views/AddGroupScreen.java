@@ -66,10 +66,9 @@ public class AddGroupScreen extends JFrame {
 	 * Create the frame.
 	 */
 	public AddGroupScreen() {
-		Image icon = iconTitle.getImage();    
-		setIconImage(icon); 
+		Image icon = iconTitle.getImage();
+		setIconImage(icon);
 		setTitle("Create New Group");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 354);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

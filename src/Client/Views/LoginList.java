@@ -1,45 +1,22 @@
 package Client.Views;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JScrollPane;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import org.bson.Document;
-
-import Client.Controller;
-import Entity.Packet;
-import Server.Controller.AccountController;
-
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
-import org.bson.Document;
-
-import Client.Controller;
-import Entity.Packet;
 import Server.Controller.AccountController;
 
 import javax.swing.JButton;
@@ -72,8 +49,8 @@ public class LoginList extends JFrame {
 	 * Create the frame.
 	 */
 	public LoginList() {
-		Image icon = iconTitle.getImage();    
-		setIconImage(icon); 
+		Image icon = iconTitle.getImage();
+		setIconImage(icon);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 740, 547);
 		contentPane = new JPanel();
@@ -128,12 +105,6 @@ public class LoginList extends JFrame {
 		table.getModel();
 		tableModel = (DefaultTableModel) table.getModel();
 		tableModel.setRowCount(0);
-		
-//		for (int i = 0; i < listUserLogin.size(); i = i + 3) {
-//			tableModel
-//					.addRow(new Object[] { listUserLogin.get(i + 2), listUserLogin.get(i), listUserLogin.get(i + 1) });
-//		}
-		
 		for (int i = listUserLogin.size() - 1; i >= 2; i = i - 3) {
 			tableModel
 					.addRow(new Object[] { listUserLogin.get(i), listUserLogin.get(i-2), listUserLogin.get(i - 1) });
