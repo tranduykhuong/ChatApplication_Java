@@ -6,7 +6,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -51,7 +50,7 @@ public class ChatApplicationScreen extends JFrame {
 	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	public ChatApplicationScreen() {
-		Image icon = iconTitle.getImage();    
+		Image icon = iconTitle.getImage();
 		setIconImage(icon);
 		setTitle("Chat Application");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -248,7 +247,7 @@ public class ChatApplicationScreen extends JFrame {
 				showListNameRoom.clear();
 			}
 		});
-		list_2.setModel(dmodel);
+//		list_2.setModel(dmodel);
 		list_2.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		list_2.setBorder(
 				new TitledBorder(null, "Nh\u00F3m", TitledBorder.LEADING, TitledBorder.TOP, null, Color.BLACK));
@@ -328,6 +327,8 @@ public class ChatApplicationScreen extends JFrame {
 		for (int i = 0; i < listNameGr.split(", ").length; i++) {
 			dmodel.addElement(listNameGr.split(", ")[i]);
 		}
+
+		list_2.setModel(dmodel);
 	}
 
 	public void destroyListNameRoom() {
