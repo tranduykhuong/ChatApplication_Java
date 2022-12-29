@@ -547,19 +547,16 @@ public class InterfaceAPI {
 
 		return dataMessage;
 	}
-
 	public ArrayList<String> showHistoryLogin() {
 		ArrayList<String> res = new ArrayList<String>();
 		res = accountApi.listHistoryLogin();
 		return res;
 	}
-
 	public ArrayList<String> showGroupChatList() {
 		ArrayList<String> res = new ArrayList<>();
 		res = roomApi.listGroupChat();
 		return res;
 	}
-
 	public ArrayList<String> showGroupChatListToSort() {
 		ArrayList<String> res = new ArrayList<>();
 		res = roomApi.sortByGroupName();
@@ -587,7 +584,6 @@ public class InterfaceAPI {
 		}
 		return listMemberInGroup;
 	}
-
 	public ArrayList<String> showAdminGroup(String groupName) {
 		ArrayList<String> res = new ArrayList<>();
 		ArrayList<String> listAdminInGroup = new ArrayList<>();

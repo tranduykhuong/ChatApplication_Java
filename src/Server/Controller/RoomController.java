@@ -80,81 +80,37 @@ public class RoomController extends RoomModel {
 		System.out.println("Success");
 	}
 
-	public ArrayList<String> listGroupChat() {
-		MongoCursor<Document> documentCursor = CollectionRoom().find().iterator();
-		ArrayList<String> dataGroupArrayList = new ArrayList<>();
-		try {
-			while (documentCursor.hasNext()) {
-				Document nextDocument = documentCursor.next();
-				dataGroupArrayList.add((String) nextDocument.get("name"));
-				dataGroupArrayList.add((String) nextDocument.get("id").toString());
-			}
-		} finally {
-			documentCursor.close();
-		}
-		return dataGroupArrayList;
-	}
-
-	public ArrayList<String> sortByGroupName() {
-		MongoCursor<Document> documentCursor = CollectionRoom().find().iterator();
-		ArrayList<String> dataGroupArrayList = new ArrayList<>();
-		try {
-			while (documentCursor.hasNext()) {
-				Document nextDocument = documentCursor.next();
-				dataGroupArrayList.add((String) nextDocument.get("name"));
-			}
-		} finally {
-			documentCursor.close();
-		}
-		return dataGroupArrayList;
-	}
-
-	public ArrayList<String> sortByCreateDateGroup() {
-		MongoCursor<Document> documentCursor = CollectionRoom().find().iterator();
-		ArrayList<String> dataGroupArrayList = new ArrayList<>();
-		try {
-			while (documentCursor.hasNext()) {
-				Document nextDocument = documentCursor.next();
-				dataGroupArrayList.add((String) nextDocument.get("name"));
-				dataGroupArrayList.add((String) nextDocument.getString("createTime"));
-			}
-		} finally {
-			documentCursor.close();
-		}
-		return dataGroupArrayList;
-	}
-
-	public ArrayList<String> listMember(String groupName) {
-		Document group = new Document();
-		group.append("name", groupName);
-		MongoCursor<Document> documentCursor = CollectionRoom().find(group).iterator();
-		ArrayList<String> dataIdMemberList = new ArrayList<>();
-		try {
-			while (documentCursor.hasNext()) {
-				Document nexDocument = documentCursor.next();
-				dataIdMemberList.add(nexDocument.get("listMember").toString());
-			}
-		} finally {
-			documentCursor.close();
-		}
-		return dataIdMemberList;
-	}
-
-	public ArrayList<String> listAdmin(String groupN) {
-		Document groups = new Document();
-		groups.append("name", groupN);
-		MongoCursor<Document> documentCursor = CollectionRoom().find(groups).iterator();
-		ArrayList<String> dataIdAdminList = new ArrayList<>();
-		try {
-			while (documentCursor.hasNext()) {
-				Document nextDocument = documentCursor.next();
-				dataIdAdminList.add(nextDocument.get("listAdmins").toString());
-			}
-		} finally {
-			documentCursor.close();
-		}
-		return dataIdAdminList;
-	}
+//	public ArrayList<String> listMember(String groupName) {
+//		Document group = new Document();
+//		group.append("name", groupName);
+//		MongoCursor<Document> documentCursor = CollectionRoom().find(group).iterator();
+//		ArrayList<String> dataIdMemberList = new ArrayList<>();
+//		try {
+//			while (documentCursor.hasNext()) {
+//				Document nexDocument = documentCursor.next();
+//				dataIdMemberList.add(nexDocument.get("listMember").toString());
+//			}
+//		} finally {
+//			documentCursor.close();
+//		}
+//		return dataIdMemberList;
+//	}
+//
+//	public ArrayList<String> listAdmin(String groupN) {
+//		Document groups = new Document();
+//		groups.append("name", groupN);
+//		MongoCursor<Document> documentCursor = CollectionRoom().find(groups).iterator();
+//		ArrayList<String> dataIdAdminList = new ArrayList<>();
+//		try {
+//			while (documentCursor.hasNext()) {
+//				Document nextDocument = documentCursor.next();
+//				dataIdAdminList.add(nextDocument.get("listAdmins").toString());
+//			}
+//		} finally {
+//			documentCursor.close();
+//		}
+//		return dataIdAdminList;
+//	}
 
 	@SuppressWarnings("unchecked")
 	public void insertPeopleRoom(String idUser, String idRoom) {
@@ -245,5 +201,81 @@ public class RoomController extends RoomModel {
 	public void changeNameGr(String idRoom, String newNameGr) {
 		CollectionRoom().updateOne(eq("id", idRoom), combine(set("name", newNameGr)));
 		System.out.println("successful");
+	}
+
+	public ArrayList<String> listGroupChat() {
+		MongoCursor<Document> documentCursor = CollectionRoom().find().iterator();
+		ArrayList<String> dataGroupArrayList = new ArrayList<>();
+		try {
+			while (documentCursor.hasNext()) {
+				Document nextDocument = documentCursor.next();
+				dataGroupArrayList.add((String) nextDocument.get("name"));
+				dataGroupArrayList.add((String) nextDocument.get("id").toString());
+			}
+		} finally {
+			documentCursor.close();
+		}
+		return dataGroupArrayList;
+	}
+	
+	public ArrayList<String> sortByGroupName() {
+		MongoCursor<Document> documentCursor = CollectionRoom().find().iterator();
+		ArrayList<String> dataGroupArrayList = new ArrayList<>();
+		try {
+			while (documentCursor.hasNext()) {
+				Document nextDocument = documentCursor.next();
+				dataGroupArrayList.add((String) nextDocument.get("name"));
+			}
+		} finally {
+			documentCursor.close();
+		}
+		return dataGroupArrayList;
+	}
+	
+	public ArrayList<String> sortByCreateDateGroup() {
+		MongoCursor<Document> documentCursor = CollectionRoom().find().iterator();
+		ArrayList<String> dataGroupArrayList = new ArrayList<>();
+		try {
+			while (documentCursor.hasNext()) {
+				Document nextDocument = documentCursor.next();
+				dataGroupArrayList.add((String) nextDocument.get("name"));
+				dataGroupArrayList.add((String) nextDocument.getString("createTime"));
+			}
+		} finally {
+			documentCursor.close();
+		}
+		return dataGroupArrayList;
+	}
+
+	public ArrayList<String> listMember(String groupName) {
+		Document group = new Document();
+		group.append("name", groupName);
+		MongoCursor<Document> documentCursor = CollectionRoom().find(group).iterator();
+		ArrayList<String> dataIdMemberList = new ArrayList<>();
+		try {
+			while (documentCursor.hasNext()) {
+				Document nexDocument = documentCursor.next();
+				dataIdMemberList.add(nexDocument.get("listMember").toString());
+			}
+		} finally {
+			documentCursor.close();
+		}
+		return dataIdMemberList;
+	}
+
+	public ArrayList<String> listAdmin(String groupN) {
+		Document groups = new Document();
+		groups.append("name", groupN);
+		MongoCursor<Document> documentCursor = CollectionRoom().find(groups).iterator();
+		ArrayList<String> dataIdAdminList = new ArrayList<>();
+		try {
+			while (documentCursor.hasNext()) {
+				Document nextDocument = documentCursor.next();
+				dataIdAdminList.add(nextDocument.get("listAdmins").toString());
+			}
+		} finally {
+			documentCursor.close();
+		}
+		return dataIdAdminList;
 	}
 }
