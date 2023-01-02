@@ -7,26 +7,25 @@ import static com.mongodb.client.model.Updates.set;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import Server.Models.AccountModel;
+import Server.Models.ClientSocket;
 
 public class AccountController extends AccountModel {
 	Logger logger1 = LoggerFactory.getLogger("org.mongodb.driver");
-	
+
 	public String formatDate() {
-		
+
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
 
@@ -74,6 +73,12 @@ public class AccountController extends AccountModel {
 		System.out.println("successful");
 	}
 
+	public void updateProfile(String id, String fullName, String address, String dob, boolean gender) {
+		logger1.atLevel(org.slf4j.event.Level.ERROR);
+		CollectionAccount().updateOne(eq("id", id),
+				combine(set("fullName", fullName), set("dob", dob), set("address", address), set("gender", gender)));
+	}
+
 	public ArrayList<String> read() {
 		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		MongoCursor<Document> document = CollectionAccount().find().iterator();
@@ -94,7 +99,7 @@ public class AccountController extends AccountModel {
 
 		return listData;
 	}
-	
+
 	public ArrayList<String> listHistoryLogin() {
 		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		MongoCursor<Document> documentCursor = CollectionAccount().find().iterator();
@@ -113,7 +118,7 @@ public class AccountController extends AccountModel {
 		}
 		return dataArrayList;
 	}
-	
+
 	public ArrayList<String> listMemberGroupChat(String id) {
 		Document idMember = new Document();
 		idMember.append("id", id);
@@ -129,7 +134,7 @@ public class AccountController extends AccountModel {
 		}
 		return dataMemberArrayList;
 	}
-	
+
 	public ArrayList<String> listAdminGroupChat(String id) {
 		Document idMember = new Document();
 		idMember.append("id", id);
@@ -145,7 +150,6 @@ public class AccountController extends AccountModel {
 		}
 		return dataAdminArrayList;
 	}
-	
 
 	public String checkAccountExist(String userName) {
 		MongoCursor<Document> document = CollectionAccount().find(eq("userName", userName)).iterator();
@@ -290,7 +294,6 @@ public class AccountController extends AccountModel {
 		}
 		return listData;
 	}
-	
 
 	public void addPeopleRoom(String idRoom, String idUser) {
 		ArrayList<String> document = new ArrayList<String>();
@@ -314,16 +317,14 @@ public class AccountController extends AccountModel {
 
 		CollectionAccount().updateOne(eq("id", idDelMember), combine(set("listRoom", document)));
 	}
-	
-	public ArrayList<String> getListFriend (String idUser)
-	{
+
+	public ArrayList<String> getListFriend(String idUser) {
 		ArrayList<String> document = new ArrayList<String>();
-		document = (ArrayList<String>) CollectionAccount().find(eq("id", idUser)).iterator().next()
-				.get("listFriend");
-		
+		document = (ArrayList<String>) CollectionAccount().find(eq("id", idUser)).iterator().next().get("listFriend");
+
 		return document;
 	}
-	
+
 	public void updateListRequestAddFriend(String idUserSentRequest, String idUserRequest) {
 		ArrayList<String> document = new ArrayList<String>();
 		document = (ArrayList<String>) CollectionAccount().find(eq("id", idUserSentRequest)).iterator().next()
@@ -331,6 +332,21 @@ public class AccountController extends AccountModel {
 		document.add(idUserRequest);
 
 		CollectionAccount().updateOne(eq("id", idUserSentRequest), combine(set("listRequestAddFriend", document)));
+	}
+
+	public ArrayList<String> getListRequestAddFriend(String idUser) {
+		ArrayList<String> document = new ArrayList<String>();
+		ArrayList<String> result = new ArrayList<String>();
+		document = (ArrayList<String>) CollectionAccount().find(eq("id", idUser)).iterator().next()
+				.get("listRequestAddFriend");
+
+		for (String e : document) {
+			String name = SearchByID(e).get(0);
+			result.add(e);
+			result.add(name);
+		}
+
+		return result;
 	}
 
 	public void deleteFriendListRequest(String idUser, String idRejectUser) {
@@ -346,6 +362,31 @@ public class AccountController extends AccountModel {
 
 		CollectionAccount().updateOne(eq("id", idUser), combine(set("listRequestAddFriend", document)));
 		System.out.println("Success");
+	}
+
+	public boolean checkFriend(String idA, String idB) {
+		ArrayList<String> document = new ArrayList<String>();
+		document = (ArrayList<String>) CollectionAccount().find(eq("id", idA)).iterator().next().get("listFriend");
+
+		for (int i = 0; i < document.size(); i++) {
+			if (document.get(i).equals(idB)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean checkInviteAddF(String idA, String idB) {
+		ArrayList<String> document = new ArrayList<String>();
+		document = (ArrayList<String>) CollectionAccount().find(eq("id", idA)).iterator().next()
+				.get("listRequestAddFriend");
+
+		for (int i = 0; i < document.size(); i++) {
+			if (document.get(i).equals(idB)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void addListFriend(String idUser, String idNewFriend) {
@@ -387,8 +428,9 @@ public class AccountController extends AccountModel {
 	public void updateAccount(String id, String userName, String fullName, String dob, boolean gender, String address,
 			String email, String role) {
 		logger1.atLevel(org.slf4j.event.Level.ERROR);
-		CollectionAccount().updateOne(eq("id", id), combine(set("userName", userName), set("fullName", fullName),
-				set("dob", dob), set("address", address), set("gender", gender), set("email", email), set("role", role)));
+		CollectionAccount().updateOne(eq("id", id),
+				combine(set("userName", userName), set("fullName", fullName), set("dob", dob), set("address", address),
+						set("gender", gender), set("email", email), set("role", role)));
 	}
 
 	public void delete(String id) {
@@ -399,55 +441,35 @@ public class AccountController extends AccountModel {
 		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		CollectionAccount().deleteMany(eq("id", id));
 	}
-	
-	public Number getStatus(String idUser)
-	{
-		Object document = new ArrayList<String>();
-		document = CollectionAccount().find(eq("id", idUser)).iterator().next().get("active");
-		
-	 
-		
-		return 1;
-	}
-	public void updateStatusUser(String idUser) {
-		logger1.atLevel(org.slf4j.event.Level.ERROR);
-		Object document = new ArrayList<String>();
-		document = CollectionAccount().find(eq("id", idUser)).iterator().next().get("active");
 
-		document = 1 - (int) document;
-
-		CollectionAccount().updateOne(eq("id", idUser), combine(set("active", document)));
-
-	}
-	
 	@SuppressWarnings("unchecked")
-	public ArrayList<String> getListFriendOnline(String idUser)
-	{
+	public ArrayList<String> getListFriendOnline(String idUser) {
 		ArrayList<String> documentListFriend = new ArrayList<String>();
-		documentListFriend = (ArrayList<String>) CollectionAccount().find(eq("id", idUser)).iterator().next().get("listFriend");
-		
-		 MongoCursor<Document> dcListOnline = 
-				 (MongoCursor<Document>) CollectionAccount().find(eq("active", 1)).iterator();		 
-		 ArrayList<String> convertString = new ArrayList<>();
-		 while (dcListOnline.hasNext()) {
-			 convertString.add((String) dcListOnline.next().get("id"));
-	     }
-		 
+		documentListFriend = (ArrayList<String>) CollectionAccount().find(eq("id", idUser)).iterator().next()
+				.get("listFriend");
+
 		ArrayList<String> listFriendsOnline = new ArrayList<>();
-		for( int i=0; i< documentListFriend.size(); i++)
-		{
-			if(convertString.contains(documentListFriend.get(i)))
-			{
-				System.out.println(documentListFriend.get(i) );
-				listFriendsOnline.add(documentListFriend.get(i));
+		ArrayList<String> dataName = new ArrayList<String>();
+		ArrayList<String> data = new ArrayList<String>();
+
+		List<ClientSocket> clientOnline = ClientConnected.getInstance().getClientConnected();
+		for (ClientSocket e : clientOnline) {
+			if (e.getID() != null) {
+				if (documentListFriend.contains(e.getID())) {
+					listFriendsOnline.add(e.getID());
+					ArrayList<String> dataString = new ArrayList<String>();
+					dataString = getFullnameToById(e.getID());
+					dataName.add(dataString.get(0));
+				}
 			}
 		}
-		
-		return listFriendsOnline;
-			
-		
+
+		data.add(dataName.toString());
+		data.add(listFriendsOnline.toString());
+
+		return data;
 	}
-	
+
 	public String updatePassword(String userName, String password) {
 		CollectionAccount().updateOne(eq("userName", userName), combine(set("password", password)));
 		ArrayList<String> result = SearchByName(userName);

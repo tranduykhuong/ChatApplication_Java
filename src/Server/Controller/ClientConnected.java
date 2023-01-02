@@ -95,6 +95,14 @@ public class ClientConnected {
 		}
 	}
 
+	public void sendNotify(String desID, String header, String data, String author) {
+		for (ClientSocket e : connectedClient) {
+			if (e.getID() != null && e.getID().equals(desID)) {
+				e.sendString(new Packet(header, data, "").toString());
+			}
+		}
+	}
+
 //	function gửi message cho client đã đăng nhập
 //	Nhớ check id != null (id == null tức là client connected nhưng chưa login nên chưa có id)
 //	Lặp qua connectedClient, sử dụng hàm getID() để lấy id

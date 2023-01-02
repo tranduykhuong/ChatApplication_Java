@@ -145,7 +145,7 @@ public class Controller extends Thread {
 				}
 				case "getListFriend": {
 					String idUser = pk.getData();
-					String dataString =api.seeListFriend(idUser).toString();
+					String dataString = api.seeListFriend(idUser).toString();
 					thisClient.sendString(new Packet("getListFriend", dataString, "").toString());
 					break;
 				}
@@ -191,12 +191,17 @@ public class Controller extends Thread {
 					String[] req = pk.getData().split("`");
 					ArrayList<String> data = api.login(req[0], req[1]);
 					if (!data.isEmpty()) {
-						System.out.println("aa: " + data);
 						ClientConnected.getInstance().setID(thisClient, data.get(data.size() - 1));
 						thisClient.sendString(new Packet("logIn", data.toString(), "").toString());
 					} else {
 						thisClient.sendString(new Packet("logIn", "Username or password is wrong!", "").toString());
 					}
+					break;
+				}
+				case "updateProfile": {
+					String[] data = pk.getData().split("`");
+					String fullname = api.updateProfile(data[0], data[1], data[2], data[3], data[4]);
+					thisClient.sendString(new Packet("updateProfile", fullname, "").toString());
 					break;
 				}
 				case "forgotPassword": {
@@ -209,13 +214,26 @@ public class Controller extends Thread {
 					}
 					break;
 				}
+				case "statusFriend": {
+					String replace1 = pk.getData().substring(0, pk.getData().length());
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					String idUserRequest = myList.get(0);
+					String idUserSentRequest = myList.get(1);
+					String res = api.getStatusFriend(idUserRequest, idUserSentRequest);
+					thisClient.sendString(new Packet("statusFriend", res, "").toString());
+					break;
+				}
+				case "listRequestAddFriend": {
+					String dataString = api.getListRequestAddFriend(pk.getData()).toString();
+					thisClient.sendString(new Packet("listRequestAddFriend", dataString, "").toString());
+					break;
+				}
 				case "addFriend": {
 					String replace1 = pk.getData().substring(0, pk.getData().length());
 					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
 					String idUserRequest = myList.get(0);
 					String idUserSentRequest = myList.get(1);
 					api.addFriend(idUserRequest, idUserSentRequest);
-					thisClient.sendString(new Packet("addFriend", "add friend successfully", "").toString());
 					break;
 				}
 				case "unFriend": {
@@ -233,7 +251,6 @@ public class Controller extends Thread {
 					String idUser = myList.get(0);
 					String idNewFriend = myList.get(1);
 					api.acceptFriend(idUser, idNewFriend);
-					thisClient.sendString(new Packet("acceptRequestFriend", "accept request add friend successfully", "").toString());
 					break;
 				}
 				case "rejectRequestFriend": {
@@ -242,13 +259,8 @@ public class Controller extends Thread {
 					String idUser = myList.get(0);
 					String idFriendReject = myList.get(1);
 					api.rejectFriend(idUser, idFriendReject);
-					thisClient.sendString(new Packet("rejectRequestFriend", "reject request add friend successfully", "").toString());
-					break;
-				}
-				case "setStatus":{
-					String idUser = pk.getData();
-					api.setActive(idUser);
-					thisClient.sendString(new Packet("setStatus", "set new status successfully", "").toString());
+					thisClient.sendString(
+							new Packet("rejectRequestFriend", "reject request add friend successfully", "").toString());
 					break;
 				}
 				case "listFriendOnline": {
@@ -257,26 +269,30 @@ public class Controller extends Thread {
 					thisClient.sendString(new Packet("listFriendOnline", dataString, "").toString());
 					break;
 				}
-				case "chatWithFriendOnline": {
-					String replace1 = pk.getData().substring(0, pk.getData().length());
-					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
-					String idSender = myList.get(0);
-					String nameSender = myList.get(1);
-					String idReceiver = myList.get(2);
-					String message = myList.get(3);
-					api.sendMessageU2U( idSender,  nameSender,  idReceiver,  message);
-					thisClient.sendString(new Packet("chatWithFriendOnline", "chat with friend successfully", "").toString());
+				case "userSeenMessage": {
+					String[] listData = pk.getData().split(", ");
+					api.userSeenMessage(listData[0], listData[1]);
 					break;
 				}
-				case "chatWithFriendOffline": {
+				case "chatU2U": {
 					String replace1 = pk.getData().substring(0, pk.getData().length());
 					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
 					String idSender = myList.get(0);
 					String nameSender = myList.get(1);
 					String idReceiver = myList.get(2);
 					String message = myList.get(3);
-					api.sendMessageU2UOffline( idSender,  nameSender,  idReceiver,  message);
-					thisClient.sendString(new Packet("chatWithFriendOnline", "chat with friend successfully", "").toString());
+					api.sendMessageU2U(idSender, nameSender, idReceiver, message);
+					break;
+				}
+				case "chatGroup": {
+					String replace1 = pk.getData().substring(0, pk.getData().length());
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					String idSender = myList.get(0);
+					String nameSender = myList.get(1);
+					String idRoom = myList.get(2);
+					String message = myList.get(3);
+					api.sendMessageRoom(idSender, nameSender, idRoom, message);
+
 					break;
 				}
 				case "viewChatHistoryWithFriend": {
@@ -284,8 +300,19 @@ public class Controller extends Thread {
 					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
 					String idUser1 = myList.get(0);
 					String idUser2 = myList.get(1);
-					String dataString = api.showMessageU2U(idUser1, idUser2).toString();;
+					String dataString = api.showMessageU2U(idUser1, idUser2);
 					thisClient.sendString(new Packet("viewChatHistoryWithFriend", dataString, "").toString());
+					break;
+				}
+				case "viewChatHistoryRoom": {
+					String[] listData = pk.getData().split(", ");
+					String dataString = api.showMessageRoom(listData[1], listData[0]);
+					thisClient.sendString(new Packet("viewChatHistoryRoom", dataString, "").toString());
+					break;
+				}
+				case "getWaitingMessage": {
+					String dataString = api.getWaitingMessage(pk.getData());
+					thisClient.sendString(new Packet("getWaitingMessage", dataString, "").toString());
 					break;
 				}
 				case "removeChatWithFriendHistory": {
@@ -293,9 +320,21 @@ public class Controller extends Thread {
 					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
 					String idSender = myList.get(0);
 					String idReceiver = myList.get(1);
-					api.removeMessageU2U( idSender,  idReceiver);
-					thisClient.sendString(new Packet("removeChatWithFriendHistory", "remove message successfully", "").toString());
-					
+					api.removeMessageU2U(idSender, idReceiver);
+					thisClient.sendString(
+							new Packet("removeChatWithFriendHistory", "remove message successfully", "").toString());
+
+					break;
+				}
+				case "removeChatWithRoomHistory": {
+					String replace1 = pk.getData().substring(0, pk.getData().length());
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					String idSender = myList.get(0);
+					String idRoom = myList.get(1);
+					api.removeMessageRoom(idSender, idRoom);
+					thisClient.sendString(
+							new Packet("removeChatWithRoomHistory", "remove message successfully", "").toString());
+
 					break;
 				}
 				case "searchMessageOfFriendChat": {
@@ -304,8 +343,27 @@ public class Controller extends Thread {
 					String idSender = myList.get(0);
 					String idReceiver = myList.get(1);
 					String keyword = myList.get(2);
-					String dataString = api.findMessage(idSender, idReceiver, keyword).toString();
+					String dataString = api.findMessage(idSender, idReceiver, keyword, "").toString();
 					thisClient.sendString(new Packet("searchMessageOfFriendChat", dataString, "").toString());
+					break;
+				}
+				case "searchMessageOfRoomChat": {
+					String replace1 = pk.getData().substring(0, pk.getData().length());
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					String idSender = myList.get(0);
+					String idRoom = myList.get(1);
+					String keyword = myList.get(2);
+					String dataString = api.findMessage(idSender, "", keyword, idRoom).toString();
+					thisClient.sendString(new Packet("searchMessageOfRoomChat", dataString, "").toString());
+					break;
+				}
+				case "searchMessageAll": {
+					String replace1 = pk.getData().substring(0, pk.getData().length());
+					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
+					String idSender = myList.get(0);
+					String keyword = myList.get(1);
+					String dataString = api.findMessageAll(idSender, keyword).toString();
+					thisClient.sendString(new Packet("searchMessageAll", dataString, "").toString());
 					break;
 				}
 				case "showListGr": {
@@ -321,6 +379,13 @@ public class Controller extends Thread {
 
 					String res = api.searchListFriend(data).toString();
 					thisClient.sendString(new Packet("showListFriend", res, "").toString());
+					break;
+				}
+				case "showListFriendChat": {
+					String data = pk.getData();
+
+					String res = api.searchListFriend(data).toString();
+					thisClient.sendString(new Packet("showListFriendChat", res, "").toString());
 					break;
 				}
 				case "createGroup": {
@@ -415,18 +480,6 @@ public class Controller extends Thread {
 //
 //					break;
 //				}
-				case "chatGroup": {
-					String replace1 = pk.getData().substring(0, pk.getData().length());
-					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
-					String idSender = myList.get(0);
-					String nameSender = myList.get(1);
-					String idRoom = myList.get(2);
-					String message = myList.get(3);
-					api.sendMessageRoom( idSender,  nameSender,  idRoom,  message);
-					thisClient.sendString(new Packet("chatGroup", "chat with group successfully", "").toString());
-					
-					break;
-				}
 				case "resetPassword": {
 					String username = pk.getData();
 					boolean check = api.forgotPassword(username);
@@ -444,7 +497,8 @@ public class Controller extends Thread {
 				}
 			}
 
-		} catch (IOException e) {
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			ServerApp.mainScreen.reConnect();
 		}
 	}

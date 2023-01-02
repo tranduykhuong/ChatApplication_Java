@@ -1,20 +1,29 @@
 package Server.Controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
-import java.awt.image.RescaleOp;
-import java.util.ArrayList;
 import java.util.UUID;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import Entity.Packet;
+import Server.Models.ClientSocket;
 import Server.Models.Email;
 
 public class InterfaceAPI {
 	private AccountController accountApi = new AccountController();
 	private RoomController roomApi = new RoomController();
 	private MessageController messageApi = new MessageController();
+
+	private String formatDate() {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Date date = new Date();
+
+		return formatter.format(date);
+	}
 
 	public String createAccount(String fullName, String userName, String password, String name, String dob,
 			boolean gender, String address, String email, String role) {
@@ -82,16 +91,28 @@ public class InterfaceAPI {
 		} else {
 			mainGD = true;
 		}
-		
+
 		if (role.equals("false")) {
 			mainRole = "admin";
 		} else {
 			mainRole = "user";
 		}
-		
+
 		accountApi.updateAccount(id, userName, fullName, dob, mainGD, address, email, mainRole);
 		res.add(id);
 		return res;
+	}
+
+	public String updateProfile(String id, String fullName, String address, String dob, String gender) {
+		boolean mainGD;
+		if (gender.equals("Nam")) {
+			mainGD = false;
+		} else {
+			mainGD = true;
+		}
+
+		accountApi.updateProfile(id, fullName, address, dob, mainGD);
+		return fullName;
 	}
 
 	//
@@ -111,31 +132,55 @@ public class InterfaceAPI {
 		accountApi.deletePeopleRoom(idRoom, idDelMember);
 	}
 
-	
-	public ArrayList<String> seeListFriend(String idUser)
-	{
+	public ArrayList<String> seeListFriend(String idUser) {
 		return accountApi.getListFriend(idUser);
 	}
+
+	public String getStatusFriend(String idA, String idB) {
+		if (accountApi.checkFriend(idA, idB)) {
+			return "Bạn bè";
+		} else if (accountApi.checkInviteAddF(idA, idB)) {
+			return "Yêu cầu kết bạn";
+		} else if (accountApi.checkInviteAddF(idB, idA)) {
+			return "Đã gửi lời mời";
+		} else {
+			return "Chưa kết bạn";
+		}
+	}
+
 	/// idUserRequest : id người gửi
 	// idUserSentRequest : id người nhận
 	public void addFriend(String idUserRequest, String idUserSentRequest) {
 		accountApi.updateListRequestAddFriend(idUserSentRequest, idUserRequest);
+
+		String data = accountApi.getFullnameToById(idUserRequest).get(0) + ", " + idUserRequest;
+		ClientConnected.getInstance().sendNotify(idUserSentRequest, "addFriend", data, "");
+	}
+
+	public ArrayList<String> getListRequestAddFriend(String idUser) {
+		return accountApi.getListRequestAddFriend(idUser);
 	}
 
 	public void acceptFriend(String idUser, String idNewFriend) {
 		accountApi.deleteFriendListRequest(idUser, idNewFriend);
 		accountApi.addListFriend(idUser, idNewFriend);
 		accountApi.addListFriend(idNewFriend, idUser);
+
+		String data = accountApi.getFullnameToById(idUser).get(0);
+		ClientConnected.getInstance().sendNotify(idNewFriend, "acceptRequestFriend", data, "");
 	}
 
 	public void rejectFriend(String idUser, String idFriendReject) {
 		accountApi.deleteFriendListRequest(idUser, idFriendReject);
+		accountApi.deleteFriendListRequest(idFriendReject, idUser);
 	}
 
 	//
 	public void deleteFriend(String idUser, String idFriendDel) {
 		accountApi.deleteFriendListFriend(idUser, idFriendDel);
 		accountApi.deleteFriendListFriend(idFriendDel, idUser);
+
+		ClientConnected.getInstance().sendNotify(idFriendDel, "unFriend", "", "");
 	}
 
 	///
@@ -143,61 +188,94 @@ public class InterfaceAPI {
 
 		if (!messageApi.checkExistChatU2U(idSender, idReceiver))
 			messageApi.createChatU2U(idSender, idReceiver);
-		
-		messageApi.updateChatU2U(idSender, nameSender, idReceiver, message);
-	}
-	
-	public void sendMessageU2UOffline(String idSender, String nameSender, String idReceiver, String message) {
 
-		if (!messageApi.checkExistChatU2U(idSender, idReceiver))
-			messageApi.createChatU2U(idSender, idReceiver);
-		
-		messageApi.updateChatU2UOffline(idSender, nameSender, idReceiver, message);
+		messageApi.chatU2U(idSender, nameSender, idReceiver, message);
 	}
-	
-	public void removeMessageU2U(String idSender, String idReceiver)
-	{
+
+	public void sendMessageRoom(String idSender, String nameSender, String idRoom, String message) {
+		ArrayList<String> list = new ArrayList<String>();
+		ArrayList<String> listMember = new ArrayList<String>();
+
+		if (!messageApi.checkExistChatRoom(idRoom))
+			messageApi.createChatRoom(idRoom);
+
+		list = roomApi.getListIdMemberRoom(idRoom);
+		String[] tmp1 = list.get(0).substring(1, list.get(0).length() - 1).split(", ");
+		String[] tmp2 = list.get(1).substring(1, list.get(1).length() - 1).split(", ");
+
+		for (String e : tmp1) {
+			listMember.add(e);
+		}
+		for (String e : tmp2) {
+			listMember.add(e);
+		}
+
+		messageApi.updateChatRoom(idSender, nameSender, idRoom, message, listMember);
+	}
+
+	public void removeMessageU2U(String idSender, String idReceiver) {
 		messageApi.removeMessageU2U(idSender, idReceiver);
 	}
-	public void sendMessageRoom(String idSender, String nameSender, String idRoom, String message) {
 
-		messageApi.updateChatRoom(idSender, nameSender, idRoom, message);
-	}
-	public void removeMessageRoom(String idSender, String idRoom)
-	{
+	public void removeMessageRoom(String idSender, String idRoom) {
 		messageApi.removeMessageRoom(idSender, idRoom);
 	}
-	
-	
-	
-	public ArrayList<Object> showMessageU2U(String idUser1, String idUser2)
-	{
+
+	public void userSeenMessage(String idUser1, String idUser2) {
+		List<ClientSocket> clientOnline = ClientConnected.getInstance().getClientConnected();
+		for (ClientSocket e : clientOnline) {
+			if (e.getID() != null && e.getID().equals(idUser2)) {
+				e.sendString(new Packet("userSeenMessage", idUser1, "").toString());
+			}
+		}
+	}
+
+	public String showMessageU2U(String idUser1, String idUser2) {
+		if (!messageApi.checkExistChatU2U(idUser1, idUser2)) {
+			messageApi.createChatU2U(idUser1, idUser2);
+			return "0";
+		}
 		return messageApi.showHistoryMessageU2U(idUser1, idUser2);
 	}
 
-	public void setActive(String idUser) {
-		accountApi.updateStatusUser(idUser);
+	public String showMessageRoom(String idRoom, String idUser) {
+		if (!messageApi.checkExistChatRoom(idRoom)) {
+			messageApi.createChatRoom(idRoom);
+			return "0";
+		}
+		return messageApi.showHistoryMessageRoom(idRoom, idUser);
 	}
-	public Number getStatus(String idUser)
-	{
-		return accountApi.getStatus(idUser);
+
+	public String getWaitingMessage(String idUser) {
+		ArrayList<String> listId = new ArrayList<String>();
+		ArrayList<String> listName = new ArrayList<String>();
+		listId = messageApi.getWaitingMessage(idUser);
+
+		for (String e : listId) {
+			String name = accountApi.getFullnameToById(e).get(0);
+			listName.add(name);
+		}
+
+		return listId + "`" + listName;
 	}
-	
-	
-	public ArrayList<String> getListFriendOnline( String idUser ) {
+
+	public ArrayList<String> getListFriendOnline(String idUser) {
 		return accountApi.getListFriendOnline(idUser);
 	}
-	
+
 	public void saveTimeLogin(String idUser) {
 		accountApi.updateHistoryLogin(idUser);
 	}
 
-	public ArrayList<String> findMessage(String idSender, String idReceiver, String keyWord) {
-		ArrayList<String> listResultAfterFilter = messageApi.findMessage(idSender, idReceiver, keyWord);
+	public ArrayList<String> findMessage(String idSender, String idReceiver, String keyWord, String idRoom) {
+		ArrayList<String> listResultAfterFilter = messageApi.findMessageSigle(idSender, idReceiver, keyWord, idRoom);
 
-		for (String stringValue : listResultAfterFilter) {
-			System.out.print(stringValue);
-		}
+		return listResultAfterFilter;
+	}
+
+	public ArrayList<String> findMessageAll(String idSender, String keyWord) {
+		ArrayList<String> listResultAfterFilter = messageApi.findMessageAll(idSender, keyWord);
+
 		return listResultAfterFilter;
 	}
 
@@ -235,24 +313,24 @@ public class InterfaceAPI {
 	public ArrayList<String> Filter(String key, String data, int status) {
 		ArrayList<String> res = new ArrayList<String>();
 		switch (key) {
-			case "searchByName":
-				res = accountApi.SearchByName(data);
-				break;
+		case "searchByName":
+			res = accountApi.SearchByName(data);
+			break;
 
-			case "orderbyName":
-				res = accountApi.FilterByName(status);
-				break;
+		case "orderbyName":
+			res = accountApi.FilterByName(status);
+			break;
 
-			case "orderbyCreateDay":
-				res = accountApi.FilterByDate(status);
-				break;
+		case "orderbyCreateDay":
+			res = accountApi.FilterByDate(status);
+			break;
 
-			case "showAllInf":
-				res = accountApi.read();
-				break;
+		case "showAllInf":
+			res = accountApi.read();
+			break;
 
-			default:
-				break;
+		default:
+			break;
 		}
 		return res;
 	}

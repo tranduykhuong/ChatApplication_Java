@@ -10,8 +10,11 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import Client.Views.AddFriend;
+import Client.Views.AddFriendNotify;
 import Client.Views.AddGroupScreen;
 import Client.Views.ChatApplicationScreen;
+import Client.Views.FindMessageScreen;
 import Client.Views.ForgotPWScreen;
 import Client.Views.GroupChatList;
 import Client.Views.GroupChatScreen;
@@ -21,6 +24,7 @@ import Client.Views.LoginList;
 import Client.Views.LoginScreen;
 import Client.Views.ManageUsersList;
 import Client.Views.RegisterScreen;
+import Client.Views.UpdateProfileScreen;
 import Client.Views.User;
 import Entity.Packet;
 
@@ -30,9 +34,9 @@ public class Controller {
 	private String hostName;
 	private int port;
 	private Boolean running;
-	private User userframe;
 
 	private String data;
+	private User userframe;
 	private GroupChatList groupChatLists = new GroupChatList();
 
 	private AddGroupScreen addGrScreen = new AddGroupScreen();
@@ -46,10 +50,14 @@ public class Controller {
 	private ForgotPWScreen forgotScreen = new ForgotPWScreen();
 
 	private LoadingScreen ldscreen = new LoadingScreen();
+	private AddFriend afscreen = new AddFriend();
+	private AddFriendNotify afnscreen = new AddFriendNotify();
+	private FindMessageScreen findMsgScreen = new FindMessageScreen();
+	private UpdateProfileScreen updateProfileScreen = new UpdateProfileScreen();
 
-	private String username;
+	private String username = "";
 	private String id;
-	private String fullname;
+	private String fullname = "";
 
 	private Controller() {
 		client = new TCP_Client();
@@ -73,6 +81,28 @@ public class Controller {
 		return false;
 	}
 
+	public void handleDisconnect() {
+		ClientApp.connectionScreen.handleDisconnect();
+		ClientApp.connectionScreen.setVisible(true);
+
+		groupChatLists.setVisible(false);
+		addGrScreen.setVisible(false);
+		chatAppScreen.setVisible(false);
+		grChat.setVisible(false);
+		MNUserList.setVisible(false);
+		loginScreen.setVisible(false);
+		registerScreen.setVisible(false);
+		homeScreen.setVisible(false);
+		forgotScreen.setVisible(false);
+		ldscreen.setVisible(false);
+		afscreen.setVisible(false);
+		afnscreen.setVisible(false);
+		findMsgScreen.setVisible(false);
+		updateProfileScreen.setVisible(false);
+
+		disconnect();
+	}
+
 	public void startListen() {
 		new Thread(() -> {
 			while (true) {
@@ -85,9 +115,7 @@ public class Controller {
 					break;
 
 				if (msg.equals("Server closed!")) {
-					ClientApp.connectionScreen.handleDisconnect();
-					ClientApp.connectionScreen.setVisible(true);
-					disconnect();
+					handleDisconnect();
 					break;
 				}
 
@@ -104,6 +132,7 @@ public class Controller {
 					String replace1 = data.substring(1, data.lastIndexOf("]"));
 					List<String> myList = new ArrayList<String>(Arrays.asList(replace1.split(", ")));
 					MNUserList.showInforWithRole(myList);
+					afscreen.showListFriend(myList);
 					break;
 				}
 				case "showAll": {
@@ -270,7 +299,6 @@ public class Controller {
 					String[] infoGroup = str.split(", ");
 
 					for (int i = 0; i < infoGroup.length; i++) {
-						// System.out.println(infoGroup[i]);
 						nameGroup.add(infoGroup[i]);
 					}
 
@@ -370,16 +398,18 @@ public class Controller {
 					} else {
 						String[] dataArr = data.substring(1, data.length() - 1).split(", ");
 						this.username = dataArr[0];
+						this.fullname = dataArr[0];
 						this.id = dataArr[dataArr.length - 1];
 						registerScreen.showMessage("Register successfully!", "Success",
 								JOptionPane.INFORMATION_MESSAGE);
 						registerScreen.setVisible(false);
-						chatAppScreen.setVisible(true);
+
+						updateProfileScreen.setData(this.id);
+						updateProfileScreen.setVisible(true);
 					}
 					break;
 				}
 				case "logIn": {
-					System.out.println(pk.getData());
 					String data = pk.getData();
 					if (data.equals("Username or password is wrong!")) {
 						loginScreen.showMessage(data, "Warning", JOptionPane.WARNING_MESSAGE);
@@ -388,16 +418,24 @@ public class Controller {
 						this.username = dataArr[0];
 						this.fullname = dataArr[1];
 						this.id = dataArr[dataArr.length - 1];
-						loginScreen.showMessage("Login successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
 						loginScreen.setVisible(false);
-						if (dataArr[dataArr.length - 2].equals("user"))
-							loginScreen.controllShowListGroup(this.id);
-						// chatAppScreen.setVisible(true);
-						else {
+						if (dataArr[dataArr.length - 2].equals("user")) {
+							chatAppScreen.showUserInfo(this.fullname, this.id);
+							chatAppScreen.run();
+						} else {
 							MNUserList.setVisible(true);
 							MNUserList.run();
 						}
 					}
+					break;
+				}
+				case "updateProfile": {
+					updateProfileScreen.showMessage("Cập nhật thành công!", "Thành công",
+							JOptionPane.INFORMATION_MESSAGE);
+					updateProfileScreen.setVisible(false);
+					this.fullname = pk.getData();
+					chatAppScreen.showUserInfo(this.fullname, this.id);
+					chatAppScreen.run();
 					break;
 				}
 				case "forgotPassword": {
@@ -413,31 +451,83 @@ public class Controller {
 					}
 					break;
 				}
+				case "listRequestAddFriend": {
+					chatAppScreen.showRequestAddFriend(pk.getData());
+					break;
+				}
+				case "statusFriend": {
+					afscreen.handleStatusFriend(pk.getData());
+					break;
+				}
 				case "addFriend": {
+					afnscreen.show(pk.getData().split(", ")[0], pk.getData().split(", ")[1]);
+					sgt.sendTextMessage(new Packet("showListFriendChat", id, id).toString());
+					sgt.sendTextMessage(new Packet("listFriendOnline", id, id).toString());
 					break;
 				}
 				case "unFriend": {
+					sgt.sendTextMessage(new Packet("showListFriendChat", id, id).toString());
+					sgt.sendTextMessage(new Packet("listFriendOnline", id, id).toString());
+					break;
+				}
+				case "acceptRequestFriend": {
+					sgt.sendTextMessage(new Packet("showListFriendChat", id, id).toString());
+					sgt.sendTextMessage(new Packet("listFriendOnline", id, id).toString());
+					afscreen.reloadStatus();
+					chatAppScreen.showMessage(pk.getData() + " đã chấp nhận lời mời kết bạn!");
 					break;
 				}
 				case "listFriendOnline": {
+					data = pk.getData();
+
+					String listIdAndName = data.substring(1, data.length() - 1);
+					chatAppScreen.showlistFriendOnline(listIdAndName);
+
 					break;
 				}
-				case "chatWithFriendOnline": {
+				case "chatU2U": {
+					chatAppScreen.renderMessage(pk.getData(), "U2U");
 					break;
 				}
-				case "chatWithFriendOffline": {
+				case "chatGroup": {
+					chatAppScreen.renderMessage(pk.getData(), "ROOM");
 					break;
 				}
-				case "viewChatHistory": {
+				case "viewChatHistoryWithFriend": {
+					chatAppScreen.viewChatHistory(pk.getData(), "U2U");
+					sgt.sendTextMessage(new Packet("getWaitingMessage", id, id).toString());
 					break;
 				}
-				case "romoveChatHistory": {
+				case "viewChatHistoryRoom": {
+					chatAppScreen.viewChatHistory(pk.getData(), "ROOM");
 					break;
 				}
-				case "searchStringChatSingle": {
+				case "userSeenMessage": {
+					chatAppScreen.userSeenMsg(pk.getData());
 					break;
 				}
-				case "searchStringChatMultiple": {
+				case "getWaitingMessage": {
+					chatAppScreen.showWaitingList(pk.getData());
+					break;
+				}
+				case "removeChatWithFriendHistory": {
+					// rerender
+					break;
+				}
+				case "removeChatWithRoomHistory": {
+					// rerender
+					break;
+				}
+				case "searchMessageOfFriendChat": {
+					findMsgScreen.showList(pk.getData());
+					break;
+				}
+				case "searchMessageOfRoomChat": {
+					findMsgScreen.showList(pk.getData());
+					break;
+				}
+				case "searchMessageAll": {
+					findMsgScreen.showList(pk.getData());
 					break;
 				}
 				case "showListGr": {
@@ -447,7 +537,6 @@ public class Controller {
 					chatAppScreen.setId(id);
 					chatAppScreen.destroyChatAppForm();
 					chatAppScreen.showListNameGr(data);
-					chatAppScreen.setVisible(true);
 					break;
 				}
 				case "showListFriend": {
@@ -462,6 +551,13 @@ public class Controller {
 					} else {
 						addGrScreen.checkMessage(listIdAndName);
 					}
+					break;
+				}
+				case "showListFriendChat": {
+					data = pk.getData();
+
+					String listIdAndName = data.substring(1, data.length() - 1);
+					chatAppScreen.showlistFriend(listIdAndName);
 					break;
 				}
 				case "createGroup": {
@@ -513,7 +609,8 @@ public class Controller {
 						grChat.checkMessage(notifyChangeNameGr);
 						grChat.setTitle(grChat.getNameGr());
 						grChat.destroyName();
-						chatAppScreen.destroyChatAppForm();
+						grChat.setVisible(false);
+						// chatAppScreen.destroyChatAppForm();
 						chatAppScreen.refeshDataForm();
 					} else {
 						grChat.checkMessage(notifyChangeNameGr);
@@ -537,8 +634,6 @@ public class Controller {
 				}
 				case "removeMember": {
 					data = pk.getData();
-
-					// System.out.println(data);
 
 					String notifyDeleteMember = data.replace("[", "").replace("]", "");
 					ArrayList<String> listGr = new ArrayList<String>();
@@ -586,36 +681,36 @@ public class Controller {
 				case "sendNotifyCreateGr": {
 					data = pk.getData();
 
-					chatAppScreen.sendMessage(data);
+					chatAppScreen.showMessage(data);
 					chatAppScreen.refeshDataForm();
 
 					break;
 				}
 				case "sendNotifyAddGr": {
 					data = pk.getData();
-
 					grChat.checkMessage(data);
 
 					break;
 				}
 				case "sendNotifyDeleteGr": {
 					data = pk.getData();
-
 					grChat.checkMessage(data);
 
 					break;
 				}
 				case "sendNotifyAdminGr": {
 					data = pk.getData();
-
 					grChat.checkMessage(data);
 
 					break;
 				}
-				case "chatGroup": {
-					break;
-				}
 				case "resetPassword": {
+					String status = pk.getData();
+					if (status.equals("success")) {
+						chatAppScreen.showMessage("Password mới đã được gửi vào email!");
+					} else {
+						chatAppScreen.showMessage("Reset password thất bại. Vui lòng thử lại!");
+					}
 					break;
 				}
 				default: {
@@ -692,9 +787,28 @@ public class Controller {
 			ldscreen.setVisible(status);
 			break;
 		}
+		case "addFriendScreen": {
+			afscreen.setVisible(status);
+			break;
+		}
+		case "findMsgScreen": {
+			findMsgScreen.setVisible(status);
+			break;
+		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + screen);
 		}
+	}
 
+	public void setDataFindMsgScreen(String id, String name, String type) {
+		findMsgScreen.setData(id, name, type);
+	}
+
+	public String getFullname() {
+		return fullname;
+	}
+
+	public String getID() {
+		return id;
 	}
 }

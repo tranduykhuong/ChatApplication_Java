@@ -21,7 +21,6 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import Client.Controller;
-import Entity.Packet;
 
 public class LoginScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -49,13 +48,9 @@ public class LoginScreen extends JFrame {
 		JOptionPane.showMessageDialog(this, content, heading, opt);
 	}
 
-	public void controllShowListGroup(String id) {
-		Controller.getInstance().sendTextMessage(new Packet("showListGr", id, id).toString());
-	}
-
 	public LoginScreen() {
-		Image icon = iconTitle.getImage();    
-		setIconImage(icon); 
+		Image icon = iconTitle.getImage();
+		setIconImage(icon);
 		setTitle("Login");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -109,7 +104,7 @@ public class LoginScreen extends JFrame {
 			}
 		});
 		btnLogin.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		btnLogin.setBounds(327, 220, 99, 34);
+		btnLogin.setBounds(309, 220, 99, 34);
 		contentPane.add(btnLogin);
 
 		btnCancel = new JButton("BACK");
@@ -120,7 +115,7 @@ public class LoginScreen extends JFrame {
 			}
 		});
 		btnCancel.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		btnCancel.setBounds(225, 220, 99, 34);
+		btnCancel.setBounds(200, 220, 99, 34);
 		contentPane.add(btnCancel);
 
 		passwordField = new JPasswordField();
@@ -137,7 +132,7 @@ public class LoginScreen extends JFrame {
 		btnForgot.setForeground(new Color(0, 0, 160));
 		btnForgot.setBackground(new Color(192, 192, 192));
 		btnForgot.setFont(new Font("Times New Roman", Font.ITALIC, 14));
-		btnForgot.setBounds(277, 174, 149, 21);
+		btnForgot.setBounds(259, 179, 149, 21);
 		contentPane.add(btnForgot);
 	}
 

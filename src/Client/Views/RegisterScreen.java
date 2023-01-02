@@ -34,17 +34,29 @@ public class RegisterScreen extends JFrame {
 	private JPasswordField confirmField;
 	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
+	static boolean isValidEmail(String email) {
+		String regex = "^(.+)@(\\S+)$";
+		return email.matches(regex);
+	}
+
 	private boolean handleRegister() {
 		String password = String.valueOf(passwordField.getPassword());
 		String passwordConfirm = String.valueOf(confirmField.getPassword());
 		if (userNameField.getText().length() == 0 || password.length() == 0 || emailField.getText().length() == 0
 				|| passwordConfirm.length() == 0) {
-			JOptionPane.showMessageDialog(this, "Missing connection config", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ các dữ liệu!", "Error",
+					JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 
 		if (!password.equals(passwordConfirm)) {
-			JOptionPane.showMessageDialog(this, "Password confirm is not valid!", "Warn", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Confirm password phải giống password!", "Warn",
+					JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+
+		if (!isValidEmail(emailField.getText())) {
+			JOptionPane.showMessageDialog(this, "Email không hợp lệ!", "Warn", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 
@@ -57,8 +69,8 @@ public class RegisterScreen extends JFrame {
 	}
 
 	public RegisterScreen() {
-		Image icon = iconTitle.getImage();    
-		setIconImage(icon); 
+		Image icon = iconTitle.getImage();
+		setIconImage(icon);
 		setTitle("Register");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
