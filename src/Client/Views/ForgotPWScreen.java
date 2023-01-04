@@ -1,8 +1,10 @@
 package Client.Views;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -20,7 +22,7 @@ import javax.swing.border.EmptyBorder;
 import Client.Controller;
 
 public class ForgotPWScreen extends JFrame {
-
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField usernameField;
 	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
@@ -41,6 +43,8 @@ public class ForgotPWScreen extends JFrame {
 	}
 
 	public ForgotPWScreen() {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(dim.width/2- getSize().width/2, dim.height/2 - getSize().height/2);
 		Image icon = iconTitle.getImage();    
 		setIconImage(icon);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -25,45 +25,13 @@ import javax.swing.border.TitledBorder;
 import Client.Controller;
 import Entity.Packet;
 
-import javax.swing.AbstractListModel;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-
-import java.awt.event.ActionListener;
-import java.util.List;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.AbstractListModel;
-import javax.swing.DefaultListModel;
-
-import java.awt.event.ActionListener;
-import java.util.List;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.border.TitledBorder;
-
-import Client.Controller;
-import Entity.Packet;
-
-import javax.swing.AbstractListModel;
-import javax.swing.DefaultListModel;
-
-import java.awt.event.ActionListener;
-import java.util.List;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 public class GroupChatList extends JFrame {
-
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JList<String> listGroupChat;
 	private JList<String> listMember;
 	private JList<String> listAdmin;
 	private String selectedString;
-	private int firstSelIx;
 
 	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
@@ -89,7 +57,6 @@ public class GroupChatList extends JFrame {
 	public GroupChatList() {
 		Image icon = iconTitle.getImage();
 		setIconImage(icon);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 842, 483);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -110,6 +77,7 @@ public class GroupChatList extends JFrame {
 		btnSortName.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Controller.getInstance().sendTextMessage(new Packet("sortByGroupName", "", "").toString());
+				Controller.getInstance().handleScreen("loadingScreen", true);
 			}
 		});
 		btnSortName.setForeground(new Color(1, 128, 254));
@@ -121,6 +89,7 @@ public class GroupChatList extends JFrame {
 		btnSortDate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Controller.getInstance().sendTextMessage(new Packet("sortByCreateDate", "", "").toString());
+				Controller.getInstance().handleScreen("loadingScreen", true);
 			}
 		});
 		btnSortDate.setForeground(new Color(1, 128, 254));
@@ -135,7 +104,6 @@ public class GroupChatList extends JFrame {
 		JButton btnBack = new JButton("Trở về");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new ManageUsersList().setVisible(true);
 				setVisible(false);
 			}
 		});
@@ -164,10 +132,9 @@ public class GroupChatList extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				selectedString = listGroupChat.getSelectedValue().toString();
-				// firstSelIx = listGroupChat.getSelectedIndex();
 				Controller.getInstance().sendTextMessage(new Packet("showMemberList", selectedString, "").toString());
+				Controller.getInstance().handleScreen("loadingScreen", true);
 				Controller.getInstance().sendTextMessage(new Packet("showAdminList", selectedString, "").toString());
-				// System.out.println(firstSelIx);
 			}
 		});
 		listGroupChat.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -214,7 +181,6 @@ public class GroupChatList extends JFrame {
 		for (int i = 0; i < groupChatList.size(); i++) {
 			listModel.addElement(groupChatList.get(i));
 		}
-		System.out.println("Vinh name ");
 	}
 
 	public void showGroupChatListSortedByCreateDate(List<String> groupChatList) {
@@ -225,8 +191,6 @@ public class GroupChatList extends JFrame {
 				listModel.addElement(groupChatList.get(i));
 			}
 		}
-
-		System.out.println(groupChatList);
 	}
 
 	public void showMemberList(List<String> userList) {
@@ -235,7 +199,6 @@ public class GroupChatList extends JFrame {
 		for (int i = 0; i < userList.size(); i++) {
 			listModel.addElement(userList.get(i));
 		}
-		System.out.println(userList);
 	}
 
 	public void showAdminList(List<String> adminList) {
@@ -244,6 +207,5 @@ public class GroupChatList extends JFrame {
 		for (int i = 0; i < adminList.size(); i++) {
 			listModel.addElement(adminList.get(i)); // + " " + groupChatList.get(i + 1)
 		}
-		System.out.println(adminList);
 	}
 }

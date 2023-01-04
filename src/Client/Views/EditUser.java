@@ -11,13 +11,6 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.Image;
 import java.text.SimpleDateFormat;
-import java.awt.Font;
-import java.text.SimpleDateFormat;
-import java.awt.Font;
-import java.awt.Color;
-
-import javax.swing.ImageIcon;
-import java.awt.Font;
 import java.awt.Color;
 
 import javax.swing.ImageIcon;
@@ -72,7 +65,6 @@ public class EditUser extends JFrame {
 		Image icon = iconTitle.getImage();    
 		setIconImage(icon);
 		setTitle("Update Account");
-		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 471, 463);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

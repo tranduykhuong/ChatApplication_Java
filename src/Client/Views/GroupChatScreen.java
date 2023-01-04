@@ -34,7 +34,7 @@ public class GroupChatScreen extends JFrame {
 
 	private String id;
 
-	private DefaultListModel dmodel = new DefaultListModel();
+	private DefaultListModel<String> dmodel = new DefaultListModel<String>();
 	private String thisIdGr = "";
 	private String isAdmin = "";
 	private String listIDMember = "";
@@ -197,6 +197,7 @@ public class GroupChatScreen extends JFrame {
 						newNameGroup.add(newNameGr);
 						Controller.getInstance()
 								.sendTextMessage(new Packet("changeNameGroup", newNameGroup.toString(), "").toString());
+						Controller.getInstance().handleScreen("loadingScreen", true);
 					}
 				}
 			}
@@ -311,6 +312,7 @@ public class GroupChatScreen extends JFrame {
 
 				Controller.getInstance().sendTextMessage(
 						new Packet("removeMember", packetIdMemberDeleteRoom.toString(), "").toString());
+				Controller.getInstance().handleScreen("loadingScreen", true);
 			}
 		}
 
@@ -344,6 +346,7 @@ public class GroupChatScreen extends JFrame {
 				packetIdMemberBecomeAdmin.add(idMemberBecomeAdmin.toString());
 				Controller.getInstance().sendTextMessage(
 						new Packet("administator", packetIdMemberBecomeAdmin.toString(), "").toString());
+				Controller.getInstance().handleScreen("loadingScreen", true);
 			}
 		}
 

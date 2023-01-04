@@ -1,8 +1,10 @@
 package Client.Views;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -51,6 +53,8 @@ public class AddMemberScreen extends JFrame {
 	 * Create the frame.
 	 */
 	public AddMemberScreen() {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(dim.width/2- getSize().width/2, dim.height/2 - getSize().height/2);
 		Image icon = iconTitle.getImage();
 		setIconImage(icon);
 		setTitle("Add member");

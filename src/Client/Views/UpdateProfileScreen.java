@@ -1,9 +1,11 @@
 package Client.Views;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
@@ -56,6 +58,8 @@ public class UpdateProfileScreen extends JFrame {
 	 */
 	public UpdateProfileScreen() {
 		Image icon = iconTitle.getImage();
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(dim.width/2- getSize().width/2, dim.height/2 - getSize().height/2);
 		setIconImage(icon);
 		setTitle("Update Profile");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

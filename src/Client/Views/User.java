@@ -1,10 +1,12 @@
 package Client.Views;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
@@ -79,7 +81,6 @@ public class User extends JFrame {
 		this.username = username;
 		Image icon = iconTitle.getImage();
 		setIconImage(icon);
-		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 550, 749);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -363,7 +364,6 @@ public class User extends JFrame {
 
 		// LIST
 		// List Friend
-		System.out.print("Nhom nhan: " + listfriend);
 		List<String> ListFriend = new ArrayList<String>(Arrays.asList(listfriend.split(", ")));
 		DefaultListModel<String> dlm = new DefaultListModel<String>();
 		for (int i = 0; i < ListFriend.size(); i++) {
@@ -373,7 +373,6 @@ public class User extends JFrame {
 		listFriend.setModel(dlm);
 
 		// History login
-		System.out.print("Lich su nhan: " + listLogin);
 		List<String> HistoryLG = new ArrayList<String>(Arrays.asList(listLogin.split(", ")));
 		DefaultListModel<String> dlm1 = new DefaultListModel<String>();
 		for (int i = 0; i < HistoryLG.size(); i++) {
@@ -381,5 +380,8 @@ public class User extends JFrame {
 		}
 
 		historyLogin.setModel(dlm1);
+		
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(dim.width/2- getSize().width/2, dim.height/2 - getSize().height/2);
 	}
 }

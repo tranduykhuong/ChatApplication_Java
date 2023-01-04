@@ -1,11 +1,14 @@
 package Client.Views;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -17,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -42,15 +46,15 @@ import javax.swing.text.StyledDocument;
 
 import Client.Controller;
 import Entity.Packet;
+import java.awt.SystemColor;
+import javax.swing.SwingConstants;
 
 public class ChatApplicationScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	JButton findOneMsgBtn;
-	JButton deleteHisBtn;
 	JButton sendBtn;
 	JTextPane listMessageTp;
-	JList<String> list;
+	JList<String> listprofile;
 	JList<String> listFriendOnline;
 	JList<String> listGroup;
 	JList<String> listFriend;
@@ -72,6 +76,8 @@ public class ChatApplicationScreen extends JFrame {
 	private boolean newMsg = false;
 	private boolean sentHistoryRoom = true;
 
+	private boolean flagOpen = false;
+
 	private String id;
 	private String fullname;
 
@@ -87,6 +93,8 @@ public class ChatApplicationScreen extends JFrame {
 	private ArrayList<String> getshowListNameRoom = new ArrayList<String>();
 	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
+	private JPanel panel_9 = new JPanel();
+
 	public String formatDate(String time) {
 		if (time.length() > 0) {
 			return time.substring(0, 5) + time.substring(10);
@@ -98,16 +106,17 @@ public class ChatApplicationScreen extends JFrame {
 		}
 	}
 
-	private void formatMessage(JTextPane pane, String text, Color color, int align, Color bgColor) {
+	private void formatMessage(JTextPane pane, String text, Color color, int align, Color bgColor, boolean italic) {
 		StyledDocument doc = listMessageTp.getStyledDocument();
 
 		Style style = pane.addStyle("Color Style", null);
 		StyleConstants.setForeground(style, color);
 		StyleConstants.setBackground(style, bgColor);
+		StyleConstants.setItalic(style, italic);
 
 		SimpleAttributeSet center = new SimpleAttributeSet();
 		StyleConstants.setAlignment(center, align);
-//		StyleConstants có nhiều hàm set lắm á, tìm hiểu trang trí cho đẹp, t chưa border radius được
+		StyleConstants.setLineSpacing(center, 1);
 
 		try {
 			doc.insertString(doc.getLength(), text, style);
@@ -127,17 +136,20 @@ public class ChatApplicationScreen extends JFrame {
 		SwingUtilities.invokeLater(() -> {
 			if (sender.equals(fullname)) {
 				if (!type.equals("ROOM")) {
-					formatMessage(listMessageTp, seen, Color.green, StyleConstants.ALIGN_RIGHT, Color.white);
+					formatMessage(listMessageTp, seen, Color.cyan, StyleConstants.ALIGN_RIGHT, Color.white, true);
 				}
-				formatMessage(listMessageTp, content, Color.BLACK, StyleConstants.ALIGN_RIGHT, Color.blue);
+				formatMessage(listMessageTp, " " + content, Color.blue, StyleConstants.ALIGN_RIGHT, Color.white, false);
 				formatMessage(listMessageTp, " [" + time + "]\n", Color.LIGHT_GRAY, StyleConstants.ALIGN_RIGHT,
-						Color.white);
+						Color.white, false);
 			} else {
-				formatMessage(listMessageTp, "[" + time + "]", Color.LIGHT_GRAY, StyleConstants.ALIGN_LEFT, Color.gray);
+				formatMessage(listMessageTp, "[" + time + "]", Color.LIGHT_GRAY, StyleConstants.ALIGN_LEFT, Color.gray,
+						false);
 				if (type.equals("ROOM")) {
-					formatMessage(listMessageTp, "[" + sender + "]", Color.BLUE, StyleConstants.ALIGN_LEFT, Color.cyan);
+					formatMessage(listMessageTp, "[" + sender + "]", Color.BLUE, StyleConstants.ALIGN_LEFT, Color.cyan,
+							false);
 				}
-				formatMessage(listMessageTp, " " + content + "\n", Color.BLACK, StyleConstants.ALIGN_LEFT, Color.green);
+				formatMessage(listMessageTp, " " + content + "\n", Color.BLACK, StyleConstants.ALIGN_LEFT, Color.green,
+						false);
 			}
 			scrollToBottom();
 		});
@@ -145,6 +157,8 @@ public class ChatApplicationScreen extends JFrame {
 
 	public ChatApplicationScreen() {
 		Image icon = iconTitle.getImage();
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(dim.width / 2 - getSize().width / 2, dim.height / 2 - getSize().height / 2);
 		setIconImage(icon);
 		setTitle("Chat Application");
 		setResizable(false);
@@ -160,24 +174,24 @@ public class ChatApplicationScreen extends JFrame {
 				}
 			}
 		});
-		setBounds(100, 100, 917, 498);
+		setBounds(100, 100, 965, 498);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		list = new JList<String>();
-		list.setBounds(5, 5, 113, 62);
+		listprofile = new JList<String>();
+		listprofile.setBounds(5, 5, 113, 61);
 
-		list.setFont(new Font("Times New Roman", Font.BOLD, 12));
-		list.setBorder(new TitledBorder(
+		listprofile.setFont(new Font("Times New Roman", Font.BOLD, 12));
+		listprofile.setBorder(new TitledBorder(
 				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
-				"User information", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		contentPane.add(list);
+				"Th\u00F4ng tin", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		contentPane.add(listprofile);
 
 		JPanel panel = new JPanel();
-		panel.setBounds(123, 5, 623, 356);
+		panel.setBounds(123, 5, 662, 400);
 		panel.setBorder(new MatteBorder(2, 2, 3, 2, (Color) new Color(128, 128, 128)));
 		contentPane.add(panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
@@ -188,7 +202,9 @@ public class ChatApplicationScreen extends JFrame {
 		panel.setLayout(gbl_panel);
 
 		JPanel panel_4 = new JPanel();
-		panel_4.setBorder(new TitledBorder(null, "Message", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_4.setBorder(new TitledBorder(
+				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
+				"Tin Nh\u1EAFn", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel_4.setBackground(Color.WHITE);
 		panel_4.setLayout(null);
 		GridBagConstraints gbc_panel_4 = new GridBagConstraints();
@@ -197,9 +213,42 @@ public class ChatApplicationScreen extends JFrame {
 		gbc_panel_4.gridy = 0;
 		panel.add(panel_4, gbc_panel_4);
 
+		panel_9 = new JPanel();
+		panel_9.setLayout(null);
+		panel_9.setBorder(new TitledBorder(null, "Thao t\u00E1c", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_9.setBackground(SystemColor.menu);
+		panel_9.setBounds(447, 51, 192, 0);
+		panel_4.add(panel_9);
+
+		JButton deleteHisBtn = new JButton("Xóa lịch sử");
+		deleteHisBtn.setIcon(new ImageIcon(ChatApplicationScreen.class.getResource("/Image/trashicon.png")));
+		deleteHisBtn.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		deleteHisBtn.setEnabled(false);
+		deleteHisBtn.setBackground(Color.WHITE);
+		deleteHisBtn.setBounds(5, 25, 182, 27);
+		panel_9.add(deleteHisBtn);
+
+		JButton findOneMsgBtn = new JButton("Tìm tin nhắn");
+		findOneMsgBtn.setIcon(new ImageIcon(ChatApplicationScreen.class.getResource("/Image/findicon.png")));
+		findOneMsgBtn.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		findOneMsgBtn.setEnabled(false);
+		findOneMsgBtn.setBackground(Color.WHITE);
+		findOneMsgBtn.setBounds(5, 62, 182, 27);
+		panel_9.add(findOneMsgBtn);
+
+		JButton logOutbtn = new JButton("ĐĂNG XUẤT");
+		logOutbtn.setIcon(new ImageIcon(ChatApplicationScreen.class.getResource("/Image/logouticon.png")));
+		logOutbtn.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		logOutbtn.setContentAreaFilled(false);
+		logOutbtn.setBorderPainted(true);
+		logOutbtn.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		logOutbtn.setBackground(Color.WHITE);
+		logOutbtn.setBounds(5, 164, 182, 27);
+		panel_9.add(logOutbtn);
+
 		JPanel panel_8 = new JPanel();
 		panel_8.setBorder(new MatteBorder(5, 5, 5, 5, (Color) new Color(192, 192, 192)));
-		panel_8.setBounds(6, 51, 448, 292);
+		panel_8.setBounds(6, 51, 641, 339);
 		panel_4.add(panel_8);
 		panel_8.setLayout(new GridLayout(1, 0, 0, 0));
 
@@ -207,6 +256,7 @@ public class ChatApplicationScreen extends JFrame {
 		panel_8.add(scrollPane);
 
 		listMessageTp = new JTextPane();
+		listMessageTp.setFont(new Font("Times New Roman", Font.PLAIN, 16));
 		scrollPane.setViewportView(listMessageTp);
 
 		JPanel panel_7 = new JPanel();
@@ -225,52 +275,30 @@ public class ChatApplicationScreen extends JFrame {
 		lbNameChat.setBounds(10, 6, 124, 22);
 		panel_6.add(lbNameChat);
 
-		JPanel panel_9 = new JPanel();
-		panel_9.setBorder(new TitledBorder(null, "Thao t\u00E1c ng\u01B0\u1EDDi d\u00F9ng", TitledBorder.LEADING,
-				TitledBorder.TOP, null, null));
-		panel_9.setBackground(Color.WHITE);
-		panel_9.setBounds(456, 11, 159, 334);
-		panel_4.add(panel_9);
-		panel_9.setLayout(null);
-
-		deleteHisBtn = new JButton("Xóa lịch sử");
-		deleteHisBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (roomFlag) {
-					Controller.getInstance().sendTextMessage(
-							new Packet("removeChatWithRoomHistory", id + ", " + idChat, id).toString());
-					Controller.getInstance()
-							.sendTextMessage(new Packet("viewChatHistoryRoom", id + ", " + idChat, id).toString());
-				} else {
-					Controller.getInstance().sendTextMessage(
-							new Packet("removeChatWithFriendHistory", id + ", " + idChat, id).toString());
-					Controller.getInstance().sendTextMessage(
-							new Packet("viewChatHistoryWithFriend", id + ", " + idChat, id).toString());
+		JLabel lblNewLabel = new JLabel(" Danh Mục");
+		lblNewLabel.setBackground(Color.LIGHT_GRAY);
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblNewLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (flagOpen == false) {
+					openMenuBar();
+				}
+				if (flagOpen == true) {
+					closeMenuBar();
 				}
 			}
 		});
-		deleteHisBtn.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		deleteHisBtn.setBounds(10, 30, 139, 27);
-		deleteHisBtn.setEnabled(false);
-		panel_9.add(deleteHisBtn);
+		lblNewLabel.setIcon(new ImageIcon(ChatApplicationScreen.class.getResource("/Image/menuicon.png")));
+		lblNewLabel.setBounds(456, 17, 181, 30);
+		panel_4.add(lblNewLabel);
 
-		findOneMsgBtn = new JButton("Find Message");
-		findOneMsgBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (roomFlag) {
-					Controller.getInstance().setDataFindMsgScreen(idChat, nameChat, "ROOM");
-				} else {
-					Controller.getInstance().setDataFindMsgScreen(idChat, nameChat, "FRIEND");
-				}
-				Controller.getInstance().handleScreen("findMsgScreen", true);
-			}
-		});
-		findOneMsgBtn.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		findOneMsgBtn.setBounds(10, 68, 139, 27);
-		findOneMsgBtn.setEnabled(false);
-		panel_9.add(findOneMsgBtn);
-
-		JButton findAllMsgBtn = new JButton("Find All");
+		JButton findAllMsgBtn = new JButton("");
+		findAllMsgBtn.setBounds(408, 20, 35, 27);
+		panel_4.add(findAllMsgBtn);
+		findAllMsgBtn.setIcon(new ImageIcon(ChatApplicationScreen.class.getResource("/Image/findicon.png")));
+		findAllMsgBtn.setBackground(Color.WHITE);
 		findAllMsgBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Controller.getInstance().setDataFindMsgScreen("", "ALL", "ALL");
@@ -278,45 +306,32 @@ public class ChatApplicationScreen extends JFrame {
 			}
 		});
 		findAllMsgBtn.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		findAllMsgBtn.setBounds(10, 106, 139, 27);
-		panel_9.add(findAllMsgBtn);
-
-		JButton btnNewButton_6_1_1_1_1 = new JButton("LOG OUT");
-		btnNewButton_6_1_1_1_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Controller.getInstance().logout();
-				setVisible(false);
-			}
-		});
-		btnNewButton_6_1_1_1_1.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		btnNewButton_6_1_1_1_1.setBounds(10, 291, 139, 27);
-		panel_9.add(btnNewButton_6_1_1_1_1);
 
 		listFriendOnline = new JList<String>();
 		listFriendOnline.setBounds(5, 102, 113, 99);
-		listFriendOnline.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		listFriendOnline.setFont(new Font("Times New Roman", Font.BOLD, 14));
 		listFriendOnline.setBorder(new TitledBorder(
 				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
 				"B\u1EA1n b\u00E8 Online", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		// contentPane.add(list_1);
 		JScrollPane scroll1 = new JScrollPane(listFriendOnline);
-		scroll1.setBounds(5, 72, 113, 130);
+		scroll1.setBounds(5, 76, 113, 173);
 		contentPane.add(scroll1);
 
 		listFriend = new JList<String>();
-		listFriend.setBounds(751, 4, 145, 146);
-		listFriend.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		listFriend.setBounds(795, 4, 145, 146);
+		listFriend.setFont(new Font("Times New Roman", Font.BOLD, 14));
 		listFriend.setBorder(new TitledBorder(
 				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
 				"Danh s\u00E1ch b\u1EA1n", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		contentPane.add(listFriend);
 
 		listMsgWaiting = new JList<String>();
-		listMsgWaiting.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		listMsgWaiting.setFont(new Font("Times New Roman", Font.BOLD, 14));
 		listMsgWaiting.setBorder(new TitledBorder(
 				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
 				"Tin nh\u1EAFn ch\u1EDD", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		listMsgWaiting.setBounds(751, 158, 145, 130);
+		listMsgWaiting.setBounds(795, 153, 145, 130);
 		contentPane.add(listMsgWaiting);
 
 		listFriendOnline.addMouseListener(new MouseAdapter() {
@@ -334,6 +349,7 @@ public class ChatApplicationScreen extends JFrame {
 
 				Controller.getInstance()
 						.sendTextMessage(new Packet("viewChatHistoryWithFriend", id + ", " + idChat, id).toString());
+				Controller.getInstance().handleScreen("loadingScreen", true);
 			}
 		});
 
@@ -359,6 +375,7 @@ public class ChatApplicationScreen extends JFrame {
 
 				Controller.getInstance()
 						.sendTextMessage(new Packet("viewChatHistoryWithFriend", id + ", " + idChat, id).toString());
+				Controller.getInstance().handleScreen("loadingScreen", true);
 			}
 		});
 
@@ -378,6 +395,7 @@ public class ChatApplicationScreen extends JFrame {
 					listNameWaiting2.remove(idx);
 					Controller.getInstance()
 							.sendTextMessage(new Packet("userSeenMessage", id + ", " + idChat, "").toString());
+
 				}
 
 				lbNameChat.setText(nameChat);
@@ -388,6 +406,8 @@ public class ChatApplicationScreen extends JFrame {
 
 				Controller.getInstance()
 						.sendTextMessage(new Packet("viewChatHistoryWithFriend", id + ", " + idChat, id).toString());
+
+				Controller.getInstance().handleScreen("loadingScreen", true);
 			}
 		});
 
@@ -408,6 +428,7 @@ public class ChatApplicationScreen extends JFrame {
 				if (sentHistoryRoom) {
 					Controller.getInstance()
 							.sendTextMessage(new Packet("viewChatHistoryRoom", id + ", " + idChat, id).toString());
+					Controller.getInstance().handleScreen("loadingScreen", true);
 					sentHistoryRoom = false;
 				}
 			}
@@ -428,33 +449,35 @@ public class ChatApplicationScreen extends JFrame {
 
 				Controller.getInstance()
 						.sendTextMessage(new Packet("showListMemberRoom", showListNameRoom.toString(), id).toString());
+				Controller.getInstance().handleScreen("loadingScreen", true);
 
 				showListNameRoom.clear();
 			}
 		});
-		listGroup.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		listGroup.setFont(new Font("Times New Roman", Font.BOLD, 14));
 		listGroup.setBorder(
 				new TitledBorder(null, "Nh\u00F3m", TitledBorder.LEADING, TitledBorder.TOP, null, Color.BLACK));
 		JScrollPane scroll2 = new JScrollPane(listGroup);
-		scroll2.setBounds(5, 206, 113, 155);
+		scroll2.setBounds(5, 255, 113, 155);
 		contentPane.add(scroll2);
 
 		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(5, 366, 113, 38);
+		panel_2.setBounds(5, 415, 113, 38);
 		contentPane.add(panel_2);
 		panel_2.setLayout(new GridLayout(1, 0, 0, 0));
 
 		JButton btnNewButton = new JButton("Tạo Nhóm");
+		panel_2.add(btnNewButton);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Controller.getInstance().sendTextMessage(new Packet("showListFriend", id, "").toString());
+				Controller.getInstance().handleScreen("loadingScreen", true);
 			}
 		});
 		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		panel_2.add(btnNewButton);
 
 		JPanel panel_5 = new JPanel();
-		panel_5.setBounds(123, 415, 515, 38);
+		panel_5.setBounds(123, 415, 552, 38);
 		contentPane.add(panel_5);
 		panel_5.setLayout(new GridLayout(1, 0, 0, 0));
 
@@ -478,27 +501,27 @@ public class ChatApplicationScreen extends JFrame {
 		msgInput.setWrapStyleWord(true);
 
 		JPanel panel_3 = new JPanel();
-		panel_3.setBounds(644, 415, 76, 38);
+		panel_3.setBounds(685, 415, 76, 38);
 		contentPane.add(panel_3);
 		panel_3.setLayout(new GridLayout(1, 0, 0, 0));
 
 		sendBtn = new JButton("GỬI");
-		sendBtn.setEnabled(false);
 		panel_3.add(sendBtn);
+		// sendBtn.setEnabled(false);
 		sendBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String msg = msgInput.getText();
+				String msg = msgInput.getText() + " ";
 				if (msg.length() > 0 && idChat.length() > 0) {
 					if (roomFlag) {
 						Controller.getInstance().sendTextMessage(
 								new Packet("chatGroup", id + ", " + fullname + ", " + idChat + ", " + msg, id)
 										.toString());
-						addTextMessage(fullname, msg, formatDate(""), "Đã nhận", "ROOM");
+						addTextMessage(fullname, msg, formatDate(""), "Đã nhận  ", "ROOM");
 					} else {
 						Controller.getInstance().sendTextMessage(
 								new Packet("chatU2U", id + ", " + fullname + ", " + idChat + ", " + msg, id)
 										.toString());
-						addTextMessage(fullname, msg, formatDate(""), "Đã nhận", "U2U");
+						addTextMessage(fullname, msg, formatDate(""), "Đã nhận  ", "U2U");
 					}
 				}
 				msgInput.setText("");
@@ -507,7 +530,7 @@ public class ChatApplicationScreen extends JFrame {
 		sendBtn.setFont(new Font("Times New Roman", Font.BOLD, 13));
 
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(727, 415, 169, 38);
+		panel_1.setBounds(771, 415, 169, 38);
 		contentPane.add(panel_1);
 		panel_1.setLayout(new GridLayout(1, 0, 0, 0));
 
@@ -521,11 +544,11 @@ public class ChatApplicationScreen extends JFrame {
 		btnNewButton_2.setFont(new Font("Times New Roman", Font.BOLD, 13));
 
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(751, 293, 145, 111);
+		scrollPane_2.setBounds(795, 293, 145, 111);
 		contentPane.add(scrollPane_2);
 
 		listReqFriend = new JList<String>();
-		listReqFriend.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		listReqFriend.setFont(new Font("Times New Roman", Font.BOLD, 14));
 		listReqFriend.setBorder(new TitledBorder(
 				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
 				"L\u1EDDi m\u1EDDi k\u1EBFt b\u1EA1n", TitledBorder.LEADING, TitledBorder.TOP, null,
@@ -629,10 +652,11 @@ public class ChatApplicationScreen extends JFrame {
 
 	public void showUserInfo(String fullname, String id) {
 		DefaultListModel<String> infoModel = new DefaultListModel<String>();
-		infoModel.addElement(fullname);
+		infoModel.addElement("Tên: " + fullname);
+		infoModel.addElement("ID: " + id);
 		this.fullname = fullname;
 		this.id = id;
-		list.setModel(infoModel);
+		listprofile.setModel(infoModel);
 	}
 
 	public void renderMessage(String data, String type) {
@@ -721,5 +745,45 @@ public class ChatApplicationScreen extends JFrame {
 			reqAddFriendModel.addElement(listData[i + 1]);
 		}
 		listReqFriend.setModel(reqAddFriendModel);
+	}
+
+	public void openMenuBar() {
+		new Thread(new Runnable() {
+			@Override
+			// 455 51 192 334
+			public void run() {
+				panel_9.setAlignmentY(51);
+				for (int i = 0; i < 206; i++) {
+					panel_9.setSize(192, i);
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				flagOpen = true;
+
+			}
+		}).start();
+	}
+
+	public void closeMenuBar() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				panel_9.setAlignmentY(51);
+				for (int i = 206; i > 0; i--) {
+					panel_9.setSize(192, i);
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				flagOpen = false;
+			}
+		}).start();
 	}
 }

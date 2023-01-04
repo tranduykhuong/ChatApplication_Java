@@ -17,32 +17,10 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import Server.Controller.AccountController;
-
-import javax.swing.JButton;
-import java.awt.Font;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
-import org.bson.Document;
-
-import Client.Controller;
-import Entity.Packet;
-import Server.Controller.AccountController;
-
 public class LoginList extends JFrame {
-
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	private AccountController account = new AccountController();
 	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	/**
@@ -51,7 +29,6 @@ public class LoginList extends JFrame {
 	public LoginList() {
 		Image icon = iconTitle.getImage();
 		setIconImage(icon);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 740, 547);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -78,7 +55,6 @@ public class LoginList extends JFrame {
 		JButton btnBack = new JButton("Trở về");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new ManageUsersList().setVisible(true);
 				setVisible(false);
 			}
 		});
@@ -99,8 +75,6 @@ public class LoginList extends JFrame {
 	}
 
 	public void showHistoryLoginList(List<String> listUserLogin) {
-		// List<String> sortedList = new ArrayList<>();
-		List<String> sortedList = new ArrayList<>();
 		DefaultTableModel tableModel;
 		table.getModel();
 		tableModel = (DefaultTableModel) table.getModel();

@@ -15,8 +15,6 @@ import java.util.UUID;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -26,13 +24,6 @@ import com.toedter.calendar.JDateChooser;
 
 import Client.Controller;
 import Entity.Packet;
-
-import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.UUID;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class AddUser extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -63,7 +54,6 @@ public class AddUser extends JFrame {
 	}
 
 	public AddUser() {
-		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 471, 463);
 		contentPane = new JPanel();
 		contentPane.setForeground(new Color(30, 113, 225));
@@ -192,6 +182,11 @@ public class AddUser extends JFrame {
 		rdbtnAdmin.setBounds(297, 271, 103, 21);
 		panel.add(rdbtnAdmin);
 
+		JLabel lblNewLabel_1_1_3_1 = new JLabel("Email");
+		lblNewLabel_1_1_3_1.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblNewLabel_1_1_3_1.setBounds(30, 238, 106, 13);
+		panel.add(lblNewLabel_1_1_3_1);
+
 		JLabel lblNewLabel = new JLabel("Thêm người dùng");
 		lblNewLabel.setForeground(new Color(30, 113, 225));
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -214,8 +209,9 @@ public class AddUser extends JFrame {
 		boolean gender;
 		String role;
 
-		if (userFd.getText().equals("") || fullnameFd.getText().equals("") || addrFd.getText().equals("") || emailFd.getText().equals("")
-				|| !emailFd.getText().matches(EMAIL_PATTERN) || dateChooser.getDate() == null) {
+		if (userFd.getText().equals("") || fullnameFd.getText().equals("") || addrFd.getText().equals("")
+				|| emailFd.getText().equals("") || !emailFd.getText().matches(EMAIL_PATTERN)
+				|| dateChooser.getDate() == null) {
 			JOptionPane.showMessageDialog(this, "Field invalid!", "Warning", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
@@ -228,7 +224,7 @@ public class AddUser extends JFrame {
 		} else {
 			gender = true;
 		}
-		
+
 		if (rdbtnAdmin.isSelected()) {
 			role = "admin";
 		} else {
@@ -238,12 +234,14 @@ public class AddUser extends JFrame {
 		String id = UUID.randomUUID().toString();
 		String password = UUID.randomUUID().toString();
 
-		Controller.getInstance()
-				.sendTextMessage(new Packet("addAccount",
-						id + ", " + userFd.getText() + ", " + fullnameFd.getText() + ", " + password + ", "
-								+ addrFd.getText() + ", " + strDate + ", " + gender + ", " + emailFd.getText() + ", " + role,
-						"").toString());
+		Controller.getInstance().sendTextMessage(new Packet(
+				"addAccount", id + ", " + userFd.getText() + ", " + fullnameFd.getText() + ", " + password + ", "
+						+ addrFd.getText() + ", " + strDate + ", " + gender + ", " + emailFd.getText() + ", " + role,
+				"").toString());
 		JOptionPane.showMessageDialog(this, "Thêm thành công");
+
+		Controller.getInstance().handleScreen("loadingScreen", true);
+
 		Controller.getInstance().sendTextMessage(new Packet("showAll", "", "").toString());
 		setVisible(false);
 	}

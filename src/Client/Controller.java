@@ -1,5 +1,7 @@
 package Client;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.text.Collator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -121,6 +123,19 @@ public class Controller {
 
 				Packet pk = new Packet(msg);
 				String header = pk.getHeader();
+				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+				MNUserList.setLocation(dim.width/2- MNUserList.getSize().width/2, dim.height/2 - MNUserList.getSize().height/2);
+				groupChatLists.setLocation(dim.width/2- groupChatLists.getSize().width/2, dim.height/2 - groupChatLists.getSize().height/2);
+				ldscreen.setLocation(dim.width/2- ldscreen.getSize().width/2, dim.height/2 - ldscreen.getSize().height/2);
+				homeScreen.setLocation(dim.width/2- homeScreen.getSize().width/2, dim.height/2 - homeScreen.getSize().height/2);
+				chatAppScreen.setLocation(dim.width/2- chatAppScreen.getSize().width/2, dim.height/2 - chatAppScreen.getSize().height/2);
+				findMsgScreen.setLocation(dim.width/2- findMsgScreen.getSize().width/2, dim.height/2 - findMsgScreen.getSize().height/2);
+				afnscreen.setLocation(dim.width/2- afnscreen.getSize().width/2, dim.height/2 - afnscreen.getSize().height/2);
+				addGrScreen.setLocation(dim.width/2- addGrScreen.getSize().width/2, dim.height/2 - addGrScreen.getSize().height/2);
+				grChat.setLocation(dim.width/2- grChat.getSize().width/2, dim.height/2 - grChat.getSize().height/2);
+				afscreen.setLocation(dim.width/2- afscreen.getSize().width/2, dim.height/2 - afscreen.getSize().height/2);
+				registerScreen.setLocation(dim.width/2- registerScreen.getSize().width/2, dim.height/2 - registerScreen.getSize().height/2);
+				
 
 				System.out.println("Header client receive: " + header);
 				switch (header) {
@@ -226,6 +241,9 @@ public class Controller {
 				}
 				case "listLoginTime": {
 					String dataString = pk.getData();
+					if (!dataString.equals("")) {
+						ldscreen.setVisible(false);
+					}
 					ArrayList<ArrayList<String>> historyLogin = new ArrayList<>();
 					ArrayList<List<String>> tmpHistoryLogin = new ArrayList<List<String>>();
 					ArrayList<String> historyLoginArrayList = new ArrayList<String>();
@@ -241,7 +259,6 @@ public class Controller {
 						userInfo.add(temp[1]);
 						historyLogin.add(userInfo);
 					}
-					System.out.println(historyLogin);
 					for (int i = 0; i < historyLogin.size(); i++) {
 						String usname = historyLogin.get(i).get(0);
 						String fname = historyLogin.get(i).get(1);
@@ -286,14 +303,17 @@ public class Controller {
 							historyLoginArrayList.add(tmpHistoryLogin.get(i).get(j));
 						}
 					}
-					System.out.println(historyLoginArrayList);
 					LoginList historyLoginList = new LoginList();
+					historyLoginList.setLocation(dim.width/2- historyLoginList.getSize().width/2, dim.height/2 - historyLoginList.getSize().height/2);
 					historyLoginList.showHistoryLoginList(historyLoginArrayList);
 					historyLoginList.setVisible(true);
 					break;
 				}
 				case "listGroupChat": {
 					String dataString = pk.getData();
+					if (!dataString.equals("")) {
+						ldscreen.setVisible(false);
+					}
 					String str = dataString.substring(1, dataString.length() - 1);
 					ArrayList<String> nameGroup = new ArrayList<>();
 					String[] infoGroup = str.split(", ");
@@ -308,6 +328,9 @@ public class Controller {
 				}
 				case "showMemberList": {
 					String data = pk.getData();
+					if (!data.equals("")) {
+						ldscreen.setVisible(false);
+					}
 					String str = data.substring(1, data.length() - 1);
 					ArrayList<String> nameMemberList = new ArrayList<>();
 					String[] infoMember = str.split(", ");
@@ -334,6 +357,9 @@ public class Controller {
 				}
 				case "sortByGroupName": {
 					String dataString = pk.getData();
+					if (!dataString.equals("")) {
+						ldscreen.setVisible(false);
+					}
 					String str = dataString.substring(1, dataString.length() - 1);
 					System.out.println("Vinh: " + str);
 					ArrayList<String> nameGroupSorted = new ArrayList<>();
@@ -356,6 +382,9 @@ public class Controller {
 				}
 				case "sortByCreateDate": {
 					String dataString = pk.getData();
+					if (!dataString.equals("")) {
+						ldscreen.setVisible(false);
+					}
 					String str = dataString.substring(1, dataString.length() - 1);
 					ArrayList<String> infoCreatedGroupSorted = new ArrayList<>();
 					ArrayList<String> finalSortGroupList = new ArrayList<>();
@@ -411,6 +440,9 @@ public class Controller {
 				}
 				case "logIn": {
 					String data = pk.getData();
+					if (!data.equals("")) {
+						ldscreen.setVisible(false);
+					}
 					if (data.equals("Username or password is wrong!")) {
 						loginScreen.showMessage(data, "Warning", JOptionPane.WARNING_MESSAGE);
 					} else {
@@ -494,11 +526,17 @@ public class Controller {
 					break;
 				}
 				case "viewChatHistoryWithFriend": {
+					if (!pk.getData().equals("")) {
+						ldscreen.setVisible(false);
+					}
 					chatAppScreen.viewChatHistory(pk.getData(), "U2U");
 					sgt.sendTextMessage(new Packet("getWaitingMessage", id, id).toString());
 					break;
 				}
 				case "viewChatHistoryRoom": {
+					if (!pk.getData().equals("")) {
+						ldscreen.setVisible(false);
+					}
 					chatAppScreen.viewChatHistory(pk.getData(), "ROOM");
 					break;
 				}
@@ -541,7 +579,9 @@ public class Controller {
 				}
 				case "showListFriend": {
 					data = pk.getData();
-
+					if (!data.equals("")) {
+						ldscreen.setVisible(false);
+					}
 					addGrScreen.setID(this.id);
 					addGrScreen.destroyAddGroupScreen();
 					String listIdAndName = data.substring(1, data.length() - 1);
@@ -562,6 +602,9 @@ public class Controller {
 				}
 				case "createGroup": {
 					data = pk.getData();
+					if (!data.equals("")) {
+						ldscreen.setVisible(false);
+					}
 
 					String notifyCreateGroup = data.replace("[", "").replace("]", "");
 					if (notifyCreateGroup.equals("Tạo thành công")) {
@@ -577,6 +620,9 @@ public class Controller {
 				}
 				case "showListMemberRoom": {
 					data = pk.getData();
+					if (!data.equals("")) {
+						ldscreen.setVisible(false);
+					}
 
 					String res = data.substring(data.indexOf("[") + 1, data.length() - 1);
 					String listNameMember = res.split("]], ")[0].replace("[", "").replace("]", "");
@@ -603,6 +649,9 @@ public class Controller {
 				}
 				case "changeNameGroup": {
 					data = pk.getData();
+					if (!data.equals("")) {
+						ldscreen.setVisible(false);
+					}
 
 					String notifyChangeNameGr = data.replace("[", "").replace("]", "");
 					if (notifyChangeNameGr.equals("Thay đổi thành công")) {
@@ -620,7 +669,10 @@ public class Controller {
 				}
 				case "administator": {
 					data = pk.getData();
-
+					if (!data.equals("")) {
+						ldscreen.setVisible(false);
+					}
+					
 					String notifyUpdateAdmin = data.replace("[", "").replace("]", "");
 					if (notifyUpdateAdmin.equals("Update thành công")) {
 						grChat.checkMessage(notifyUpdateAdmin);
@@ -634,6 +686,9 @@ public class Controller {
 				}
 				case "removeMember": {
 					data = pk.getData();
+					if (!data.equals("")) {
+						ldscreen.setVisible(false);
+					}
 
 					String notifyDeleteMember = data.replace("[", "").replace("]", "");
 					ArrayList<String> listGr = new ArrayList<String>();
@@ -762,36 +817,45 @@ public class Controller {
 	}
 
 	public void handleScreen(String screen, boolean status) {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		switch (screen) {
 		case "registerScreen": {
+			registerScreen.setLocation(dim.width/2- registerScreen.getSize().width/2, dim.height/2 - registerScreen.getSize().height/2);
 			registerScreen.setVisible(status);
 			break;
 		}
 		case "homeScreen": {
+			homeScreen.setLocation(dim.width/2- homeScreen.getSize().width/2, dim.height/2 - homeScreen.getSize().height/2);
 			homeScreen.setVisible(status);
 			break;
 		}
 		case "loginScreen": {
+			loginScreen.setLocation(dim.width/2- loginScreen.getSize().width/2, dim.height/2 - loginScreen.getSize().height/2);
 			loginScreen.setVisible(status);
 			break;
 		}
 		case "manageScreen": {
+			MNUserList.setLocation(dim.width/2- MNUserList.getSize().width/2, dim.height/2 - MNUserList.getSize().height/2);
 			MNUserList.setVisible(status);
 			break;
 		}
 		case "forgotScreen": {
+			forgotScreen.setLocation(dim.width/2- forgotScreen.getSize().width/2, dim.height/2 - forgotScreen.getSize().height/2);
 			forgotScreen.setVisible(status);
 			break;
 		}
 		case "loadingScreen": {
+			ldscreen.setLocation(dim.width/2- ldscreen.getSize().width/2, dim.height/2 - ldscreen.getSize().height/2);
 			ldscreen.setVisible(status);
 			break;
 		}
 		case "addFriendScreen": {
+			afscreen.setLocation(dim.width/2- afscreen.getSize().width/2, dim.height/2 - afscreen.getSize().height/2);
 			afscreen.setVisible(status);
 			break;
 		}
 		case "findMsgScreen": {
+			findMsgScreen.setLocation(dim.width/2- findMsgScreen.getSize().width/2, dim.height/2 - findMsgScreen.getSize().height/2);
 			findMsgScreen.setVisible(status);
 			break;
 		}

@@ -1,7 +1,9 @@
 package Client.Views;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -103,6 +105,8 @@ public class ConnectionScreen extends JFrame {
 	 * Create the frame.
 	 */
 	public ConnectionScreen() {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(dim.width/2- getSize().width/2, dim.height/2 - getSize().height/2);
 		Image icon = iconTitle.getImage();    
 		setIconImage(icon); 
 		setTitle("Connection");

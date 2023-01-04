@@ -1,10 +1,12 @@
 package Client.Views;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -66,6 +68,8 @@ public class AddGroupScreen extends JFrame {
 	 * Create the frame.
 	 */
 	public AddGroupScreen() {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(dim.width/2- getSize().width/2, dim.height/2 - getSize().height/2);
 		Image icon = iconTitle.getImage();
 		setIconImage(icon);
 		setTitle("Create New Group");
@@ -179,6 +183,7 @@ public class AddGroupScreen extends JFrame {
 
 					Controller.getInstance()
 							.sendTextMessage(new Packet("createGroup", concatGrNameListId.toString(), id).toString());
+					Controller.getInstance().handleScreen("loadingScreen", true);
 				}
 			}
 		});

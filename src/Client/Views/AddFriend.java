@@ -1,9 +1,11 @@
 package Client.Views;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -65,6 +67,8 @@ public class AddFriend extends JFrame {
 	 * Create the frame.
 	 */
 	public AddFriend() {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(dim.width/2- getSize().width/2, dim.height/2 - getSize().height/2);
 		Image icon = iconTitle.getImage();
 		setIconImage(icon);
 		setTitle("Find Friend");

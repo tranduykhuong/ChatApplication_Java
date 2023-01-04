@@ -1,9 +1,11 @@
 package Client.Views;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -25,58 +27,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JScrollPane;
-import java.awt.event.ActionListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import java.awt.Color;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.JButton;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.border.CompoundBorder;
-import java.awt.SystemColor;
-import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
-import javax.swing.JScrollPane;
-import java.awt.event.ActionListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.awt.event.ActionEvent;
-import javax.swing.JList;
-import javax.swing.JFormattedTextField;
-import javax.swing.AbstractListModel;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-
-import Client.Controller;
-import Entity.Packet;
-
-import com.mongodb.internal.connection.tlschannel.NeedsWriteException;
-
-import Client.Controller;
-import Entity.Packet;
-
-import com.mongodb.internal.connection.tlschannel.NeedsWriteException;
 
 import Client.Controller;
 import Entity.Packet;
@@ -91,6 +42,8 @@ public class ManageUsersList extends JFrame {
 	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
 
 	public ManageUsersList() {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(dim.width/2- getSize().width/2, dim.height/2 - getSize().height/2);
 		Image icon = iconTitle.getImage();    
 		setIconImage(icon); 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -200,6 +153,8 @@ public class ManageUsersList extends JFrame {
 		btnAddUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AddUser AddUserFrame = new AddUser();
+				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+				AddUserFrame.setLocation(dim.width/2- AddUserFrame.getSize().width/2, dim.height/2 - AddUserFrame.getSize().height/2);
 				AddUserFrame.setVisible(true);
 			}
 		});
@@ -276,7 +231,7 @@ public class ManageUsersList extends JFrame {
 		btnXemChiTit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Controller.getInstance().sendTextMessage(new Packet("listLoginTime", "", "").toString());
-				setVisible(false);
+				Controller.getInstance().handleScreen("loadingScreen", true);
 			}
 		});
 		btnXemChiTit.setForeground(new Color(1, 128, 254));
@@ -301,7 +256,7 @@ public class ManageUsersList extends JFrame {
 		btnDanhSchNhm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Controller.getInstance().sendTextMessage(new Packet("listGroupChat", "", "").toString());
-				setVisible(false);
+				Controller.getInstance().handleScreen("loadingScreen", true);
 			}
 		});
 		btnDanhSchNhm.setForeground(new Color(1, 128, 254));

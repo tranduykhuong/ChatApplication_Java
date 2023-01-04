@@ -1,5 +1,6 @@
 package Client.Views;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -8,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Toolkit;
 
 import javax.swing.JPasswordField;
 import javax.swing.ImageIcon;
@@ -44,6 +46,8 @@ public class ChangePasswordScreen extends JFrame {
 	 * Create the frame.
 	 */
 	public ChangePasswordScreen() {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(dim.width/2- getSize().width/2, dim.height/2 - getSize().height/2);
 		Image icon = iconTitle.getImage();    
 		setIconImage(icon);
 		setTitle("Change Password");
