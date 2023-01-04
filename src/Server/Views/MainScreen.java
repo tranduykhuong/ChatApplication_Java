@@ -137,25 +137,25 @@ public class MainScreen extends JFrame {
 	 */
 	public MainScreen() {
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		setLocation(dim.width/2- getSize().width/2, dim.height/2 - getSize().height/2);
-		Image icon = iconTitle.getImage();    
-		setIconImage(icon); 
+		setLocation(dim.width / 2 - getSize().width / 2, dim.height / 2 - getSize().height / 2);
+		Image icon = iconTitle.getImage();
+		setIconImage(icon);
 		setResizable(false);
 		setTitle("SERVER");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
 				String[] options = { "Yes", "No" };
 				int result = JOptionPane.showOptionDialog(null, "Are you sure you want to exit?", "Confirmation",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
-				
+
 				System.out.println(options[0]);
 				System.out.println(result);
-				
+
 				if (result == 0) {
 					server.closeSocket();
-				}
-				else {
+					dispose();
+				} else {
 					return;
 				}
 			}

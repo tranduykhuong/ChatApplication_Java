@@ -7,7 +7,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Insets;
+import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,10 +32,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.BadLocationException;
@@ -46,8 +46,6 @@ import javax.swing.text.StyledDocument;
 
 import Client.Controller;
 import Entity.Packet;
-import java.awt.SystemColor;
-import javax.swing.SwingConstants;
 
 public class ChatApplicationScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -106,13 +104,15 @@ public class ChatApplicationScreen extends JFrame {
 		}
 	}
 
-	private void formatMessage(JTextPane pane, String text, Color color, int align, Color bgColor, boolean italic) {
+	private void formatMessage(JTextPane pane, String text, Color color, int align, Color bgColor, boolean italic,
+			int fsize) {
 		StyledDocument doc = listMessageTp.getStyledDocument();
 
 		Style style = pane.addStyle("Color Style", null);
 		StyleConstants.setForeground(style, color);
 		StyleConstants.setBackground(style, bgColor);
 		StyleConstants.setItalic(style, italic);
+		StyleConstants.setFontSize(style, fsize);
 
 		SimpleAttributeSet center = new SimpleAttributeSet();
 		StyleConstants.setAlignment(center, align);
@@ -136,20 +136,25 @@ public class ChatApplicationScreen extends JFrame {
 		SwingUtilities.invokeLater(() -> {
 			if (sender.equals(fullname)) {
 				if (!type.equals("ROOM")) {
-					formatMessage(listMessageTp, seen, Color.cyan, StyleConstants.ALIGN_RIGHT, Color.white, true);
+					formatMessage(listMessageTp, seen + "  ", Color.LIGHT_GRAY, StyleConstants.ALIGN_RIGHT, Color.white,
+							true, 12);
 				}
-				formatMessage(listMessageTp, " " + content, Color.blue, StyleConstants.ALIGN_RIGHT, Color.white, false);
-				formatMessage(listMessageTp, " [" + time + "]\n", Color.LIGHT_GRAY, StyleConstants.ALIGN_RIGHT,
-						Color.white, false);
+				formatMessage(listMessageTp, "  " + content + "  ", Color.white, StyleConstants.ALIGN_RIGHT,
+						Color.darkGray, false, 15);
+				formatMessage(listMessageTp, " [" + time + "]\n", Color.GRAY, StyleConstants.ALIGN_RIGHT, Color.white,
+						false, 12);
 			} else {
-				formatMessage(listMessageTp, "[" + time + "]", Color.LIGHT_GRAY, StyleConstants.ALIGN_LEFT, Color.gray,
-						false);
+				formatMessage(listMessageTp, "[" + time + "] ", Color.GRAY, StyleConstants.ALIGN_LEFT, Color.white,
+						false, 12);
 				if (type.equals("ROOM")) {
-					formatMessage(listMessageTp, "[" + sender + "]", Color.BLUE, StyleConstants.ALIGN_LEFT, Color.cyan,
-							false);
+					formatMessage(listMessageTp, "  " + content + "  ", Color.white, StyleConstants.ALIGN_LEFT,
+							Color.blue, false, 15);
+					formatMessage(listMessageTp, "  gửi từ " + sender + "\n", Color.LIGHT_GRAY,
+							StyleConstants.ALIGN_LEFT, Color.white, true, 12);
+				} else {
+					formatMessage(listMessageTp, "  " + content + "  \n", Color.white, StyleConstants.ALIGN_LEFT,
+							Color.blue, false, 15);
 				}
-				formatMessage(listMessageTp, " " + content + "\n", Color.BLACK, StyleConstants.ALIGN_LEFT, Color.green,
-						false);
 			}
 			scrollToBottom();
 		});
@@ -217,7 +222,7 @@ public class ChatApplicationScreen extends JFrame {
 		panel_9.setLayout(null);
 		panel_9.setBorder(new TitledBorder(null, "Thao t\u00E1c", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_9.setBackground(SystemColor.menu);
-		panel_9.setBounds(447, 51, 192, 0);
+		panel_9.setBounds(447, 50, 192, -5);
 		panel_4.add(panel_9);
 
 		JButton deleteHisBtn = new JButton("Xóa lịch sử");
@@ -237,6 +242,12 @@ public class ChatApplicationScreen extends JFrame {
 		panel_9.add(findOneMsgBtn);
 
 		JButton logOutbtn = new JButton("ĐĂNG XUẤT");
+		logOutbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Controller.getInstance().logout();
+				setVisible(false);
+			}
+		});
 		logOutbtn.setIcon(new ImageIcon(ChatApplicationScreen.class.getResource("/Image/logouticon.png")));
 		logOutbtn.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		logOutbtn.setContentAreaFilled(false);
@@ -260,20 +271,10 @@ public class ChatApplicationScreen extends JFrame {
 		scrollPane.setViewportView(listMessageTp);
 
 		JPanel panel_7 = new JPanel();
-		panel_7.setBounds(5, 20, 144, 35);
+		panel_7.setBounds(6, 20, 143, 35);
 		panel_4.add(panel_7);
 		panel_7.setLayout(new GridLayout(1, 0, 0, 0));
-
-		JPanel panel_6 = new JPanel();
-		panel_7.add(panel_6);
-		panel_6.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_6.setBackground(Color.LIGHT_GRAY);
-		panel_6.setLayout(null);
-
-		JLabel lbNameChat = new JLabel("");
-		lbNameChat.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		lbNameChat.setBounds(10, 6, 124, 22);
-		panel_6.add(lbNameChat);
+		panel_7.setBackground(Color.LIGHT_GRAY);
 
 		JLabel lblNewLabel = new JLabel(" Danh Mục");
 		lblNewLabel.setBackground(Color.LIGHT_GRAY);
@@ -306,6 +307,17 @@ public class ChatApplicationScreen extends JFrame {
 			}
 		});
 		findAllMsgBtn.setFont(new Font("Times New Roman", Font.BOLD, 15));
+
+		JPanel panel_6 = new JPanel();
+		panel_6.setBounds(6, 20, 144, 35);
+		panel_4.add(panel_6);
+		panel_6.setBackground(Color.LIGHT_GRAY);
+		panel_6.setLayout(null);
+
+		JLabel lbNameChat = new JLabel("");
+		lbNameChat.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		lbNameChat.setBounds(10, 6, 124, 22);
+		panel_6.add(lbNameChat);
 
 		listFriendOnline = new JList<String>();
 		listFriendOnline.setBounds(5, 102, 113, 99);

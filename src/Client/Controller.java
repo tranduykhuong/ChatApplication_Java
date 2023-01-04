@@ -39,23 +39,23 @@ public class Controller {
 
 	private String data;
 	private User userframe;
-	private GroupChatList groupChatLists = new GroupChatList();
+	private GroupChatList groupChatLists;
 
-	private AddGroupScreen addGrScreen = new AddGroupScreen();
-	private ChatApplicationScreen chatAppScreen = new ChatApplicationScreen();
-	private GroupChatScreen grChat = new GroupChatScreen();
-	private ManageUsersList MNUserList = new ManageUsersList();
+	private AddGroupScreen addGrScreen;
+	private ChatApplicationScreen chatAppScreen;
+	private GroupChatScreen grChat;
+	private ManageUsersList MNUserList;
 
-	private LoginScreen loginScreen = new LoginScreen();
-	private RegisterScreen registerScreen = new RegisterScreen();
-	private HomeScreen homeScreen = new HomeScreen();
-	private ForgotPWScreen forgotScreen = new ForgotPWScreen();
+	private LoginScreen loginScreen;
+	private RegisterScreen registerScreen;
+	private HomeScreen homeScreen;
+	private ForgotPWScreen forgotScreen;
 
-	private LoadingScreen ldscreen = new LoadingScreen();
-	private AddFriend afscreen = new AddFriend();
-	private AddFriendNotify afnscreen = new AddFriendNotify();
-	private FindMessageScreen findMsgScreen = new FindMessageScreen();
-	private UpdateProfileScreen updateProfileScreen = new UpdateProfileScreen();
+	private LoadingScreen ldscreen;
+	private AddFriend afscreen;
+	private AddFriendNotify afnscreen;
+	private FindMessageScreen findMsgScreen;
+	private UpdateProfileScreen updateProfileScreen;
 
 	private String username = "";
 	private String id;
@@ -63,6 +63,22 @@ public class Controller {
 
 	private Controller() {
 		client = new TCP_Client();
+
+		groupChatLists = new GroupChatList();
+		addGrScreen = new AddGroupScreen();
+		chatAppScreen = new ChatApplicationScreen();
+		grChat = new GroupChatScreen();
+		MNUserList = new ManageUsersList();
+		loginScreen = new LoginScreen();
+		registerScreen = new RegisterScreen();
+		homeScreen = new HomeScreen();
+		forgotScreen = new ForgotPWScreen();
+		ldscreen = new LoadingScreen();
+		afscreen = new AddFriend();
+		afnscreen = new AddFriendNotify();
+		findMsgScreen = new FindMessageScreen();
+		updateProfileScreen = new UpdateProfileScreen();
+
 		running = false;
 	}
 
@@ -124,18 +140,17 @@ public class Controller {
 				Packet pk = new Packet(msg);
 				String header = pk.getHeader();
 				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-				MNUserList.setLocation(dim.width/2- MNUserList.getSize().width/2, dim.height/2 - MNUserList.getSize().height/2);
-				groupChatLists.setLocation(dim.width/2- groupChatLists.getSize().width/2, dim.height/2 - groupChatLists.getSize().height/2);
-				ldscreen.setLocation(dim.width/2- ldscreen.getSize().width/2, dim.height/2 - ldscreen.getSize().height/2);
-				homeScreen.setLocation(dim.width/2- homeScreen.getSize().width/2, dim.height/2 - homeScreen.getSize().height/2);
-				chatAppScreen.setLocation(dim.width/2- chatAppScreen.getSize().width/2, dim.height/2 - chatAppScreen.getSize().height/2);
-				findMsgScreen.setLocation(dim.width/2- findMsgScreen.getSize().width/2, dim.height/2 - findMsgScreen.getSize().height/2);
-				afnscreen.setLocation(dim.width/2- afnscreen.getSize().width/2, dim.height/2 - afnscreen.getSize().height/2);
-				addGrScreen.setLocation(dim.width/2- addGrScreen.getSize().width/2, dim.height/2 - addGrScreen.getSize().height/2);
-				grChat.setLocation(dim.width/2- grChat.getSize().width/2, dim.height/2 - grChat.getSize().height/2);
-				afscreen.setLocation(dim.width/2- afscreen.getSize().width/2, dim.height/2 - afscreen.getSize().height/2);
-				registerScreen.setLocation(dim.width/2- registerScreen.getSize().width/2, dim.height/2 - registerScreen.getSize().height/2);
-				
+//				MNUserList.setLocation(dim.width/2- MNUserList.getSize().width/2, dim.height/2 - MNUserList.getSize().height/2);
+//				groupChatLists.setLocation(dim.width/2- groupChatLists.getSize().width/2, dim.height/2 - groupChatLists.getSize().height/2);
+//				ldscreen.setLocation(dim.width/2- ldscreen.getSize().width/2, dim.height/2 - ldscreen.getSize().height/2);
+//				homeScreen.setLocation(dim.width/2- homeScreen.getSize().width/2, dim.height/2 - homeScreen.getSize().height/2);
+//				chatAppScreen.setLocation(dim.width/2- chatAppScreen.getSize().width/2, dim.height/2 - chatAppScreen.getSize().height/2);
+//				findMsgScreen.setLocation(dim.width/2- findMsgScreen.getSize().width/2, dim.height/2 - findMsgScreen.getSize().height/2);
+//				afnscreen.setLocation(dim.width/2- afnscreen.getSize().width/2, dim.height/2 - afnscreen.getSize().height/2);
+//				addGrScreen.setLocation(dim.width/2- addGrScreen.getSize().width/2, dim.height/2 - addGrScreen.getSize().height/2);
+//				grChat.setLocation(dim.width/2- grChat.getSize().width/2, dim.height/2 - grChat.getSize().height/2);
+//				afscreen.setLocation(dim.width/2- afscreen.getSize().width/2, dim.height/2 - afscreen.getSize().height/2);
+//				registerScreen.setLocation(dim.width/2- registerScreen.getSize().width/2, dim.height/2 - registerScreen.getSize().height/2);
 
 				System.out.println("Header client receive: " + header);
 				switch (header) {
@@ -304,7 +319,8 @@ public class Controller {
 						}
 					}
 					LoginList historyLoginList = new LoginList();
-					historyLoginList.setLocation(dim.width/2- historyLoginList.getSize().width/2, dim.height/2 - historyLoginList.getSize().height/2);
+					historyLoginList.setLocation(dim.width / 2 - historyLoginList.getSize().width / 2,
+							dim.height / 2 - historyLoginList.getSize().height / 2);
 					historyLoginList.showHistoryLoginList(historyLoginArrayList);
 					historyLoginList.setVisible(true);
 					break;
@@ -672,7 +688,7 @@ public class Controller {
 					if (!data.equals("")) {
 						ldscreen.setVisible(false);
 					}
-					
+
 					String notifyUpdateAdmin = data.replace("[", "").replace("]", "");
 					if (notifyUpdateAdmin.equals("Update thành công")) {
 						grChat.checkMessage(notifyUpdateAdmin);
@@ -820,42 +836,50 @@ public class Controller {
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		switch (screen) {
 		case "registerScreen": {
-			registerScreen.setLocation(dim.width/2- registerScreen.getSize().width/2, dim.height/2 - registerScreen.getSize().height/2);
+			registerScreen.setLocation(dim.width / 2 - registerScreen.getSize().width / 2,
+					dim.height / 2 - registerScreen.getSize().height / 2);
 			registerScreen.setVisible(status);
 			break;
 		}
 		case "homeScreen": {
-			homeScreen.setLocation(dim.width/2- homeScreen.getSize().width/2, dim.height/2 - homeScreen.getSize().height/2);
+			homeScreen.setLocation(dim.width / 2 - homeScreen.getSize().width / 2,
+					dim.height / 2 - homeScreen.getSize().height / 2);
 			homeScreen.setVisible(status);
 			break;
 		}
 		case "loginScreen": {
-			loginScreen.setLocation(dim.width/2- loginScreen.getSize().width/2, dim.height/2 - loginScreen.getSize().height/2);
+			loginScreen.setLocation(dim.width / 2 - loginScreen.getSize().width / 2,
+					dim.height / 2 - loginScreen.getSize().height / 2);
 			loginScreen.setVisible(status);
 			break;
 		}
 		case "manageScreen": {
-			MNUserList.setLocation(dim.width/2- MNUserList.getSize().width/2, dim.height/2 - MNUserList.getSize().height/2);
+			MNUserList.setLocation(dim.width / 2 - MNUserList.getSize().width / 2,
+					dim.height / 2 - MNUserList.getSize().height / 2);
 			MNUserList.setVisible(status);
 			break;
 		}
 		case "forgotScreen": {
-			forgotScreen.setLocation(dim.width/2- forgotScreen.getSize().width/2, dim.height/2 - forgotScreen.getSize().height/2);
+			forgotScreen.setLocation(dim.width / 2 - forgotScreen.getSize().width / 2,
+					dim.height / 2 - forgotScreen.getSize().height / 2);
 			forgotScreen.setVisible(status);
 			break;
 		}
 		case "loadingScreen": {
-			ldscreen.setLocation(dim.width/2- ldscreen.getSize().width/2, dim.height/2 - ldscreen.getSize().height/2);
+			ldscreen.setLocation(dim.width / 2 - ldscreen.getSize().width / 2,
+					dim.height / 2 - ldscreen.getSize().height / 2);
 			ldscreen.setVisible(status);
 			break;
 		}
 		case "addFriendScreen": {
-			afscreen.setLocation(dim.width/2- afscreen.getSize().width/2, dim.height/2 - afscreen.getSize().height/2);
+			afscreen.setLocation(dim.width / 2 - afscreen.getSize().width / 2,
+					dim.height / 2 - afscreen.getSize().height / 2);
 			afscreen.setVisible(status);
 			break;
 		}
 		case "findMsgScreen": {
-			findMsgScreen.setLocation(dim.width/2- findMsgScreen.getSize().width/2, dim.height/2 - findMsgScreen.getSize().height/2);
+			findMsgScreen.setLocation(dim.width / 2 - findMsgScreen.getSize().width / 2,
+					dim.height / 2 - findMsgScreen.getSize().height / 2);
 			findMsgScreen.setVisible(status);
 			break;
 		}
