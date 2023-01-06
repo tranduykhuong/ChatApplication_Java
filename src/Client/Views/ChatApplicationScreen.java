@@ -231,6 +231,21 @@ public class ChatApplicationScreen extends JFrame {
 		deleteHisBtn.setEnabled(false);
 		deleteHisBtn.setBackground(Color.WHITE);
 		deleteHisBtn.setBounds(5, 25, 182, 27);
+		deleteHisBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (roomFlag) {
+					Controller.getInstance().sendTextMessage(
+							new Packet("removeChatWithRoomHistory", id + ", " + idChat, id).toString());
+					Controller.getInstance()
+							.sendTextMessage(new Packet("viewChatHistoryRoom", id + ", " + idChat, id).toString());
+				} else {
+					Controller.getInstance().sendTextMessage(
+							new Packet("removeChatWithFriendHistory", id + ", " + idChat, id).toString());
+					Controller.getInstance().sendTextMessage(
+							new Packet("viewChatHistoryWithFriend", id + ", " + idChat, id).toString());
+				}
+			}
+		});
 		panel_9.add(deleteHisBtn);
 
 		JButton findOneMsgBtn = new JButton("Tìm tin nhắn");
@@ -239,6 +254,16 @@ public class ChatApplicationScreen extends JFrame {
 		findOneMsgBtn.setEnabled(false);
 		findOneMsgBtn.setBackground(Color.WHITE);
 		findOneMsgBtn.setBounds(5, 62, 182, 27);
+		findOneMsgBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (roomFlag) {
+					Controller.getInstance().setDataFindMsgScreen(idChat, nameChat, "ROOM");
+				} else {
+					Controller.getInstance().setDataFindMsgScreen(idChat, nameChat, "FRIEND");
+				}
+				Controller.getInstance().handleScreen("findMsgScreen", true);
+			}
+		});
 		panel_9.add(findOneMsgBtn);
 
 		JButton logOutbtn = new JButton("ĐĂNG XUẤT");
