@@ -461,6 +461,8 @@ public class Controller {
 					}
 					if (data.equals("Username or password is wrong!")) {
 						loginScreen.showMessage(data, "Warning", JOptionPane.WARNING_MESSAGE);
+					} else if (data.equals("Tài khoản của bạn đã bị khóa!")) {
+						loginScreen.showMessage(data, "Warning", JOptionPane.WARNING_MESSAGE);
 					} else {
 						String[] dataArr = data.substring(1, data.length() - 1).split(", ");
 						this.username = dataArr[0];
@@ -683,6 +685,10 @@ public class Controller {
 
 					break;
 				}
+				case "changeNameRoom": {
+					sgt.sendTextMessage(new Packet("showListGr", id, id).toString());
+					break;
+				}
 				case "administator": {
 					data = pk.getData();
 					if (!data.equals("")) {
@@ -766,6 +772,7 @@ public class Controller {
 				case "sendNotifyDeleteGr": {
 					data = pk.getData();
 					grChat.checkMessage(data);
+					chatAppScreen.refeshDataForm();
 
 					break;
 				}

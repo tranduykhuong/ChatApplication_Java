@@ -1,31 +1,29 @@
 package Client.Views;
 
+import java.awt.Color;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
-import java.awt.Color;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
 import com.toedter.calendar.JDateChooser;
 
 import Client.Controller;
 import Entity.Packet;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class EditUser extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -62,7 +60,7 @@ public class EditUser extends JFrame {
 
 	public EditUser(String id, String userName, String fullName, boolean gender, java.util.Date date, String address,
 			String email, boolean role) {
-		Image icon = iconTitle.getImage();    
+		Image icon = iconTitle.getImage();
 		setIconImage(icon);
 		setTitle("Update Account");
 		setBounds(100, 100, 471, 463);
@@ -71,7 +69,7 @@ public class EditUser extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JLabel lblCpNhtNgi = new JLabel("Cập nhật người dùng");
 		lblCpNhtNgi.setBounds(164, 10, 140, 16);
 		lblCpNhtNgi.setForeground(new Color(30, 113, 225));
@@ -237,14 +235,18 @@ public class EditUser extends JFrame {
 			nuFd.setSelected(true);
 			flagGender = true;
 		}
-		
+
 		if (role == false) {
 			rdbtnAdmin.setSelected(true);
 			rdbtnCustomer.setSelected(false);
+			rdbtnAdmin.setEnabled(false);
+			rdbtnCustomer.setEnabled(false);
 			flagRole = false;
 		} else {
 			rdbtnAdmin.setSelected(false);
 			rdbtnCustomer.setSelected(true);
+			rdbtnAdmin.setEnabled(true);
+			rdbtnCustomer.setEnabled(true);
 			flagRole = true;
 		}
 
@@ -265,22 +267,19 @@ public class EditUser extends JFrame {
 			}
 
 			Controller.getInstance().handleScreen("loadingScreen", true);
-			
+
 			Controller.getInstance()
-					.sendTextMessage(
-							new Packet("updateAccount",
-									id + ", " + nameFd.getText() + ", " + fnameFd.getText() + ", " + strDate + ", "
-											+ flagGender + ", " + addFd.getText() + ", " + emailFd.getText() + ", " + flagRole,
-									"").toString());
-			
-			
+					.sendTextMessage(new Packet("updateAccount",
+							id + ", " + nameFd.getText() + ", " + fnameFd.getText() + ", " + strDate + ", " + flagGender
+									+ ", " + addFd.getText() + ", " + emailFd.getText() + ", " + flagRole,
+							"").toString());
 
 			Controller.getInstance().sendTextMessage(new Packet("showDetail",
 					nameFd.getText() + ", " + fnameFd.getText() + ", " + addFd.getText() + ", " + emailFd.getText(), "")
 					.toString());
-			
+
 			Controller.getInstance().handleScreen("loadingScreen", true);
-			
+
 			Controller.getInstance().sendTextMessage(new Packet("showAll", "", "").toString());
 			setVisible(false);
 		}

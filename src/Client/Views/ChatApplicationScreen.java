@@ -384,9 +384,11 @@ public class ChatApplicationScreen extends JFrame {
 				deleteHisBtn.setEnabled(true);
 				sendBtn.setEnabled(true);
 
-				Controller.getInstance()
-						.sendTextMessage(new Packet("viewChatHistoryWithFriend", id + ", " + idChat, id).toString());
-				Controller.getInstance().handleScreen("loadingScreen", true);
+				if (nameChat.length() > 0) {
+					Controller.getInstance().sendTextMessage(
+							new Packet("viewChatHistoryWithFriend", id + ", " + idChat, id).toString());
+					Controller.getInstance().handleScreen("loadingScreen", true);
+				}
 			}
 		});
 
@@ -399,20 +401,22 @@ public class ChatApplicationScreen extends JFrame {
 
 				lbNameChat.setText(nameChat);
 				roomFlag = false;
-				findOneMsgBtn.setEnabled(true);
-				deleteHisBtn.setEnabled(true);
-				sendBtn.setEnabled(true);
 
-				if (listIDWaiting2.contains(idChat)) {
-					listIDWaiting2.remove(idChat);
-					listNameWaiting2.remove(nameChat);
-					Controller.getInstance()
-							.sendTextMessage(new Packet("userSeenMessage", id + ", " + idChat, "").toString());
+				if (nameChat.length() > 0) {
+					findOneMsgBtn.setEnabled(true);
+					deleteHisBtn.setEnabled(true);
+					sendBtn.setEnabled(true);
+					if (listIDWaiting2.contains(idChat)) {
+						listIDWaiting2.remove(idChat);
+						listNameWaiting2.remove(nameChat);
+						Controller.getInstance()
+								.sendTextMessage(new Packet("userSeenMessage", id + ", " + idChat, "").toString());
+					}
+
+					Controller.getInstance().sendTextMessage(
+							new Packet("viewChatHistoryWithFriend", id + ", " + idChat, id).toString());
+					Controller.getInstance().handleScreen("loadingScreen", true);
 				}
-
-				Controller.getInstance()
-						.sendTextMessage(new Packet("viewChatHistoryWithFriend", id + ", " + idChat, id).toString());
-				Controller.getInstance().handleScreen("loadingScreen", true);
 			}
 		});
 
@@ -430,21 +434,26 @@ public class ChatApplicationScreen extends JFrame {
 
 					listIDWaiting2.remove(idx);
 					listNameWaiting2.remove(idx);
-					Controller.getInstance()
-							.sendTextMessage(new Packet("userSeenMessage", id + ", " + idChat, "").toString());
 
+					if (nameChat.length() > 0) {
+						Controller.getInstance()
+								.sendTextMessage(new Packet("userSeenMessage", id + ", " + idChat, "").toString());
+					}
 				}
 
 				lbNameChat.setText(nameChat);
 				roomFlag = false;
-				findOneMsgBtn.setEnabled(true);
-				deleteHisBtn.setEnabled(true);
-				sendBtn.setEnabled(true);
 
-				Controller.getInstance()
-						.sendTextMessage(new Packet("viewChatHistoryWithFriend", id + ", " + idChat, id).toString());
+				if (nameChat.length() > 0) {
+					findOneMsgBtn.setEnabled(true);
+					deleteHisBtn.setEnabled(true);
+					sendBtn.setEnabled(true);
 
-				Controller.getInstance().handleScreen("loadingScreen", true);
+					Controller.getInstance().sendTextMessage(
+							new Packet("viewChatHistoryWithFriend", id + ", " + idChat, id).toString());
+
+					Controller.getInstance().handleScreen("loadingScreen", true);
+				}
 			}
 		});
 
@@ -458,11 +467,12 @@ public class ChatApplicationScreen extends JFrame {
 
 				lbNameChat.setText(nameChat);
 				roomFlag = true;
-				findOneMsgBtn.setEnabled(true);
-				deleteHisBtn.setEnabled(true);
-				sendBtn.setEnabled(true);
 
-				if (sentHistoryRoom) {
+				if (sentHistoryRoom && nameChat.length() > 0) {
+					findOneMsgBtn.setEnabled(true);
+					deleteHisBtn.setEnabled(true);
+					sendBtn.setEnabled(true);
+
 					Controller.getInstance()
 							.sendTextMessage(new Packet("viewChatHistoryRoom", id + ", " + idChat, id).toString());
 					Controller.getInstance().handleScreen("loadingScreen", true);
@@ -484,11 +494,13 @@ public class ChatApplicationScreen extends JFrame {
 				}
 				getshowListNameRoom.add(showListNameRoom.toString());
 
-				Controller.getInstance()
-						.sendTextMessage(new Packet("showListMemberRoom", showListNameRoom.toString(), id).toString());
-				Controller.getInstance().handleScreen("loadingScreen", true);
+				if (selected.length() > 0) {
+					Controller.getInstance().sendTextMessage(
+							new Packet("showListMemberRoom", showListNameRoom.toString(), id).toString());
+					Controller.getInstance().handleScreen("loadingScreen", true);
 
-				showListNameRoom.clear();
+					showListNameRoom.clear();
+				}
 			}
 		});
 		listGroup.setFont(new Font("Times New Roman", Font.BOLD, 14));
@@ -525,7 +537,7 @@ public class ChatApplicationScreen extends JFrame {
 		msgInput.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (!roomFlag && newMsg) {
+				if (!roomFlag && newMsg && nameChat.length() > 0) {
 					Controller.getInstance()
 							.sendTextMessage(new Packet("userSeenMessage", id + ", " + idChat, "").toString());
 					newMsg = false;
@@ -597,7 +609,9 @@ public class ChatApplicationScreen extends JFrame {
 				String name = listReqFriend.getSelectedValue();
 				String id = listReqestAddFriend.get(idx * 2);
 
-				new AddFriendNotify().show(name, id);
+				if (name.length() > 0) {
+					new AddFriendNotify().show(name, id);
+				}
 			}
 		});
 		scrollPane_2.setViewportView(listReqFriend);
@@ -694,6 +708,7 @@ public class ChatApplicationScreen extends JFrame {
 		this.fullname = fullname;
 		this.id = id;
 		listprofile.setModel(infoModel);
+		closeMenuBar();
 	}
 
 	public void renderMessage(String data, String type) {

@@ -196,7 +196,7 @@ public class GroupChatScreen extends JFrame {
 						getNameGr = newNameGr;
 						newNameGroup.add(newNameGr);
 						Controller.getInstance()
-								.sendTextMessage(new Packet("changeNameGroup", newNameGroup.toString(), "").toString());
+								.sendTextMessage(new Packet("changeNameGroup", newNameGroup.toString(), id).toString());
 						Controller.getInstance().handleScreen("loadingScreen", true);
 					}
 				}

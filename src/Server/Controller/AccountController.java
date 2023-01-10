@@ -187,6 +187,24 @@ public class AccountController extends AccountModel {
 		return listData;
 	}
 
+	public boolean isAccountBlock(String userName) {
+		logger1.atLevel(org.slf4j.event.Level.ERROR);
+		MongoCursor<Document> document = CollectionAccount()
+				.find(Filters.and(Filters.eq("active", 1), Filters.eq("userName", userName))).iterator();
+		ArrayList<String> listData = new ArrayList<String>();
+		try {
+			while (document.hasNext()) {
+				Document doc = document.next();
+				listData.add((String) doc.get("id"));
+			}
+		} finally {
+			document.close();
+		}
+		if (listData.size() == 0)
+			return true;
+		return false;
+	}
+
 	public ArrayList<String> FilterByName(int status) {
 		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		List<Document> document = CollectionAccount().find()
@@ -437,6 +455,23 @@ public class AccountController extends AccountModel {
 		CollectionAccount().deleteMany(eq("_id", id));
 	}
 
+	public ArrayList<String> getListFriendAndRoom(String idUser) {
+		ArrayList<String> res = new ArrayList<>();
+		MongoCursor<Document> document = CollectionAccount().find(eq("id", idUser)).iterator();
+
+		try {
+			while (document.hasNext()) {
+				Document doc = document.next();
+				res.add((String) doc.get("listFriend").toString());
+				res.add((String) doc.get("listRoom").toString());
+			}
+		} finally {
+			document.close();
+		}
+
+		return res;
+	}
+
 	public void removeAccount(String id) {
 		logger1.atLevel(org.slf4j.event.Level.ERROR);
 		CollectionAccount().deleteMany(eq("id", id));
@@ -520,6 +555,23 @@ public class AccountController extends AccountModel {
 			while (document.hasNext()) {
 				Document doc = document.next();
 				listData.add((String) doc.get("fullName").toString());
+			}
+		} finally {
+			document.close();
+		}
+		return listData;
+	}
+
+	public ArrayList<String> getFullnameAndRoleById(String id) {
+		Document filterDoc = new Document();
+		filterDoc.append("id", id);
+		MongoCursor<Document> document = CollectionAccount().find(filterDoc).iterator();
+		ArrayList<String> listData = new ArrayList<String>();
+		try {
+			while (document.hasNext()) {
+				Document doc = document.next();
+				listData.add((String) doc.get("fullName").toString());
+				listData.add((String) doc.get("role").toString());
 			}
 		} finally {
 			document.close();

@@ -43,6 +43,13 @@ public class InterfaceAPI {
 		ArrayList<String> pwCheck = accountApi.findByUsername(userName);
 		if (pwCheck.size() == 0)
 			return pwCheck;
+
+		if (accountApi.isAccountBlock(userName)) {
+			ArrayList<String> result = new ArrayList<String>();
+			result.add("Block");
+			return result;
+		}
+
 		boolean matched = BCrypt.checkpw(password, pwCheck.get(pwCheck.size() - 3));
 
 		if (matched) {
@@ -307,6 +314,22 @@ public class InterfaceAPI {
 		ArrayList<String> res = new ArrayList<String>();
 		res = accountApi.FindID(userName, fullName, address, email);
 		String id = res.get(0);
+
+		ArrayList<String> listFR = accountApi.getListFriendAndRoom(id);
+		if (listFR.get(0).length() > 2) {
+			String[] listF = listFR.get(0).substring(1, listFR.get(0).length() - 1).split(", ");
+			System.out.println(listF);
+			for (String idUser : listF)
+				accountApi.deleteFriendListFriend(idUser, id);
+		}
+		if (listFR.get(1).length() > 2) {
+			String[] listR = listFR.get(1).substring(1, listFR.get(0).length() - 1).split(", ");
+			for (String idRoom : listR) {
+				roomApi.deletePeopleRoom(idRoom, id);
+				roomApi.deleteAdminRoom(idRoom, id);
+			}
+		}
+
 		accountApi.removeAccount(id);
 	}
 
@@ -376,8 +399,14 @@ public class InterfaceAPI {
 
 			for (int i = 0; i < resIdName.size(); i++) {
 				ArrayList<String> dataString = new ArrayList<String>();
-				dataString = accountApi.getFullnameToById(resIdName.get(i));
-				dataName.add(dataString.get(0));
+				dataString = accountApi.getFullnameAndRoleById(resIdName.get(i));
+
+				if (dataString.get(1).equals("user")) {
+					dataName.add(dataString.get(0));
+				} else {
+					resIdName.remove(i);
+					i--;
+				}
 			}
 
 			data.add(dataName.toString());
@@ -487,7 +516,7 @@ public class InterfaceAPI {
 		return listIdMemberRoomAndNameRoom;
 	}
 
-	public ArrayList<String> changeNameGr(String data) {
+	public ArrayList<String> changeNameGr(String data, String idSender) {
 		ArrayList<String> message = new ArrayList<String>();
 		ArrayList<String> listNameGr = new ArrayList<String>();
 
@@ -506,6 +535,28 @@ public class InterfaceAPI {
 		if (flag) {
 			message.add("Thay đổi thành công");
 			roomApi.changeNameGr(idRoom, newName);
+
+			ArrayList<String> list = new ArrayList<String>();
+			ArrayList<String> listMember = new ArrayList<String>();
+			list = roomApi.getListIdMemberRoom(idRoom);
+			String[] tmp1 = list.get(0).substring(1, list.get(0).length() - 1).split(", ");
+			String[] tmp2 = list.get(1).substring(1, list.get(1).length() - 1).split(", ");
+
+			for (String e : tmp1) {
+				listMember.add(e);
+			}
+			for (String e : tmp2) {
+				listMember.add(e);
+			}
+
+			for (String member : listMember) {
+				List<ClientSocket> clientOnline = ClientConnected.getInstance().getClientConnected();
+				for (ClientSocket e : clientOnline) {
+					if (e.getID() != null && e.getID().equals(member) && !e.getID().equals(idSender)) {
+						e.sendString(new Packet("changeNameRoom", newName, idSender).toString());
+					}
+				}
+			}
 		} else {
 			message.add("Nhóm đã tồn tại!!");
 		}

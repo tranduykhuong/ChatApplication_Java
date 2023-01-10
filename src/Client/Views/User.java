@@ -51,6 +51,7 @@ public class User extends JFrame {
 	private boolean flagGender;
 	private boolean flagRole;
 	private JButton btnKho;
+	private JButton btnXa;
 	private JList<String> listFriend;
 	private JList<String> historyLogin;
 	private ImageIcon iconTitle = new ImageIcon(HomeScreen.class.getResource("/Image/iconmini.jpg"));
@@ -236,7 +237,7 @@ public class User extends JFrame {
 		btniMtKhu.setForeground(new Color(1, 128, 254));
 		btniMtKhu.setFont(new Font("Tahoma", Font.BOLD, 13));
 
-		JButton btnXa = new JButton("Xóa");
+		btnXa = new JButton("Xóa");
 		btnXa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DeleteAccount();
@@ -349,10 +350,14 @@ public class User extends JFrame {
 		if (role.equals("admin")) {
 			btnadm.setSelected(true);
 			btncus.setSelected(false);
+			btnKho.setEnabled(false);
+			btnXa.setEnabled(false);
 			flagRole = false;
 		} else {
 			btnadm.setSelected(false);
 			btncus.setSelected(true);
+			btnKho.setEnabled(true);
+			btnXa.setEnabled(true);
 			flagRole = true;
 		}
 
@@ -380,8 +385,8 @@ public class User extends JFrame {
 		}
 
 		historyLogin.setModel(dlm1);
-		
+
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		setLocation(dim.width/2- getSize().width/2, dim.height/2 - getSize().height/2);
+		setLocation(dim.width / 2 - getSize().width / 2, dim.height / 2 - getSize().height / 2);
 	}
 }

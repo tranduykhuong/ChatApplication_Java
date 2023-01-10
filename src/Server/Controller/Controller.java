@@ -191,6 +191,10 @@ public class Controller extends Thread {
 					String[] req = pk.getData().split("`");
 					ArrayList<String> data = api.login(req[0], req[1]);
 					if (!data.isEmpty()) {
+						if (data.size() == 1) {
+							thisClient.sendString(new Packet("logIn", "Tài khoản của bạn đã bị khóa!", "").toString());
+							break;
+						}
 						ClientConnected.getInstance().setID(thisClient, data.get(data.size() - 1));
 						thisClient.sendString(new Packet("logIn", data.toString(), "").toString());
 					} else {
@@ -418,8 +422,9 @@ public class Controller extends Thread {
 				}
 				case "changeNameGroup": {
 					String data = pk.getData();
+					String idSender = pk.getAuthor();
 
-					String res = api.changeNameGr(data).toString();
+					String res = api.changeNameGr(data, idSender).toString();
 					thisClient.sendString(new Packet("changeNameGroup", res.toString(), "").toString());
 					break;
 				}
@@ -498,7 +503,8 @@ public class Controller extends Thread {
 			}
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+//			System.out.println(e.getMessage());
+			System.out.println(e);
 			ServerApp.mainScreen.reConnect();
 		}
 	}
